@@ -31,11 +31,11 @@ Run
     .\\scripts\\run_product_tests.ps1 -Suite agentic
 
     # Single scenario, all agents
-    python -m pytest tests/product/agentic/test_project_experiment.py \\
+    uv run pytest tests/product/agentic/test_project_experiment.py \\
         -m llm_product -k list_project_roots -v
 
     # HTML report
-    python -m pytest tests/product/agentic/test_project_experiment.py \\
+    uv run pytest tests/product/agentic/test_project_experiment.py \\
         -m llm_product --html=reports/agentic.html
 """
 
@@ -110,3 +110,4 @@ async def test_project_experiment(
                 f"Scenario : {scenario.name}\n"
                 f"Agent    : {type(project_agent_runner).__name__}"
             )
+

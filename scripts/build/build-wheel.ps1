@@ -101,17 +101,9 @@ if (Test-Path $pipIni) {
 }
 
 # ── Ensure build frontend is installed ────────────────────────────────────────
-if (-not (python -c "import build" 2>&1 | Select-String "ModuleNotFoundError")) {
-    # module present — no action needed
-}
-else {
-    Write-Host "build not found — installing via pip..." -ForegroundColor Yellow
-    pip install build --quiet
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "ERROR: Failed to install build. Ensure pip is on PATH." -ForegroundColor Red
-        exit 1
-    }
-    Write-Host "build installed." -ForegroundColor Green
+if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
+    Write-Host "ERROR: uv is required to build this project." -ForegroundColor Red
+    exit 1
 }
 
 Write-Host "Python  : $(python --version 2>&1)"
@@ -128,10 +120,10 @@ if ($Clean -and (Test-Path $defaultDist)) {
 
 # ── Run python -m build --wheel ───────────────────────────────────────────────
 Write-Host "Building wheel ..." -ForegroundColor Cyan
-python -m build --wheel --outdir $defaultDist
+uv run --with build python -m build --wheel --outdir $defaultDist
 if ($LASTEXITCODE -ne 0) {
     Write-Host ""
-    Write-Host "ERROR: 'python -m build' failed (exit $LASTEXITCODE)." -ForegroundColor Red
+    Write-Host "ERROR: 'uv run --with build python -m build' failed (exit $LASTEXITCODE)." -ForegroundColor Red
     Write-Host "       Check pyproject.toml and the output above for details." -ForegroundColor Red
     exit 1
 }
@@ -281,17 +273,16 @@ $bundledPipNote
 
 ``````powershell
 # Create virtual environment
-python -m venv controldesk-mcp-venv
-controldesk-mcp-venv\Scripts\Activate.ps1
+uv venv controldesk-mcp-venv
 
 # Install
-pip install .\controldesk_mcp_server-0.1.0-py3-none-any.whl
+uv pip install --python .\controldesk-mcp-venv\Scripts\python.exe .\controldesk_mcp_server-0.1.0-py3-none-any.whl
 ``````
 
 For corporate proxy:
 ``````powershell
 `$env:PIP_INDEX_URL = "https://your-proxy/simple"
-pip install .\controldesk_mcp_server-0.1.0-py3-none-any.whl
+uv pip install --python .\controldesk-mcp-venv\Scripts\python.exe .\controldesk_mcp_server-0.1.0-py3-none-any.whl
 ``````
 
 ---
@@ -331,7 +322,7 @@ Replace `"command": "controldesk-mcp"` with the **full path** from install scrip
 ### Install Into Current Python (No Virtual Environment)
 
 ``````powershell
-pip install .\controldesk_mcp_server-0.1.0-py3-none-any.whl --user
+uv pip install --python python .\controldesk_mcp_server-0.1.0-py3-none-any.whl --user
 ``````
 
 > ⚠️ Not recommended — using a virtual environment is safer.

@@ -1,19 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Python
-if [ -d servers/python ]; then
-  python -m pip install -e servers/python[dev] >/dev/null
-  ruff check servers/python
-  black --check servers/python
-  pytest -q servers/python
+if ! command -v uv >/dev/null 2>&1; then
+  echo "ERROR: uv is not available on PATH."
+  echo "Install: https://docs.astral.sh/uv/getting-started/installation/"
+  exit 1
 fi
 
-# .NET
-if [ -d servers/csharp ]; then
-  dotnet restore servers/csharp
-  dotnet build servers/csharp -warnaserror
-  dotnet test servers/csharp --no-build --verbosity normal
-fi
+uv sync --extra dev
+uv run ruff check sources tests
+uv run black --check sources tests
+uv run python scripts/validate_mcp_tools.py
+uv run pytest tests/unit/ -q -m "not integration"
 
 echo "Quality gate passed."

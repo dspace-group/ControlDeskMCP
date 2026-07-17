@@ -34,10 +34,10 @@ Run
     .\\scripts\\run_product_tests.ps1 -Suite agentic
 
     # Single scenario, all agents
-    python -m pytest tests/product/agentic/ -m llm_product -k start_and_report_version -v
+    uv run pytest tests/product/agentic/ -m llm_product -k start_and_report_version -v
 
     # HTML report
-    python -m pytest tests/product/agentic/ -m llm_product --html=reports/agentic.html
+    uv run pytest tests/product/agentic/ -m llm_product --html=reports/agentic.html
 """
 
 from __future__ import annotations
@@ -114,3 +114,4 @@ async def test_application_lifecycle(
                 f"Scenario : {scenario.name}\n"
                 f"Agent    : {type(agent_runner).__name__}"
             )
+

@@ -128,7 +128,7 @@ Write-Host "  Copilot Mdl: $($env:COPILOT_MODEL)" -ForegroundColor DarkGray
 Write-Host ""
 
 # ── Run ────────────────────────────────────────────────────────────────────────
-python -m pytest @pytestArgs
+uv run pytest @pytestArgs
 $exitCode = $LASTEXITCODE
 
 Pop-Location

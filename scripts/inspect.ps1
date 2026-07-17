@@ -27,33 +27,18 @@ param()
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot\..
 
-function Test-CriticalPythonModules {
-    python -c "import pydantic, mcp" 2>$null
-    return ($LASTEXITCODE -eq 0)
-}
-
-function Test-OptionalSettingsModule {
-    python -c "import pydantic_settings" 2>$null
-    return ($LASTEXITCODE -eq 0)
-}
-
-function Ensure-PythonDependencies {
-    if (-not (Test-CriticalPythonModules)) {
-        Write-Host "Critical Python modules missing — installing runtime dependencies..." -ForegroundColor Yellow
-        python -m pip install "pydantic>=2.0" "mcp>=1.6.0"
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "ERROR: Failed to install critical runtime dependencies." -ForegroundColor Red
-            Write-Host "Run manually: python -m pip install \"pydantic>=2.0\" \"mcp>=1.6.0\"" -ForegroundColor Red
-            exit 1
-        }
+function Ensure-UvEnvironment {
+    if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
+        Write-Host "ERROR: uv is not available on PATH." -ForegroundColor Red
+        Write-Host "Install uv: https://docs.astral.sh/uv/getting-started/installation/" -ForegroundColor Red
+        exit 1
     }
 
-    if (-not (Test-OptionalSettingsModule)) {
-        Write-Host "Optional module pydantic-settings missing — attempting install..." -ForegroundColor Yellow
-        python -m pip install "pydantic-settings>=2.0"
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "WARNING: pydantic-settings install failed; continuing with fallback settings mode." -ForegroundColor Yellow
-        }
+    Write-Host "Ensuring uv project environment..." -ForegroundColor Yellow
+    uv sync
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ERROR: uv sync failed." -ForegroundColor Red
+        exit 1
     }
 }
 
@@ -70,8 +55,8 @@ $nodeVersion = node --version 2>&1
 Write-Host "Node.js : $nodeVersion"
 
 # ── Python dependencies ───────────────────────────────────────────────────────
-Write-Host '--- Ensuring Python dependencies ---' -ForegroundColor Cyan
-Ensure-PythonDependencies
+Write-Host '--- Ensuring Python dependencies (uv) ---' -ForegroundColor Cyan
+Ensure-UvEnvironment
 
 # ── Environment ───────────────────────────────────────────────────────────────
 $env:PYTHONPATH = (Get-Location).Path
@@ -81,7 +66,7 @@ Write-Host ''
 Write-Host '=== ControlDesk MCP — Inspector ===' -ForegroundColor Cyan
 Write-Host ''
 Write-Host '  UI   : http://localhost:5173' -ForegroundColor Green
-Write-Host '  Server : python -m sources  (stdio transport)' -ForegroundColor Green
+Write-Host '  Server : uv run python -m sources  (stdio transport)' -ForegroundColor Green
 Write-Host '  PYTHONPATH : ' + $env:PYTHONPATH
 Write-Host ''
 Write-Host 'The Inspector spawns the server as a child process.' -ForegroundColor Yellow
@@ -90,4 +75,4 @@ Write-Host ''
 
 # ── Launch ────────────────────────────────────────────────────────────────────
 # -y  : auto-confirm the one-time npx package download (no interactive prompt)
-npx -y @modelcontextprotocol/inspector python -m sources
+npx -y @modelcontextprotocol/inspector uv run python -m sources

@@ -15,7 +15,7 @@ try:
 except ModuleNotFoundError:  # pragma: no cover - import-time guard
     warnings.warn(
         "pydantic-settings is not installed; falling back to environment-only settings. "
-        "Install with: python -m pip install 'pydantic-settings>=2.0'",
+        "Install with: uv sync",
         RuntimeWarning,
         stacklevel=2,
     )

@@ -82,14 +82,14 @@ location itself.
 
 The appropriate sequence depends on the task, but a normal online workflow is:
 
-1. `app_start_or_attach()`
+1. `start_controldesk(...)`
 2. `project_open(...)` or `project_discover(...)`
 3. `platform_manage(...)` and `platform_connect(...)`, when communication with
    an ECU or virtual platform is required
 4. Use the required measurement, calibration, variable, recording, or bus tool
 5. Stop active measurement, calibration, and recorder operations before calling
    `platform_disconnect(...)`
-6. Call `app_quit(...)` only when ControlDesk should be closed
+6. Call `stop_controldesk(...)` only when ControlDesk should be closed
 
 Use the relevant `*_discover()` tool when a domain offers additional on-demand
 operations. Tool calls return structured results; failures contain an error code,
@@ -112,8 +112,11 @@ The complete, current catalog is available through the MCP resources
 
 ## Development
 
-The project also includes a PowerShell setup script for a traditional virtual
-environment-based development setup:
+Run the uv-based setup once after cloning:
+
+```powershell
+.\scripts\setup.ps1
+```
 
 Run the quality gate after changes:
 
@@ -138,7 +141,7 @@ Integration tests need a live ControlDesk installation and are skipped by the
 normal quality gate. Run them explicitly when needed:
 
 ```powershell
-python -m pytest -m integration
+uv run pytest -m integration
 ```
 
 ## Troubleshooting
@@ -149,7 +152,7 @@ python -m pytest -m integration
   set `CONTROLDESK_VERSION` to the installed release, for example `2026-A`.
 - **COM call is blocked or rejected:** close modal dialogs in ControlDesk and retry.
 - **A tool call times out or ControlDesk exits:** call `app_get_logs(...)` for
-  candidate ControlDesk log files, then restart and reattach with `app_start_or_attach()`.
+  candidate ControlDesk log files, then restart and reattach with `start_controldesk(...)`.
 
 ## Further Documentation
 
@@ -157,5 +160,4 @@ python -m pytest -m integration
 - [Client configuration and examples](docs/clients.md)
 - [Server architecture](docs/architecture.md)
 - [Error handling](docs/error-handling.md)
-- [Tool specifications](docs/tools/)
 - [Contributing guide](CONTRIBUTING.md)

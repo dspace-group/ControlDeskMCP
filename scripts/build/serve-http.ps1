@@ -71,17 +71,17 @@ Write-Host ""
 # ── Resolve launcher ─────────────────────────────────────────────────────────
 if ($DevMode) {
     # Dev mode: use local source tree
-    $pythonVersion = python --version 2>&1
+    $pythonVersion = uv run python --version 2>&1
     Write-Host "Mode   : development (python -m sources)"
     Write-Host "Python : $pythonVersion"
 
-    $installed = pip show controldesk-mcp-server 2>&1
+    $installed = uv run python -c "import mcp, pydantic" 2>&1
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "Dev dependencies not installed — running pip install -e .[dev] ..." -ForegroundColor Yellow
-        pip install -e .[dev]
+        Write-Host "Dev dependencies not installed - running uv sync --extra dev ..." -ForegroundColor Yellow
+        uv sync --extra dev
     }
     $env:PYTHONPATH = (Get-Location).Path
-    $launcher = { python -m sources }
+    $launcher = { uv run python -m sources }
 }
 else {
     # Installed wheel: prefer venv exe, fall back to PATH

@@ -23,33 +23,18 @@ param(
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot\..
 
-function Test-CriticalPythonModules {
-    python -c "import pydantic, mcp" 2>$null
-    return ($LASTEXITCODE -eq 0)
-}
-
-function Test-OptionalSettingsModule {
-    python -c "import pydantic_settings" 2>$null
-    return ($LASTEXITCODE -eq 0)
-}
-
-function Ensure-PythonDependencies {
-    if (-not (Test-CriticalPythonModules)) {
-        Write-Host "Critical Python modules missing — installing runtime dependencies..." -ForegroundColor Yellow
-        python -m pip install "pydantic>=2.0" "mcp>=1.6.0"
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "ERROR: Failed to install critical runtime dependencies." -ForegroundColor Red
-            Write-Host "Run manually: python -m pip install \"pydantic>=2.0\" \"mcp>=1.6.0\"" -ForegroundColor Red
-            exit 1
-        }
+function Ensure-UvEnvironment {
+    if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
+        Write-Host "ERROR: uv is not available on PATH." -ForegroundColor Red
+        Write-Host "Install uv: https://docs.astral.sh/uv/getting-started/installation/" -ForegroundColor Red
+        exit 1
     }
 
-    if (-not (Test-OptionalSettingsModule)) {
-        Write-Host "Optional module pydantic-settings missing — attempting install..." -ForegroundColor Yellow
-        python -m pip install "pydantic-settings>=2.0"
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "WARNING: pydantic-settings install failed; continuing with fallback settings mode." -ForegroundColor Yellow
-        }
+    Write-Host "Ensuring uv project environment..." -ForegroundColor Yellow
+    uv sync
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ERROR: uv sync failed." -ForegroundColor Red
+        exit 1
     }
 }
 
@@ -57,10 +42,9 @@ Write-Host "=== ControlDesk MCP Server — Debug Mode ===" -ForegroundColor Cyan
 Write-Host ""
 
 # ── Environment checks ───────────────────────────────────────────────────────
-$pythonVersion = python --version 2>&1
+Ensure-UvEnvironment
+$pythonVersion = uv run python --version 2>&1
 Write-Host "Python : $pythonVersion"
-
-Ensure-PythonDependencies
 
 # ── Debug environment variables ──────────────────────────────────────────────
 $env:PYTHONPATH = (Get-Location).Path
@@ -77,8 +61,8 @@ Write-Host ""
 
 # ── Launch ───────────────────────────────────────────────────────────────────
 if ($Transport -eq "http") {
-    python -m sources --transport streamable-http
+    uv run python -m sources --transport streamable-http
 }
 else {
-    python -m sources
+    uv run python -m sources
 }

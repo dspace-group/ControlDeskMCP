@@ -28,14 +28,14 @@ Assertion levels
 Run
 ---
     # All agents, all scenarios
-    python -m pytest tests/product/agentic/test_tool_window.py -m llm_product -v
+    uv run pytest tests/product/agentic/test_tool_window.py -m llm_product -v
 
     # Single scenario, all agents
-    python -m pytest tests/product/agentic/test_tool_window.py \\
+    uv run pytest tests/product/agentic/test_tool_window.py \\
         -m llm_product -k list_all_tool_windows -v
 
     # HTML report
-    python -m pytest tests/product/agentic/test_tool_window.py \\
+    uv run pytest tests/product/agentic/test_tool_window.py \\
         -m llm_product --html=reports/tool_window.html
 """
 
@@ -110,3 +110,4 @@ async def test_tool_window(
                 f"Scenario : {scenario.name}\n"
                 f"Agent    : {type(tool_window_runner).__name__}"
             )
+

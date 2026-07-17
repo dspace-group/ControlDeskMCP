@@ -4,44 +4,27 @@ Set-Location $PSScriptRoot\..
 
 # ── Python server ─────────────────────────────────────────────────────────────
 Write-Host '--- Installing dependencies ---' -ForegroundColor Cyan
-$pythonExe = 'python'
-$py312 = & py -3.12 -c "import sys; print(sys.executable)" 2>$null
-if ($LASTEXITCODE -eq 0 -and $py312) {
-    $pythonExe = $py312.Trim()
+if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
+    Write-Host 'ERROR: uv is not available on PATH.' -ForegroundColor Red
+    Write-Host 'Install uv: https://docs.astral.sh/uv/getting-started/installation/' -ForegroundColor Red
+    exit 1
 }
-Write-Host "  Using Python: $pythonExe" -ForegroundColor DarkCyan
 
-& $pythonExe -m pip install --retries 15 --timeout 60 hatchling editables | Out-Null
+& uv sync --extra dev
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-$maxAttempts = 3
-$attempt = 1
-while ($attempt -le $maxAttempts) {
-    Write-Host "  Install attempt $attempt/$maxAttempts" -ForegroundColor DarkCyan
-    & $pythonExe -m pip install --retries 15 --timeout 60 --no-build-isolation -e '.[dev]' | Out-Null
-    if ($LASTEXITCODE -eq 0) {
-        break
-    }
-    if ($attempt -eq $maxAttempts) {
-        Write-Host 'Dependency installation failed after multiple attempts.' -ForegroundColor Red
-        exit $LASTEXITCODE
-    }
-    Write-Host '  Dependency install failed, retrying...' -ForegroundColor Yellow
-    $attempt++
-}
-
 Write-Host '--- Ruff lint (E/F/W/I/N/T20) ---' -ForegroundColor Cyan
-& $pythonExe -m ruff check sources tests
+& uv run ruff check sources tests
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Write-Host '--- Black format check ---' -ForegroundColor Cyan
-& $pythonExe -m black --check sources tests
+& uv run black --check sources tests
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 # ── MCP tool decorator validation ─────────────────────────────────────────────
 # Rule: Every @mcp.tool() MUST have name=, description=, and annotations=
 Write-Host '--- MCP tool decorators ---' -ForegroundColor Cyan
-& $pythonExe scripts/validate_mcp_tools.py
+& uv run python scripts/validate_mcp_tools.py
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 # ── Layer boundary enforcement ────────────────────────────────────────────────
@@ -53,7 +36,7 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 # ── Tests ─────────────────────────────────────────────────────────────────────
 Write-Host '--- Pytest ---' -ForegroundColor Cyan
-& $pythonExe -m pytest tests/unit/ -q -m 'not integration'
+& uv run pytest tests/unit/ -q -m 'not integration'
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Write-Host 'Quality gate passed.' -ForegroundColor Green

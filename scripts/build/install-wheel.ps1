@@ -168,6 +168,12 @@ $wheelName = [System.IO.Path]::GetFileName($WheelPath)
 Write-Host "Wheel   : $wheelName" -ForegroundColor White
 Write-Host "Python  : $(python --version 2>&1)" -ForegroundColor White
 
+if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
+    Write-Host "ERROR: uv is not available on PATH." -ForegroundColor Red
+    Write-Host "Install uv: https://docs.astral.sh/uv/getting-started/installation/" -ForegroundColor Red
+    exit 1
+}
+
 # ── Determine installation target ─────────────────────────────────────────────
 $useVenv = ($VenvDir -ne "skip" -and $VenvDir -ne "")
 
@@ -184,7 +190,7 @@ if ($useVenv) {
 
     if (-not (Test-Path $VenvDir)) {
         Write-Host "Creating virtual environment ..." -ForegroundColor Cyan
-        python -m venv $VenvDir
+        uv venv $VenvDir
         if ($LASTEXITCODE -ne 0) {
             Write-Host "ERROR: Failed to create virtual environment at $VenvDir" -ForegroundColor Red
             exit 1
@@ -198,12 +204,11 @@ if ($useVenv) {
         $pipHealthCheck = & (Join-Path $VenvDir "Scripts\pip.exe") --version 2>&1
         if ($LASTEXITCODE -ne 0) {
             Write-Host "  pip is missing or broken — attempting repair with ensurepip ..." -ForegroundColor Yellow
-            & (Join-Path $VenvDir "Scripts\python.exe") -m ensurepip --upgrade 2>&1 | Out-Null
-            & (Join-Path $VenvDir "Scripts\python.exe") -m pip install --upgrade pip 2>&1 | Out-Null
+            & uv pip install --python (Join-Path $VenvDir "Scripts\python.exe") pip 2>&1 | Out-Null
             if ($LASTEXITCODE -ne 0) {
                 Write-Host "  Repair failed — recreating virtual environment from scratch ..." -ForegroundColor Yellow
                 Remove-Item -Recurse -Force $VenvDir
-                python -m venv $VenvDir
+                uv venv $VenvDir
                 if ($LASTEXITCODE -ne 0) {
                     Write-Host "ERROR: Failed to recreate virtual environment at $VenvDir" -ForegroundColor Red
                     exit 1
@@ -282,10 +287,10 @@ else {
 # ── Install the wheel ─────────────────────────────────────────────────────────
 Write-Host ""
 Write-Host "Installing wheel (dependencies will be downloaded from PyPI) ..." -ForegroundColor Cyan
-& $pipExe install "$WheelPath" --upgrade
+& uv pip install --python $pythonExe "$WheelPath" --upgrade
 if ($LASTEXITCODE -ne 0) {
     Write-Host ""
-    Write-Host "ERROR: pip install failed (exit $LASTEXITCODE)." -ForegroundColor Red
+    Write-Host "ERROR: uv pip install failed (exit $LASTEXITCODE)." -ForegroundColor Red
     Write-Host "       Check the output above. If offline, see SETUP.md — Offline Installation." -ForegroundColor Red
     exit 1
 }
