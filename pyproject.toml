@@ -1,0 +1,55 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "controldesk-mcp-server"
+version = "0.1.0"
+description = "MCP server for dSPACE ControlDesk automation via COM bridge"
+requires-python = ">=3.11"
+dependencies = ["mcp>=1.6.0", "pydantic>=2.0", "pydantic-settings>=2.0"]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.4",
+    "black>=24.0",
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-mock>=3.0",
+    "pytest-cov>=5.0",
+    "build>=1.0",
+]
+product = ["openai>=1.0"]
+agentic = ["github-copilot-sdk>=0.3.0"]
+
+[project.scripts]
+controldesk-mcp = "sources.main:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["sources"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+# E/F/W: standard errors/warnings, I: isort, N: naming, T20: print statements
+select = ["E", "F", "W", "I", "N", "T20"]
+# N999: invalid module name — some domain files use underscores intentionally
+ignore = ["N999"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+log_cli = true
+log_cli_level = "INFO"
+log_cli_format = "%(message)s"
+markers = [
+    "integration: marks tests requiring a live ControlDesk instance (deselect with -m 'not integration')",
+    "product: direct product test against real ControlDesk — no LLM (deselect with -m 'not product')",
+    "llm_product: LLM-driven product test; requires GITHUB_TOKEN + live ControlDesk (deselect with -m 'not llm_product')",
+]
