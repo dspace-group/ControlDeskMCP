@@ -21,11 +21,8 @@ Thank you for contributing to ControlDesk MCP Server! This is an open-source pro
 
 ## Code of Conduct
 
-- **Be respectful**: Welcome all contributors regardless of experience level.
-- **Be collaborative**: Ask questions, seek feedback, help others.
-- **Be professional**: Use constructive language; report concerns to maintainers privately if needed.
-
-Violations can be reported to the project maintainers.
+All project participants must follow the [Code of Conduct](CODE_OF_CONDUCT.md).
+Report violations privately to the project maintainers.
 
 ---
 
@@ -389,6 +386,11 @@ Mermaid renders natively in GitHub, VS Code, and MCP Inspector docs.
 ---
 
 ## Reporting Issues
+
+### Security Vulnerabilities
+
+Do not report suspected security vulnerabilities in a public issue. Follow the
+private reporting process in the [Security Policy](SECURITY.md).
 
 ### Bug Reports
 
