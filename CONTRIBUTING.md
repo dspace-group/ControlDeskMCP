@@ -1,6 +1,6 @@
 # Contributing to ControlDesk MCP Server
 
-Thank you for contributing to ControlDesk MCP Server! This is an open-source project licensed under the **MIT License**. All contributions must align with this license and the project's architecture.
+Thank you for contributing to ControlDesk MCP Server! This is an open-source project licensed under the **Apache License 2.0**. All contributions must align with this license and the project's architecture.
 
 ---
 
@@ -452,13 +452,13 @@ For questions or design discussions, use **GitHub Discussions** instead of issue
 
 By contributing to this project, you agree that:
 
-1. **Your contributions will be licensed under the MIT License**
+1. **Your contributions will be licensed under the Apache License 2.0**
 2. You have the right to contribute the code (it's your own work or you have permission)
 3. You understand the code will be publicly available
 
-The MIT License is simple and permissive — it allows commercial and private use with minimal restrictions.
+The Apache License 2.0 is permissive and includes an explicit patent grant.
 
-See [LICENSE](LICENSE) for full text.
+See [LICENSE.txt](LICENSE.txt) for full text.
 
 ---
 
