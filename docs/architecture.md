@@ -107,15 +107,10 @@ root/
 │   │   ├── test_com_bridge/           ✅
 │   │   ├── test_resources/            ✅
 │   │   └── test_prompts/              ✅
-│   └── product/                       ✅ Requires live ControlDesk
-│       ├── conftest.py                ✅ ComVerifier + session fixtures
-│       ├── manual/                    ✅ Tier 1: direct tool call tests (@pytest.mark.product)
-│       └── agentic/                   ✅ Tier 2: LLM-driven agentic tests (@pytest.mark.llm_product)
 │
 ├── scripts/
 │   ├── quality-gate.ps1               ✅ lint + format + layering check + unit tests
 │   ├── inspect.ps1                    ✅ MCP Inspector launcher
-│   └── run_product_tests.ps1          ✅ Product test convenience runner
 │
 └── docs/
     ├── INDEX.md                       ✅ Navigation entry point
@@ -182,13 +177,13 @@ root/
 
 ### Why Five Layers
 
-| Layer | Reason |
-|---|---|
-| L1 — Transport | Separates protocol concerns (Pydantic schema, stderr logging, JSON-RPC) from all domain logic |
-| L2 — Tools | Keeps `@mcp.tool` declarations thin so schema/description can be read at a glance |
-| L3 — Services | Owns business orchestration and maps COM results to Pydantic models without MCP coupling |
-| L4 — Dispatch | Single async entry point to the STA thread — enforces the apartment contract in one place |
-| L5 — COM Bridge | Isolates `win32com` and STA threading; protects upper layers from COM apartment bugs |
+| Layer           | Reason                                                                                        |
+| --------------- | --------------------------------------------------------------------------------------------- |
+| L1 — Transport  | Separates protocol concerns (Pydantic schema, stderr logging, JSON-RPC) from all domain logic |
+| L2 — Tools      | Keeps `@mcp.tool` declarations thin so schema/description can be read at a glance             |
+| L3 — Services   | Owns business orchestration and maps COM results to Pydantic models without MCP coupling      |
+| L4 — Dispatch   | Single async entry point to the STA thread — enforces the apartment contract in one place     |
+| L5 — COM Bridge | Isolates `win32com` and STA threading; protects upper layers from COM apartment bugs          |
 
 ---
 
@@ -239,14 +234,15 @@ Host → Server:  initialized (notification)
 ```
 
 Server capabilities declared:
+
 ```json
 {
-  "protocolVersion": "2024-11-05",
-  "capabilities": {
-    "tools": { "listChanged": false },
-    "logging": {}
-  },
-  "serverInfo": { "name": "ControlDesk MCP Server", "version": "0.1.0" }
+    "protocolVersion": "2024-11-05",
+    "capabilities": {
+        "tools": { "listChanged": false },
+        "logging": {}
+    },
+    "serverInfo": { "name": "ControlDesk MCP Server", "version": "0.1.0" }
 }
 ```
 
@@ -289,6 +285,7 @@ class ReadVariableInput(BaseModel):
 ```
 
 Rules:
+
 - Every `Field` MUST have a `description` with a concrete example.
 - `min_length`, `max_length`, `ge`, `le`, `pattern` must be set wherever applicable.
 - No `Optional[X]` without a default value.
@@ -311,36 +308,36 @@ handler = logging.StreamHandler(sys.stderr)  # ← stderr, NOT stdout
 
 Every tool argument must be **descriptive, unambiguous snake_case**:
 
-| Forbidden | Correct |
-|---|---|
+| Forbidden         | Correct                                          |
+| ----------------- | ------------------------------------------------ |
 | `arg1`, `p1`, `v` | `variable_path`, `platform_name`, `target_value` |
-| `name` (bare) | `experiment_name`, `project_name` |
-| `data` (bare) | `measurement_data`, `calibration_value` |
-| `type` | `data_type`, `signal_type` |
-| `file` | `project_file_path`, `sdf_file_path` |
-| `id` (bare) | `experiment_id`, `platform_id` |
-| `cfg`, `val` | `recorder_config`, `current_value` |
+| `name` (bare)     | `experiment_name`, `project_name`                |
+| `data` (bare)     | `measurement_data`, `calibration_value`          |
+| `type`            | `data_type`, `signal_type`                       |
+| `file`            | `project_file_path`, `sdf_file_path`             |
+| `id` (bare)       | `experiment_id`, `platform_id`                   |
+| `cfg`, `val`      | `recorder_config`, `current_value`               |
 
 ### Protocol Error Codes
 
-| JSON-RPC Code | Name | When Used |
-|---|---|---|
-| `-32700` | Parse error | Malformed JSON |
-| `-32600` | Invalid Request | Not valid JSON-RPC 2.0 |
-| `-32601` | Method not found | Unknown tool name |
-| `-32602` | Invalid params | Pydantic `ValidationError` |
-| `-32603` | Internal error | Unhandled exception in server |
+| JSON-RPC Code | Name             | When Used                     |
+| ------------- | ---------------- | ----------------------------- |
+| `-32700`      | Parse error      | Malformed JSON                |
+| `-32600`      | Invalid Request  | Not valid JSON-RPC 2.0        |
+| `-32601`      | Method not found | Unknown tool name             |
+| `-32602`      | Invalid params   | Pydantic `ValidationError`    |
+| `-32603`      | Internal error   | Unhandled exception in server |
 
 Domain errors (COM failures, preconditions) are **never** protocol errors — they use `isError: true` in the `result` body. See [error-handling.md](error-handling.md).
 
 ### Transport Configuration
 
-| Setting | Default | Description |
-|---|---|---|
-| `MCP_TRANSPORT` | `stdio` | Transport type: `stdio` or `streamable-http` |
-| `MCP_HOST` | `127.0.0.1` | HTTP host (ignored for stdio) |
-| `MCP_PORT` | `8000` | HTTP port (ignored for stdio) |
-| `LOG_LEVEL` | `INFO` | Python log level for stderr output |
+| Setting         | Default     | Description                                  |
+| --------------- | ----------- | -------------------------------------------- |
+| `MCP_TRANSPORT` | `stdio`     | Transport type: `stdio` or `streamable-http` |
+| `MCP_HOST`      | `127.0.0.1` | HTTP host (ignored for stdio)                |
+| `MCP_PORT`      | `8000`      | HTTP port (ignored for stdio)                |
+| `LOG_LEVEL`     | `INFO`      | Python log level for stderr output           |
 
 ---
 
@@ -350,12 +347,12 @@ Domain errors (COM failures, preconditions) are **never** protocol errors — th
 
 Tools use `MCPToolCategory` to control registration and context window costs:
 
-| Category | `lazy_loading` | When registered |
-|---|---|---|
-| `MAIN` | N/A | Always — at server start |
-| `ADD_ON` (eager) | `False` | Always — at server start |
-| `ADD_ON` (lazy) | `True` | **Never** — deferred; described by Meta-tool |
-| `SEARCH` (Meta/Discovery) | N/A | Only when ≥1 lazy ADD_ON exists in domain |
+| Category                  | `lazy_loading` | When registered                              |
+| ------------------------- | -------------- | -------------------------------------------- |
+| `MAIN`                    | N/A            | Always — at server start                     |
+| `ADD_ON` (eager)          | `False`        | Always — at server start                     |
+| `ADD_ON` (lazy)           | `True`         | **Never** — deferred; described by Meta-tool |
+| `SEARCH` (Meta/Discovery) | N/A            | Only when ≥1 lazy ADD_ON exists in domain    |
 
 The META tool (`<domain>_discover`) returns a catalogue of all lazy ADD_ON tools. The LLM calls it once to learn what operations exist, then calls the specific manage-tool.
 
@@ -370,27 +367,27 @@ Once an ADD_ON domain is activated (via `<domain>_discover`), its tools are regi
 1. Every tool call updates a `_tool_last_used[tool_name]` timestamp (`time.monotonic()`).
 2. Each SEARCH (`<domain>_discover`) call triggers `mcp.evict_stale_domains(ttl_seconds, ctx)` before activating any new domain.
 3. `evict_stale_domains` checks every currently-active ADD_ON domain. If the most-recent tool call for that domain is older than `tool_ttl_seconds`, the domain is evicted:
-   - All its ADD_ON tools are removed from FastMCP's tool manager.
-   - The `(fn, kwargs)` pairs are moved back to `_deferred_addon_tools` so the domain can be re-activated on the next discover call.
-   - A `tools/list_changed` notification is sent to the client so it re-fetches the tool list.
+    - All its ADD_ON tools are removed from FastMCP's tool manager.
+    - The `(fn, kwargs)` pairs are moved back to `_deferred_addon_tools` so the domain can be re-activated on the next discover call.
+    - A `tools/list_changed` notification is sent to the client so it re-fetches the tool list.
 
 **Stateful domain protection:**
 
 Domains with long-lived background COM state are **never** auto-evicted, regardless of idle time:
 
-| Protected domain | Reason |
-|---|---|
-| `BUS_LOGGING` | Logger may be running in the background |
-| `BUS_MONITOR` | Monitor captures live frames |
-| `BUS_REPLAY` | Replay actively transmits frames |
-| `MEASUREMENT` | Measurement session active |
-| `RECORDER` | Recorder writing to MF4 file |
+| Protected domain | Reason                                  |
+| ---------------- | --------------------------------------- |
+| `BUS_LOGGING`    | Logger may be running in the background |
+| `BUS_MONITOR`    | Monitor captures live frames            |
+| `BUS_REPLAY`     | Replay actively transmits frames        |
+| `MEASUREMENT`    | Measurement session active              |
+| `RECORDER`       | Recorder writing to MF4 file            |
 
 **Configuration (`settings.py`):**
 
-| Setting | Default | Description |
-|---|---|---|
-| `tool_ttl_enabled` | `True` | Enable/disable TTL eviction |
+| Setting            | Default | Description                               |
+| ------------------ | ------- | ----------------------------------------- |
+| `tool_ttl_enabled` | `True`  | Enable/disable TTL eviction               |
 | `tool_ttl_seconds` | `120.0` | Inactivity threshold in seconds (min: 30) |
 
 **Lifecycle (eviction + re-activation):**
@@ -437,14 +434,14 @@ The COM bridge is the **single gatekeeper**: one dedicated STA thread owns all C
 
 ### STA Threading — Non-Negotiable Rules
 
-| Rule | Consequence of Violation |
-|---|---|
-| All COM objects **created on the STA thread** | `CoInitializeEx` must be called before `Dispatch()` on the same thread |
-| All COM method calls **on the STA thread** | `RPC_E_WRONGTHREAD` → silent data corruption or crash |
-| **Never `await`** inside an STA callback | Creates a second event loop on the STA thread → deadlock |
-| STA thread must pump Windows messages (`PumpMessages`) | COM callbacks require the message loop |
-| `CoUninitialize` called **on teardown on the STA thread** | Leaked COM refs keep ControlDesk.exe alive after server exits |
-| **One STA thread** per server process | Multiple STAs add marshaling complexity without benefit |
+| Rule                                                      | Consequence of Violation                                               |
+| --------------------------------------------------------- | ---------------------------------------------------------------------- |
+| All COM objects **created on the STA thread**             | `CoInitializeEx` must be called before `Dispatch()` on the same thread |
+| All COM method calls **on the STA thread**                | `RPC_E_WRONGTHREAD` → silent data corruption or crash                  |
+| **Never `await`** inside an STA callback                  | Creates a second event loop on the STA thread → deadlock               |
+| STA thread must pump Windows messages (`PumpMessages`)    | COM callbacks require the message loop                                 |
+| `CoUninitialize` called **on teardown on the STA thread** | Leaked COM refs keep ControlDesk.exe alive after server exits          |
+| **One STA thread** per server process                     | Multiple STAs add marshaling complexity without benefit                |
 
 ### Module Map
 
@@ -629,30 +626,41 @@ async def variable_read_scalar(params: VariableReadScalarInput) -> str:
 ### JSON-RPC Response Shapes
 
 **Successful tool response:**
+
 ```json
 {
-  "jsonrpc": "2.0", "id": 42,
-  "result": {
-    "content": [{ "type": "text", "text": "{\"value\": 1234.5, \"unit\": \"rpm\"}" }],
-    "isError": false
-  }
+    "jsonrpc": "2.0",
+    "id": 42,
+    "result": {
+        "content": [
+            { "type": "text", "text": "{\"value\": 1234.5, \"unit\": \"rpm\"}" }
+        ],
+        "isError": false
+    }
 }
 ```
 
 **Domain error (isError: true — not a protocol error):**
+
 ```json
 {
-  "jsonrpc": "2.0", "id": 42,
-  "result": {
-    "content": [{ "type": "text", "text": "## ControlDesk Error\n**Code:** `COM_DISCONNECTED`\n..." }],
-    "structuredContent": {
-      "error_code": "COM_DISCONNECTED",
-      "category": "CONNECTION",
-      "retryable": true,
-      "recovery_hint": "Call app_start_or_attach to re-establish the COM connection."
-    },
-    "isError": true
-  }
+    "jsonrpc": "2.0",
+    "id": 42,
+    "result": {
+        "content": [
+            {
+                "type": "text",
+                "text": "## ControlDesk Error\n**Code:** `COM_DISCONNECTED`\n..."
+            }
+        ],
+        "structuredContent": {
+            "error_code": "COM_DISCONNECTED",
+            "category": "CONNECTION",
+            "retryable": true,
+            "recovery_hint": "Call app_start_or_attach to re-establish the COM connection."
+        },
+        "isError": true
+    }
 }
 ```
 
@@ -660,22 +668,22 @@ async def variable_read_scalar(params: VariableReadScalarInput) -> str:
 
 ## 8. Key Files
 
-| File | Purpose |
-|---|---|
-| `controldesk_mcp/main.py` | `mcp.run(transport="stdio")` — nothing else |
-| `controldesk_mcp/server/app.py` | FastMCP instance + lifespan that starts/stops COM bridge |
-| `controldesk_mcp/server/registry.py` | Single import point for all tools, resources, prompts |
-| `controldesk_mcp/tools/<domain>/` | Thin adapters: `@mcp.tool` decorator + one-line body |
-| `controldesk_mcp/com_bridge/__init__.py` | `dispatch()` — the only `com_bridge` symbol imported elsewhere |
-| `controldesk_mcp/com_bridge/sta_thread.py` | `threading.Thread` + `asyncio.Queue`; STA blocks on queue, executes COM synchronously, returns via `Future` |
-| `controldesk_mcp/com_bridge/connection.py` | `COMConnection` class — holds root COM object; reconnects on `RPC_E_DISCONNECTED` |
-| `controldesk_mcp/com_bridge/errors.py` | `CdError` subclass definitions with `retryable` and `recovery_hint` |
-| `controldesk_mcp/com_bridge/error_handling/hresult.py` | `pywintypes.com_error` → typed `CdError` subclass |
-| `controldesk_mcp/com_bridge/error_handling/guard.py` | COM Guard: STA executor, `asyncio.timeout`, retry |
-| `controldesk_mcp/com_bridge/error_handling/circuit_breaker.py` | Per-interface CLOSED/OPEN/HALF-OPEN circuit breaker |
-| `controldesk_mcp/com_bridge/detector.py` | ControlDesk version/process detection on the local machine |
-| `controldesk_mcp/config/settings.py` | `pydantic-settings`: `COM_PROG_ID`, `COM_TIMEOUT_MS`, `LOG_LEVEL`, `MCP_TRANSPORT` |
-| `AGENTS.md` | AI agent context: STA rules, ProgID, mock setup, test markers |
+| File                                                           | Purpose                                                                                                     |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `controldesk_mcp/main.py`                                      | `mcp.run(transport="stdio")` — nothing else                                                                 |
+| `controldesk_mcp/server/app.py`                                | FastMCP instance + lifespan that starts/stops COM bridge                                                    |
+| `controldesk_mcp/server/registry.py`                           | Single import point for all tools, resources, prompts                                                       |
+| `controldesk_mcp/tools/<domain>/`                              | Thin adapters: `@mcp.tool` decorator + one-line body                                                        |
+| `controldesk_mcp/com_bridge/__init__.py`                       | `dispatch()` — the only `com_bridge` symbol imported elsewhere                                              |
+| `controldesk_mcp/com_bridge/sta_thread.py`                     | `threading.Thread` + `asyncio.Queue`; STA blocks on queue, executes COM synchronously, returns via `Future` |
+| `controldesk_mcp/com_bridge/connection.py`                     | `COMConnection` class — holds root COM object; reconnects on `RPC_E_DISCONNECTED`                           |
+| `controldesk_mcp/com_bridge/errors.py`                         | `CdError` subclass definitions with `retryable` and `recovery_hint`                                         |
+| `controldesk_mcp/com_bridge/error_handling/hresult.py`         | `pywintypes.com_error` → typed `CdError` subclass                                                           |
+| `controldesk_mcp/com_bridge/error_handling/guard.py`           | COM Guard: STA executor, `asyncio.timeout`, retry                                                           |
+| `controldesk_mcp/com_bridge/error_handling/circuit_breaker.py` | Per-interface CLOSED/OPEN/HALF-OPEN circuit breaker                                                         |
+| `controldesk_mcp/com_bridge/detector.py`                       | ControlDesk version/process detection on the local machine                                                  |
+| `controldesk_mcp/config/settings.py`                           | `pydantic-settings`: `COM_PROG_ID`, `COM_TIMEOUT_MS`, `LOG_LEVEL`, `MCP_TRANSPORT`                          |
+| `AGENTS.md`                                                    | AI agent context: STA rules, ProgID, mock setup, test markers                                               |
 
 ---
 
@@ -697,10 +705,8 @@ dev = [
     "pytest-asyncio>=0.23",
     "pytest-mock>=3.14",
 ]
-product = ["openai"]           # GitHub Models LLM runner
-agentic = ["github-copilot-sdk"]
 ```
 
 ---
 
-*See also: [error-handling.md](error-handling.md) · [performance.md](performance.md) · [tool-design.md](tool-design.md) · [testing.md](testing.md) · [mcp-inspector.md](mcp-inspector.md)*
+_See also: [error-handling.md](error-handling.md) · [performance.md](performance.md) · [tool-design.md](tool-design.md) · [testing.md](testing.md) · [mcp-inspector.md](mcp-inspector.md)_

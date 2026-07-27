@@ -24,10 +24,10 @@ class TestSettingsDefaults:
 
         assert get_settings().log_level == "INFO"
 
-    def test_default_com_timeout_is_8000(self) -> None:
+    def test_default_com_timeout_is_120000(self) -> None:
         from controldesk_mcp.config.settings import get_settings
 
-        assert get_settings().com_timeout_ms == 8000
+        assert get_settings().com_timeout_ms == 120_000
 
     def test_default_launch_timeout_is_30000(self) -> None:
         from controldesk_mcp.config.settings import get_settings

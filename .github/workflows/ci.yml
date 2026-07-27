@@ -82,7 +82,7 @@ jobs:
         run: uv sync --locked --python ${{ env.PYTHON_VERSION }} --extra dev
 
       - name: Run unit tests
-        run: uv run pytest tests/unit/ -m "not integration and not product and not llm_product" -v
+        run: uv run pytest tests/unit/ -m "not integration" -v
 
   quality-gate:
     name: quality-gate
