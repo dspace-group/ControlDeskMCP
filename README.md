@@ -156,8 +156,12 @@ uv run pytest -m integration
 
 ## Further Documentation
 
+- [Documentation index](docs/README.md)
 - [MCP Inspector guide](docs/mcp-inspector.md)
 - [Client configuration and examples](docs/clients.md)
 - [Server architecture](docs/architecture.md)
 - [Error handling](docs/error-handling.md)
 - [Contributing guide](CONTRIBUTING.md)
+- [Security policy](SECURITY.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Changelog](CHANGELOG.md)

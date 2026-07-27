@@ -1,0 +1,50 @@
+name: Bug report
+description: Report a reproducible problem in ControlDesk MCP Server
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a problem. Do not include credentials, customer
+        project files, or other sensitive data. For security issues, use the
+        private reporting process in SECURITY.md.
+  - type: input
+    id: version
+    attributes:
+      label: ControlDesk MCP Server version
+      description: Include the package version or commit SHA.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Include Windows version, Python version, and ControlDesk version.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide the smallest reproducible sequence of commands or MCP calls.
+      placeholder: |
+        1. Start the server with ...
+        2. Call ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and logs
+      description: Remove paths, credentials, and customer information before posting logs.
+    validations:
+      required: true
