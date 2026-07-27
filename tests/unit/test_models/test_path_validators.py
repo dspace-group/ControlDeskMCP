@@ -104,9 +104,7 @@ def test_measurement_export_rejects_relative() -> None:
 
 def test_measurement_export_rejects_traversal() -> None:
     with pytest.raises(ValidationError, match="\\.\\."):
-        MeasurementExportRecordingInput(
-            recording_index=0, export_path="C:\\exports\\..\\Windows\\rec.mf4"
-        )
+        MeasurementExportRecordingInput(recording_index=0, export_path="C:\\exports\\..\\Windows\\rec.mf4")
 
 
 # ── MeasurementImportRecordingInput ───────────────────────────────────────────

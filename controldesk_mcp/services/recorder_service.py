@@ -149,8 +149,7 @@ async def dry_run_start_recorder(
         would_execute=not is_running,
         current_state={"state": state_result.state, "is_running": is_running},
         message=(
-            "Recorder is already running — start would fail and would not restart it; "
-            "call recorder_main_stop first."
+            "Recorder is already running — start would fail and would not restart it; call recorder_main_stop first."
             if is_running
             else "Recorder is not running — start would succeed."
         ),

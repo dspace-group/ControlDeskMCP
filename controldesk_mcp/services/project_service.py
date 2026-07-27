@@ -75,9 +75,7 @@ def _get_app():
 async def project_root_add(params: ProjectRootAddInput) -> ProjectRootAddResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.project_com.project_root_add, app, params.path
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.project_com.project_root_add, app, params.path)
         return ProjectRootAddResult(
             path=result["path"],
             added=result["added"],
@@ -93,9 +91,7 @@ async def project_root_activate(
 ) -> ProjectRootActivateResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.project_com.project_root_activate, app, params.path
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.project_com.project_root_activate, app, params.path)
         return ProjectRootActivateResult(
             activated=result["activated"],
             path=result["path"],
@@ -125,9 +121,7 @@ async def project_root_remove(
 ) -> ProjectRootRemoveResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.project_com.project_root_remove, app, params.path
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.project_com.project_root_remove, app, params.path)
         return ProjectRootRemoveResult(
             removed=result["removed"],
             path=result["path"],
@@ -141,9 +135,7 @@ async def project_root_remove(
 async def project_create(params: ProjectCreateInput) -> ProjectCreateResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.project_com.project_create, app, params.name
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.project_com.project_create, app, params.name)
         return ProjectCreateResult(
             name=result["name"],
             path=result["path"],
@@ -158,9 +150,7 @@ async def project_create(params: ProjectCreateInput) -> ProjectCreateResult | Er
 async def project_open(params: ProjectOpenInput) -> ProjectOpenResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.project_com.project_open, app, params.name
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.project_com.project_open, app, params.name)
         return ProjectOpenResult(
             name=result["name"],
             open=result["open"],
@@ -188,9 +178,7 @@ async def project_save() -> ProjectSaveResult | ErrorEnvelope:
 async def project_close(params: ProjectCloseInput) -> ProjectCloseResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.project_com.project_close, app, params.save
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.project_com.project_close, app, params.save)
         return ProjectCloseResult(
             closed=result["closed"],
             timestamp_utc=_now_utc(),
@@ -221,9 +209,7 @@ async def project_remove(params: ProjectRemoveInput) -> ProjectRemoveResult | Er
 async def project_backup(params: ProjectBackupInput) -> ProjectBackupResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.project_com.project_backup, app, params.backup_path
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.project_com.project_backup, app, params.backup_path)
         return ProjectBackupResult(
             backup_path=result["backup_path"],
             success=result["success"],
@@ -259,9 +245,7 @@ async def project_open_from_backup(
 async def project_exists(params: ProjectExistsInput) -> ProjectExistsResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.project_com.project_exists, app, params.name
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.project_com.project_exists, app, params.name)
         return ProjectExistsResult(
             name=result["name"],
             exists=result["exists"],
@@ -312,9 +296,7 @@ async def experiment_activate(
 ) -> ExperimentActivateResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.project_com.experiment_activate, app, params.name
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.project_com.experiment_activate, app, params.name)
         return ExperimentActivateResult(
             activated=result["activated"],
             name=result["name"],
@@ -378,9 +360,7 @@ async def experiment_export(
 ) -> ExperimentExportResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.project_com.experiment_export, app, params.export_path
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.project_com.experiment_export, app, params.export_path)
         return ExperimentExportResult(
             export_path=result["export_path"],
             success=result["success"],
@@ -421,9 +401,7 @@ async def experiment_rename(
 ) -> ExperimentRenameResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.project_com.experiment_rename, app, params.new_name
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.project_com.experiment_rename, app, params.new_name)
         return ExperimentRenameResult(
             new_name=result["new_name"],
             renamed=result["renamed"],
@@ -439,9 +417,7 @@ async def experiment_save_as(
 ) -> ExperimentSaveAsResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.project_com.experiment_save_as, app, params.new_name
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.project_com.experiment_save_as, app, params.new_name)
         return ExperimentSaveAsResult(
             new_name=result["new_name"],
             saved=result["saved"],

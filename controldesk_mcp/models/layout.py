@@ -110,9 +110,7 @@ class LayoutManageInput(BaseModel):
     )
     editing_mode: Optional[LayoutEditingMode] = Field(
         default=None,
-        description=(
-            "For action='configure': editing mode to set. " "Values: 'Design', 'Runtime', 'Hybrid'."
-        ),
+        description=("For action='configure': editing mode to set. Values: 'Design', 'Runtime', 'Hybrid'."),
     )
     offset: int = Field(default=0, ge=0, description="Reserved for future list pagination.")
     limit: int = Field(default=50, ge=1, le=200, description="Reserved for future list pagination.")
@@ -133,15 +131,13 @@ class LayoutIoManageInput(BaseModel):
     export_path: Optional[str] = Field(
         default=None,
         description=(
-            "Absolute path for 'export' action. "
-            "Must end with '.lax'. Example: 'C:\\\\Exports\\\\ControlLayout.lax'."
+            "Absolute path for 'export' action. Must end with '.lax'. Example: 'C:\\\\Exports\\\\ControlLayout.lax'."
         ),
     )
     import_path: Optional[str] = Field(
         default=None,
         description=(
-            "Absolute path of the .lax file for 'import' action. "
-            "Example: 'C:\\\\Exports\\\\ControlLayout.lax'."
+            "Absolute path of the .lax file for 'import' action. Example: 'C:\\\\Exports\\\\ControlLayout.lax'."
         ),
     )
     connection_file_path: Optional[str] = Field(

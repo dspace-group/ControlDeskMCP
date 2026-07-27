@@ -78,8 +78,7 @@ async def dry_run_start_calibration(
         would_execute=not is_running,
         current_state={"calibration_state": state_result.calibration_state},
         message=(
-            "Online calibration is already running — start would fail; "
-            "call calibration_stop first."
+            "Online calibration is already running — start would fail; call calibration_stop first."
             if is_running
             else "Online calibration is not running — start would succeed."
         ),

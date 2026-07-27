@@ -77,8 +77,7 @@ def signal_add(app: Any, connection_path: str) -> dict[str, Any]:
         }
     except Exception:
         raise BridgeOperationError(
-            f"Failed to add signal '{connection_path}'. "
-            f"Variable may not exist or platform may not be connected."
+            f"Failed to add signal '{connection_path}'. Variable may not exist or platform may not be connected."
         )
 
 
@@ -105,8 +104,7 @@ def signal_remove(app: Any, connection_path: str) -> dict[str, Any]:
         }
     except Exception:
         raise BridgeOperationError(
-            f"Failed to remove signal '{connection_path}'. "
-            f"Ensure measurement is stopped and the signal exists."
+            f"Failed to remove signal '{connection_path}'. Ensure measurement is stopped and the signal exists."
         )
 
 
@@ -145,9 +143,7 @@ def list_signals(app: Any) -> dict[str, Any]:
             "signals": signals_list,
         }
     except Exception:
-        raise BridgeOperationError(
-            "Failed to enumerate measurement signals. Ensure online calibration is running."
-        )
+        raise BridgeOperationError("Failed to enumerate measurement signals. Ensure online calibration is running.")
 
 
 # ── Tool 4: configure_buffer ──────────────────────────────────────────────────
@@ -181,9 +177,7 @@ def configure_buffer(
             "timestamp_utc": _timestamp_utc(),
         }
     except Exception:
-        raise BridgeOperationError(
-            "Failed to configure measurement buffer. Ensure measurement is stopped."
-        )
+        raise BridgeOperationError("Failed to configure measurement buffer. Ensure measurement is stopped.")
 
 
 # ── Tool 5: get_configuration ─────────────────────────────────────────────────
@@ -234,9 +228,7 @@ def get_configuration(app: Any) -> dict[str, Any]:
             "timestamp_utc": _timestamp_utc(),
         }
     except Exception:
-        raise BridgeOperationError(
-            "Failed to get measurement configuration. Ensure online calibration is running."
-        )
+        raise BridgeOperationError("Failed to get measurement configuration. Ensure online calibration is running.")
 
 
 # ── Tool 6: start_measurement ─────────────────────────────────────────────────
@@ -272,8 +264,7 @@ def start_measurement(app: Any) -> dict[str, Any]:
         }
     except Exception:
         raise BridgeOperationError(
-            "Failed to start measurement. Ensure online calibration is running "
-            "and at least one platform is connected."
+            "Failed to start measurement. Ensure online calibration is running and at least one platform is connected."
         )
 
 
@@ -299,9 +290,7 @@ def stop_measurement(app: Any) -> dict[str, Any]:  # noqa: ARG001
             "timestamp_utc": _timestamp_utc(),
         }
     except Exception:
-        raise BridgeOperationError(
-            "Failed to stop measurement. Ensure measurement is currently running."
-        )
+        raise BridgeOperationError("Failed to stop measurement. Ensure measurement is currently running.")
     finally:
         _measurement_data_mgmt = None
 
@@ -433,9 +422,7 @@ def configure_time_limit_condition(
             "timestamp_utc": _timestamp_utc(),
         }
     except Exception:
-        raise BridgeOperationError(
-            "Failed to configure time-limit stop condition. Ensure recording is stopped."
-        )
+        raise BridgeOperationError("Failed to configure time-limit stop condition. Ensure recording is stopped.")
 
 
 # ── Tool 12: configure_trigger_based_condition ────────────────────────────────
@@ -605,8 +592,7 @@ def import_recording(app: Any, import_path: str) -> dict[str, Any]:
         }
     except Exception:
         raise BridgeOperationError(
-            f"Failed to import recording from '{import_path}'. "
-            f"Ensure the file exists and is a valid MF4 recording."
+            f"Failed to import recording from '{import_path}'. Ensure the file exists and is a valid MF4 recording."
         )
 
 
@@ -634,9 +620,7 @@ def add_bookmark(app: Any, title: str, description: str = "") -> dict[str, Any]:
             "bookmark_timestamp": ts,
         }
     except Exception:
-        raise BridgeOperationError(
-            "Failed to add bookmark. Ensure measurement is currently running."
-        )
+        raise BridgeOperationError("Failed to add bookmark. Ensure measurement is currently running.")
 
 
 # ── Tool 17: list_bookmarks ───────────────────────────────────────────────────
@@ -672,8 +656,7 @@ def list_bookmarks(app: Any, recording_index: int) -> dict[str, Any]:
         }
     except Exception:
         raise BridgeOperationError(
-            f"Failed to list bookmarks for recording at index {recording_index}. "
-            f"Ensure the recording exists."
+            f"Failed to list bookmarks for recording at index {recording_index}. Ensure the recording exists."
         )
 
 
@@ -698,9 +681,7 @@ def create_data_logger(app: Any, logger_name: str) -> dict[str, Any]:
             "timestamp_utc": _timestamp_utc(),
         }
     except Exception:
-        raise BridgeOperationError(
-            f"Failed to create data logger '{logger_name}'. Logger name may already exist."
-        )
+        raise BridgeOperationError(f"Failed to create data logger '{logger_name}'. Logger name may already exist.")
 
 
 # ── Tool 19: configure_data_logger ────────────────────────────────────────────
@@ -738,8 +719,7 @@ def configure_data_logger(
         }
     except Exception:
         raise BridgeOperationError(
-            f"Failed to configure data logger '{logger_name}'. "
-            f"Logger may not exist or is currently running."
+            f"Failed to configure data logger '{logger_name}'. Logger may not exist or is currently running."
         )
 
 
@@ -768,8 +748,7 @@ def start_data_logger(app: Any, logger_name: str) -> dict[str, Any]:
         }
     except Exception:
         raise BridgeOperationError(
-            f"Failed to start data logger '{logger_name}'. "
-            f"Ensure measurement is running and the logger is configured."
+            f"Failed to start data logger '{logger_name}'. Ensure measurement is running and the logger is configured."
         )
 
 
@@ -797,9 +776,7 @@ def stop_data_logger(app: Any, logger_name: str) -> dict[str, Any]:
             "timestamp_utc": _timestamp_utc(),
         }
     except Exception:
-        raise BridgeOperationError(
-            f"Failed to stop data logger '{logger_name}'. Logger may not be running."
-        )
+        raise BridgeOperationError(f"Failed to stop data logger '{logger_name}'. Logger may not be running.")
 
 
 # ── Tool 22: list_data_loggers ────────────────────────────────────────────────
@@ -859,9 +836,7 @@ def remove_data_logger(app: Any, logger_name: str) -> dict[str, Any]:
             "timestamp_utc": _timestamp_utc(),
         }
     except Exception:
-        raise BridgeOperationError(
-            f"Failed to remove data logger '{logger_name}'. " f"Logger may be running or not exist."
-        )
+        raise BridgeOperationError(f"Failed to remove data logger '{logger_name}'. Logger may be running or not exist.")
 
 
 # ── Tool 24: add_raster ───────────────────────────────────────────────────────
@@ -994,8 +969,7 @@ def configure_settings(
         }
     except Exception:
         raise BridgeOperationError(
-            "Failed to configure measurement settings. "
-            "Ensure measurement is stopped and data pool path exists."
+            "Failed to configure measurement settings. Ensure measurement is stopped and data pool path exists."
         )
 
 

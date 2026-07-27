@@ -80,10 +80,7 @@ class ProjectCloseInput(BaseModel):
 
     save: bool = Field(
         default=True,
-        description=(
-            "If True the project is saved before closing. "
-            "If False unsaved changes are discarded."
-        ),
+        description=("If True the project is saved before closing. If False unsaved changes are discarded."),
         examples=[True, False],
     )
 
@@ -131,10 +128,7 @@ class ProjectOpenFromBackupInput(BaseModel):
 
     project_name: str = Field(
         default="",
-        description=(
-            "Name to assign to the restored project. "
-            "Leave empty to use the name stored in the archive."
-        ),
+        description=("Name to assign to the restored project. Leave empty to use the name stored in the archive."),
         examples=["ECU_TestProject", ""],
     )
     overwrite: bool = Field(
@@ -162,10 +156,7 @@ class ExperimentCreateInput(BaseModel):
     )
     activate: bool = Field(
         default=True,
-        description=(
-            "If True the new experiment becomes the active experiment "
-            "immediately after creation."
-        ),
+        description=("If True the new experiment becomes the active experiment immediately after creation."),
         examples=[True, False],
     )
 
@@ -258,10 +249,7 @@ class ProjectConfigureSettingsInput(BaseModel):
     )
     open_last_experiment_on_startup: bool | None = Field(
         default=None,
-        description=(
-            "If True the last active experiment is reopened when the project is opened. "
-            "None = no change."
-        ),
+        description=("If True the last active experiment is reopened when the project is opened. None = no change."),
         examples=[True, False, None],
     )
 
@@ -642,9 +630,7 @@ class ProjectRootManageInput(BaseModel):
         examples=["C:\\MyProjects"],
     )
     offset: int = Field(default=0, ge=0, description="Zero-based offset for pagination.")
-    limit: int = Field(
-        default=200, ge=1, le=1000, description="Maximum number of records to return per call."
-    )
+    limit: int = Field(default=200, ge=1, le=1000, description="Maximum number of records to return per call.")
 
 
 class ProjectManageInput(BaseModel):
@@ -686,16 +672,11 @@ class ProjectManageInput(BaseModel):
     )
     open_last_experiment_on_startup: bool | None = Field(
         default=None,
-        description=(
-            "Reopen last active experiment on project load. "
-            "None = no change. Used by: configure."
-        ),
+        description=("Reopen last active experiment on project load. None = no change. Used by: configure."),
         examples=[True, False, None],
     )
     offset: int = Field(default=0, ge=0, description="Zero-based offset for pagination.")
-    limit: int = Field(
-        default=200, ge=1, le=1000, description="Maximum number of records to return per call."
-    )
+    limit: int = Field(default=200, ge=1, le=1000, description="Maximum number of records to return per call.")
 
 
 class ProjectBackupManageInput(BaseModel):
@@ -712,16 +693,14 @@ class ProjectBackupManageInput(BaseModel):
     backup_path: str | None = Field(
         default=None,
         description=(
-            "Absolute path to the backup zip archive. "
-            "Required for: backup (destination path), restore (source path)."
+            "Absolute path to the backup zip archive. Required for: backup (destination path), restore (source path)."
         ),
         examples=["C:\\Backups\\ECU_TestProject_backup.zip"],
     )
     project_name: str = Field(
         default="",
         description=(
-            "Name to assign to the restored project. "
-            "Leave empty to use the name from the archive. Used by: restore."
+            "Name to assign to the restored project. Leave empty to use the name from the archive. Used by: restore."
         ),
         examples=["ECU_TestProject", ""],
     )
@@ -762,9 +741,7 @@ class ExperimentManageInput(BaseModel):
         examples=[False, True],
     )
     offset: int = Field(default=0, ge=0, description="Zero-based offset for pagination.")
-    limit: int = Field(
-        default=200, ge=1, le=1000, description="Maximum number of records to return per call."
-    )
+    limit: int = Field(default=200, ge=1, le=1000, description="Maximum number of records to return per call.")
 
 
 class ExperimentIoManageInput(BaseModel):
@@ -792,10 +769,7 @@ class ExperimentIoManageInput(BaseModel):
     )
     new_experiment_name: str = Field(
         default="",
-        description=(
-            "Name for the imported experiment. "
-            "Leave empty to derive from archive filename. Used by: import."
-        ),
+        description=("Name for the imported experiment. Leave empty to derive from archive filename. Used by: import."),
         examples=["", "MyImportedExperiment"],
     )
     new_name: str | None = Field(

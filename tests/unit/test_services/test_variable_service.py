@@ -103,9 +103,7 @@ class TestReadScalar:
         ):
             from controldesk_mcp.services.variable_service import read_scalar_variable
 
-            result = await read_scalar_variable(
-                VariableReadScalarInput(variable_name="control_out")
-            )
+            result = await read_scalar_variable(VariableReadScalarInput(variable_name="control_out"))
 
         assert result["value"] == 3.14
 
@@ -120,9 +118,7 @@ class TestReadScalar:
         ):
             from controldesk_mcp.services.variable_service import read_scalar_variable
 
-            result = await read_scalar_variable(
-                VariableReadScalarInput(variable_name="nonexistent")
-            )
+            result = await read_scalar_variable(VariableReadScalarInput(variable_name="nonexistent"))
 
         assert "error_code" in result
 
@@ -154,9 +150,7 @@ class TestWriteScalar:
         ):
             from controldesk_mcp.services.variable_service import write_scalar_variable
 
-            result = await write_scalar_variable(
-                VariableWriteScalarInput(variable_name="f_Kp_1", value=2.5)
-            )
+            result = await write_scalar_variable(VariableWriteScalarInput(variable_name="f_Kp_1", value=2.5))
 
         assert result["written_value"] == 2.5
         assert result["success"] is True
@@ -172,8 +166,6 @@ class TestWriteScalar:
         ):
             from controldesk_mcp.services.variable_service import write_scalar_variable
 
-            result = await write_scalar_variable(
-                VariableWriteScalarInput(variable_name="f_Kp_1", value=2.5)
-            )
+            result = await write_scalar_variable(VariableWriteScalarInput(variable_name="f_Kp_1", value=2.5))
 
         assert "error_code" in result

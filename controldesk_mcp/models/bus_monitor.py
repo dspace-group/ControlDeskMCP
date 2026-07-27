@@ -62,9 +62,7 @@ class BusMonitorCreateInput(BaseModel):
         examples=["CANMonitor", "RxDisplay"],
     )
     system_index: int = Field(
-        description=(
-            "Zero-based index of the target system (e.g. 0 = transceiver/sender, 1 = receiver)."
-        ),
+        description=("Zero-based index of the target system (e.g. 0 = transceiver/sender, 1 = receiver)."),
         examples=[0, 1],
     )
     bus_type: BusType = Field(
@@ -108,10 +106,7 @@ class BusMonitorConfigureInput(BaseModel):
     )
     update_rate_ms: int = Field(
         default=100,
-        description=(
-            "UI refresh rate in milliseconds (e.g. 100 = refresh every 100ms). "
-            "Valid range: 10–5000 ms."
-        ),
+        description=("UI refresh rate in milliseconds (e.g. 100 = refresh every 100ms). Valid range: 10–5000 ms."),
         examples=[100, 50],
     )
     buffer_size_frames: int = Field(
@@ -125,16 +120,13 @@ class BusMonitorConfigureInput(BaseModel):
     buffer_mode: BufferMode = Field(
         default=BufferMode.RingBuffer,
         description=(
-            "Behavior when buffer is full: 'FixedBuffer' (stop capturing) "
-            "or 'RingBuffer' (overwrite oldest frames)."
+            "Behavior when buffer is full: 'FixedBuffer' (stop capturing) or 'RingBuffer' (overwrite oldest frames)."
         ),
         examples=["RingBuffer", "FixedBuffer"],
     )
     enable_j1939_pgn_resolving: bool = Field(
         default=False,
-        description=(
-            "Enable J1939 parameter group name resolving for CAN frames. Ignored for non-CAN buses."
-        ),
+        description=("Enable J1939 parameter group name resolving for CAN frames. Ignored for non-CAN buses."),
         examples=[False, True],
     )
 
@@ -263,9 +255,7 @@ class BusMonitorClearAllInput(BaseModel):
         examples=[0],
     )
     confirm: bool = Field(
-        description=(
-            "Must be true to proceed. Acts as a safety guard against accidental invocation."
-        ),
+        description=("Must be true to proceed. Acts as a safety guard against accidental invocation."),
         examples=[True, False],
     )
 
@@ -287,8 +277,7 @@ class BusMonitorSaveDataInput(BaseModel):
     )
     output_file_path: str = Field(
         description=(
-            "Absolute path for the output log file "
-            "(e.g. 'C:\\\\Logs\\\\monitor_data.mf4'). Directory must exist."
+            "Absolute path for the output log file (e.g. 'C:\\\\Logs\\\\monitor_data.mf4'). Directory must exist."
         ),
         examples=["C:\\Logs\\monitor_data.mf4"],
     )
@@ -310,9 +299,7 @@ class BusMonitorSaveDataWithTimeAxisInput(BaseModel):
         examples=["CAN"],
     )
     output_file_path: str = Field(
-        description=(
-            "Absolute path for the output log file (e.g. 'C:\\\\Logs\\\\monitor_abs.mf4')."
-        ),
+        description=("Absolute path for the output log file (e.g. 'C:\\\\Logs\\\\monitor_abs.mf4')."),
         examples=["C:\\Logs\\monitor_abs.mf4"],
     )
     time_axis: TimeAxis = Field(
@@ -433,9 +420,7 @@ class BusMonitorQueryInput(BaseModel):
         examples=["CANMonitor"],
     )
     bus_platform_index: int = Field(default=0, description="Bus platform index.", examples=[0])
-    physical_bus_access_index: int = Field(
-        default=0, description="Physical bus access index.", examples=[0]
-    )
+    physical_bus_access_index: int = Field(default=0, description="Physical bus access index.", examples=[0])
     limit: int = Field(default=200, ge=1, le=1000, description="Maximum records for 'list'.")
     offset: int = Field(default=0, ge=0, description="Zero-based offset for 'list' pagination.")
 
@@ -465,10 +450,7 @@ class BusMonitorManageInput(BaseModel):
     )
     monitor_name: Optional[str] = Field(
         default=None,
-        description=(
-            "Name of the monitor. Required for: start, stop, remove, rename. "
-            "Not required for: clear_all."
-        ),
+        description=("Name of the monitor. Required for: start, stop, remove, rename. Not required for: clear_all."),
         examples=["CANMonitor"],
     )
     bus_platform_index: int = Field(
@@ -510,8 +492,7 @@ class BusMonitorSaveInput(BaseModel):
     )
     output_file_path: str = Field(
         description=(
-            "Absolute path for the output log file "
-            "(e.g. 'C:\\\\Logs\\\\monitor_data.mf4'). Directory must exist."
+            "Absolute path for the output log file (e.g. 'C:\\\\Logs\\\\monitor_data.mf4'). Directory must exist."
         ),
         examples=["C:\\Logs\\monitor_data.mf4"],
     )

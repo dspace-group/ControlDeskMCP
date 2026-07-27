@@ -46,7 +46,7 @@
     ./scripts/serve-http.ps1 -Port 9000 -LogLevel DEBUG
 
 .EXAMPLE
-    # Development mode (run from source tree, no wheel needed)
+    # Development mode (run from source tree)
     ./scripts/serve-http.ps1 -DevMode
 #>
 param(
@@ -86,7 +86,7 @@ if ($DevMode) {
 else {
     # Installed wheel: prefer venv exe, fall back to PATH
     $venvExe = "C:\tools\controldesk-mcp-venv\Scripts\controldesk-mcp.exe"
-    $pathExe  = (Get-Command controldesk-mcp -ErrorAction SilentlyContinue)?.Source
+    $pathExe = (Get-Command controldesk-mcp -ErrorAction SilentlyContinue)?.Source
 
     if (Test-Path $venvExe) {
         $exePath = $venvExe
@@ -109,9 +109,9 @@ else {
 
 # ── Environment variables ────────────────────────────────────────────────────
 $env:MCP_TRANSPORT = "streamable-http"
-$env:MCP_HOST      = $BindHost
-$env:MCP_PORT      = "$Port"
-$env:LOG_LEVEL     = $LogLevel
+$env:MCP_HOST = $BindHost
+$env:MCP_PORT = "$Port"
+$env:LOG_LEVEL = $LogLevel
 
 # ── Startup info ─────────────────────────────────────────────────────────────
 Write-Host ""

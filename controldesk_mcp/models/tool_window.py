@@ -55,8 +55,7 @@ class ToolWindowCloseInput(BaseModel):
 
     window_name: str = Field(
         description=(
-            "Exact caption of the panel to close (case-sensitive). "
-            "Use tool_window_list() to discover available names."
+            "Exact caption of the panel to close (case-sensitive). Use tool_window_list() to discover available names."
         ),
         examples=["Messages", "Measurement Configuration"],
     )
@@ -75,8 +74,7 @@ class ToolWindowGetStateInput(BaseModel):
 
     window_name: str = Field(
         description=(
-            "Exact caption of the panel to query (case-sensitive). "
-            "Use tool_window_list() to discover available names."
+            "Exact caption of the panel to query (case-sensitive). Use tool_window_list() to discover available names."
         ),
         examples=["Variables", "Measurement Data Pool"],
     )
@@ -211,8 +209,7 @@ class ToolWindowGetGeometryInput(BaseModel):
 
     window_name: str = Field(
         description=(
-            "Exact caption of the panel to query (case-sensitive). "
-            "Use tool_window_list() to discover available names."
+            "Exact caption of the panel to query (case-sensitive). Use tool_window_list() to discover available names."
         ),
         examples=["Variables", "Platforms/Devices"],
     )

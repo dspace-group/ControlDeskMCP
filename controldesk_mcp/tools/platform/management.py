@@ -200,9 +200,7 @@ async def platform_manage(
                 message="platform_type is required for add.",
                 recovery_hint="Set platform_type to the type of platform to add.",
             )
-        return await platform_service.add_platform(
-            PlatformAddInput(platform_type=params.platform_type)
-        )
+        return await platform_service.add_platform(PlatformAddInput(platform_type=params.platform_type))
 
     if action == PlatformManageAction.activate_registered:
         if params.unique_name is None:
@@ -237,11 +235,7 @@ async def platform_manage(
         )
 
     if action == PlatformManageAction.configure_calibration_behavior:
-        if (
-            params.platform_name is None
-            or params.calibration_behavior is None
-            or params.initial_page is None
-        ):
+        if params.platform_name is None or params.calibration_behavior is None or params.initial_page is None:
             return ErrorEnvelope(
                 error_code="MISSING_PARAM",
                 category="INPUT_VALIDATION",
@@ -287,9 +281,7 @@ async def platform_manage(
                 message="version is required for set_api_version.",
                 recovery_hint="Set version to 'APIVersion1' or 'APIVersion2'.",
             )
-        return await platform_service.set_api_version(
-            PlatformSetApiVersionInput(version=params.version)
-        )
+        return await platform_service.set_api_version(PlatformSetApiVersionInput(version=params.version))
 
     if action == PlatformManageAction.select_interface_manual:
         if (
@@ -325,9 +317,7 @@ async def platform_manage(
                 recovery_hint="Set platform_name and file_path to the variable description file.",
             )
         return await platform_service.add_variable_description(
-            PlatformAddVariableDescriptionInput(
-                platform_name=params.platform_name, file_path=params.file_path
-            )
+            PlatformAddVariableDescriptionInput(platform_name=params.platform_name, file_path=params.file_path)
         )
 
     return ErrorEnvelope(
@@ -385,9 +375,7 @@ async def platform_query(
         result = await platform_service.list_platforms()
         if isinstance(result, ErrorEnvelope):
             return result
-        return PlatformListResult(
-            **paginate(result.model_dump(), params.offset, params.limit, "platforms")
-        )
+        return PlatformListResult(**paginate(result.model_dump(), params.offset, params.limit, "platforms"))
 
     if action == PlatformQueryAction.get_info:
         if params.platform_name is None:
@@ -397,9 +385,7 @@ async def platform_query(
                 message="platform_name is required for get_info.",
                 recovery_hint="Set platform_name to the name of the platform to query.",
             )
-        return await platform_service.get_platform_info(
-            PlatformGetInfoInput(platform_name=params.platform_name)
-        )
+        return await platform_service.get_platform_info(PlatformGetInfoInput(platform_name=params.platform_name))
 
     if action == PlatformQueryAction.get_connection_state:
         if params.platform_name is None:
@@ -421,9 +407,7 @@ async def platform_query(
                 message="platform_name is required for list_interfaces.",
                 recovery_hint="Set platform_name to enumerate its available interfaces.",
             )
-        return await platform_service.list_interfaces(
-            PlatformListInterfacesInput(platform_name=params.platform_name)
-        )
+        return await platform_service.list_interfaces(PlatformListInterfacesInput(platform_name=params.platform_name))
 
     if action == PlatformQueryAction.list_types:
         return await platform_service.list_platform_types()
@@ -466,9 +450,7 @@ async def platform_admin_manage(
                 message="platform_name is required for remove.",
                 recovery_hint="Set platform_name to the name of the platform to remove.",
             )
-        return await platform_service.remove_platform(
-            PlatformRemoveInput(platform_name=params.platform_name)
-        )
+        return await platform_service.remove_platform(PlatformRemoveInput(platform_name=params.platform_name))
 
     if params.action == PlatformAdminManageAction.rename:
         if params.platform_name is None:
@@ -555,9 +537,7 @@ async def platform_hardware_manage(
                 recovery_hint="Set platform_type (e.g., 'SCALEXIO') and ip_address.",
             )
         return await platform_service.register_hardware_platform(
-            PlatformRegisterHardwareInput(
-                platform_type=params.platform_type, ip_address=params.ip_address
-            )
+            PlatformRegisterHardwareInput(platform_type=params.platform_type, ip_address=params.ip_address)
         )
 
     if action == PlatformHardwareManageAction.clear_registered:
@@ -569,9 +549,7 @@ async def platform_hardware_manage(
                 recovery_hint="Set confirm=true to proceed or confirm=false to get a warning.",
             )
         return await platform_service.clear_registered_platforms(
-            PlatformClearRegisteredInput(
-                confirm=params.confirm, force_driver_reset=params.force_driver_reset
-            )
+            PlatformClearRegisteredInput(confirm=params.confirm, force_driver_reset=params.force_driver_reset)
         )
 
     if action == PlatformHardwareManageAction.list_registered_hardware:
@@ -593,9 +571,7 @@ async def platform_hardware_manage(
         return await platform_service.get_registered_info(params.index)
 
     if action == PlatformHardwareManageAction.refresh_configuration:
-        return await platform_service.refresh_platform_configuration(
-            PlatformRefreshConfigurationInput()
-        )
+        return await platform_service.refresh_platform_configuration(PlatformRefreshConfigurationInput())
 
     # refresh_interface_connections
     return await platform_service.refresh_interface_connections(
@@ -655,10 +631,7 @@ async def platform_discover(ctx: Context) -> PlatformDiscoverResult:
             ),
             ToolActionEntry(
                 tool_name="platform_admin_manage",
-                purpose=(
-                    "Perform administrative operations on platforms: "
-                    "remove, rename, set_enabled."
-                ),
+                purpose=("Perform administrative operations on platforms: remove, rename, set_enabled."),
                 actions=["remove", "rename", "set_enabled"],
                 required_params_per_action={
                     "remove": ["platform_name"],
@@ -669,8 +642,7 @@ async def platform_discover(ctx: Context) -> PlatformDiscoverResult:
             ToolActionEntry(
                 tool_name="platform_hardware_manage",
                 purpose=(
-                    "Manage hardware platform registry: register, clear, list, inspect, "
-                    "and refresh hardware platforms."
+                    "Manage hardware platform registry: register, clear, list, inspect, and refresh hardware platforms."
                 ),
                 actions=[
                     "register_hardware",

@@ -31,9 +31,7 @@ def _make_windows(*windows: MagicMock, contains: bool = True) -> MagicMock:
     col.Item.side_effect = lambda idx: (
         windows[int(idx) - 1]
         if isinstance(idx, int)
-        else next(
-            (w for w in windows if w.Caption == idx), (_ for _ in ()).throw(Exception("not found"))
-        )
+        else next((w for w in windows if w.Caption == idx), (_ for _ in ()).throw(Exception("not found")))
     )
     col.Contains.return_value = contains
     return col

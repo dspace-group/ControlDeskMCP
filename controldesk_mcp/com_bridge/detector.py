@@ -171,17 +171,12 @@ def normalize_user_version(version: str) -> str:
 
     if _YEAR_ONLY_RE.match(version):
         # Year-only shorthand — find the highest installed letter for that year.
-        installed = [
-            letter for letter in _PROBE_LETTERS if is_version_installed(f"{version}-{letter}")
-        ]
+        installed = [letter for letter in _PROBE_LETTERS if is_version_installed(f"{version}-{letter}")]
         if not installed:
             raise BridgeNotInstalledError(
                 f"No ControlDesk installation found for year '{version}'. "
                 "Provide the full version string (e.g. '2026-A') or install ControlDesk.",
-                recovery_hint=(
-                    f"Install ControlDesk {version}-A or specify the exact version, "
-                    "e.g. '2026-A'."
-                ),
+                recovery_hint=(f"Install ControlDesk {version}-A or specify the exact version, e.g. '2026-A'."),
             )
         # _PROBE_LETTERS is ordered A→E; last found = highest letter = most recent.
         return f"{version}-{installed[-1]}"

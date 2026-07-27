@@ -22,9 +22,7 @@ class _StderrOnlyHandler(logging.StreamHandler):
         self.setLevel(logging.WARNING)
 
 
-_LOG_FORMAT = (
-    '{"time":"%(asctime)s","level":"%(levelname)s","logger":"%(name)s","msg":"%(message)s"}'
-)
+_LOG_FORMAT = '{"time":"%(asctime)s","level":"%(levelname)s","logger":"%(name)s","msg":"%(message)s"}'
 _DATE_FORMAT = "%Y-%m-%dT%H:%M:%S"
 
 # Module-level registry so each named logger is configured exactly once.

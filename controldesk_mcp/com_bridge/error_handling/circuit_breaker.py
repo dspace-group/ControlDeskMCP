@@ -101,11 +101,9 @@ class CircuitBreaker:
                 remaining = self.cooldown_seconds - (now - (self._opened_at or now))
                 remaining = max(0.0, remaining)
                 raise BridgeCircuitOpenError(
-                    f"Circuit OPEN for '{self.operation}' — "
-                    f"cool-down expires in {remaining:.0f} s.",
+                    f"Circuit OPEN for '{self.operation}' — cool-down expires in {remaining:.0f} s.",
                     recovery_hint=(
-                        f"Wait {remaining:.0f} s and retry, "
-                        "or call start_controldesk to reset the connection."
+                        f"Wait {remaining:.0f} s and retry, or call start_controldesk to reset the connection."
                     ),
                 )
 

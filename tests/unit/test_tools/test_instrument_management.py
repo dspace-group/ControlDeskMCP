@@ -57,9 +57,7 @@ def _patch_svc(method: str, *, return_value):
 class TestInstrumentList:
     @pytest.mark.asyncio
     async def test_returns_list_result(self) -> None:
-        expected = InstrumentListResult(
-            layout_name="ControlLayout", total_instruments=1, instruments=[_INSTR]
-        )
+        expected = InstrumentListResult(layout_name="ControlLayout", total_instruments=1, instruments=[_INSTR])
         with _patch_svc("instrument_list", return_value=expected):
             from controldesk_mcp.tools.instrument.management import instrument_list
 
@@ -82,9 +80,7 @@ class TestInstrumentList:
         types = InstrumentTypeListResult(
             total_types=2,
             instrument_types=[
-                InstrumentTypeInfo(
-                    type_string="Knob", category="Controls", signal_mode="main_variable"
-                ),
+                InstrumentTypeInfo(type_string="Knob", category="Controls", signal_mode="main_variable"),
                 InstrumentTypeInfo(
                     type_string="Time Plotter",
                     category="Data Displays",
@@ -160,16 +156,12 @@ class TestInstrumentManageAdd:
 class TestInstrumentManageRemove:
     @pytest.mark.asyncio
     async def test_remove_returns_result(self) -> None:
-        expected = InstrumentRemoveResult(
-            removed=True, instrument_name="SpeedKnob", timestamp_utc=_TS
-        )
+        expected = InstrumentRemoveResult(removed=True, instrument_name="SpeedKnob", timestamp_utc=_TS)
         with _patch_svc("instrument_remove", return_value=expected):
             from controldesk_mcp.tools.instrument.management import instrument_manage
 
             result = await instrument_manage(
-                InstrumentManageInput(
-                    action=InstrumentManageAction.remove, instrument_name="SpeedKnob"
-                )
+                InstrumentManageInput(action=InstrumentManageAction.remove, instrument_name="SpeedKnob")
             )
 
         assert isinstance(result, InstrumentRemoveResult)
@@ -179,9 +171,7 @@ class TestInstrumentManageRemove:
     async def test_remove_missing_name_returns_error(self) -> None:
         from controldesk_mcp.tools.instrument.management import instrument_manage
 
-        result = await instrument_manage(
-            InstrumentManageInput(action=InstrumentManageAction.remove)
-        )
+        result = await instrument_manage(InstrumentManageInput(action=InstrumentManageAction.remove))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"

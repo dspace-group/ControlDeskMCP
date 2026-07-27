@@ -248,9 +248,7 @@ async def bus_logger_query(
     )
     if isinstance(result, ErrorEnvelope):
         return result
-    return BusLoggerListResult(
-        **paginate(result.model_dump(), params.offset, params.limit, "loggers")
-    )
+    return BusLoggerListResult(**paginate(result.model_dump(), params.offset, params.limit, "loggers"))
 
 
 # ── GROUP: LOGGER_ADMIN ────────────────────────────────────────────────────────────
@@ -424,13 +422,7 @@ async def bus_filter_configure(
 )
 async def bus_filter_manage(
     params: BusFilterManageInput,
-) -> (
-    BusFilterStartResult
-    | BusFilterStopResult
-    | BusFilterListResult
-    | BusFilterRemoveResult
-    | ErrorEnvelope
-):
+) -> BusFilterStartResult | BusFilterStopResult | BusFilterListResult | BusFilterRemoveResult | ErrorEnvelope:
     if params.action == BusFilterManageAction.start:
         if params.filter_name is None:
             return ErrorEnvelope(
@@ -474,9 +466,7 @@ async def bus_filter_manage(
         )
         if isinstance(result, ErrorEnvelope):
             return result
-        return BusFilterListResult(
-            **paginate(result.model_dump(), params.offset, params.limit, "filters")
-        )
+        return BusFilterListResult(**paginate(result.model_dump(), params.offset, params.limit, "filters"))
     # remove
     if params.filter_name is None:
         return ErrorEnvelope(
@@ -532,10 +522,7 @@ async def bus_logging_discover(ctx: Context) -> BusLoggingDiscoverResult:
             ),
             ToolActionEntry(
                 tool_name="bus_logger_admin_manage",
-                purpose=(
-                    "Perform administrative operations on bus loggers: "
-                    "remove, clear_all, set_activated, rename."
-                ),
+                purpose=("Perform administrative operations on bus loggers: remove, clear_all, set_activated, rename."),
                 actions=["remove", "clear_all", "set_activated", "rename"],
                 required_params_per_action={
                     "remove": ["logger_name"],

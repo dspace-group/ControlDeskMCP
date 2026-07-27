@@ -106,8 +106,7 @@ def _get_active_variables(app: Any) -> Any:
         "Ensure online calibration is running and a variable description is loaded.",
         error_code="BRIDGE_NO_VARIABLE_DESCRIPTION",
         recovery_hint=(
-            "Call calibration_start and ensure a variable description is loaded "
-            "via platform_add_variable_description."
+            "Call calibration_start and ensure a variable description is loaded via platform_add_variable_description."
         ),
     )
 
@@ -133,9 +132,7 @@ def _get_active_variable_description(app: Any) -> Any:
     raise BridgePreconditionError(
         "No platform has an active variable description.",
         error_code="BRIDGE_NO_VARIABLE_DESCRIPTION",
-        recovery_hint=(
-            "Ensure calibration_start has been called and a variable description is loaded."
-        ),
+        recovery_hint=("Ensure calibration_start has been called and a variable description is loaded."),
     )
 
 
@@ -228,9 +225,7 @@ def _variable_metadata(var: Any) -> dict[str, Any]:
     except Exception:  # noqa: BLE001
         meta["is_writable"] = False
     try:
-        meta["is_changeable_only_during_initialization"] = bool(
-            var.IsChangeableOnlyDuringInitialization
-        )
+        meta["is_changeable_only_during_initialization"] = bool(var.IsChangeableOnlyDuringInitialization)
     except Exception:  # noqa: BLE001
         meta["is_changeable_only_during_initialization"] = False
 
@@ -335,9 +330,7 @@ def get_variable_info(app: Any, variable_name: str) -> dict[str, Any]:
 # ── Tool 4 — read_scalar_variable ─────────────────────────────────────────────
 
 
-def read_scalar_variable(
-    app: Any, variable_name: str, value_format: str = "Converted"
-) -> dict[str, Any]:
+def read_scalar_variable(app: Any, variable_name: str, value_format: str = "Converted") -> dict[str, Any]:
     """Read the current value of a scalar variable."""
     variables = _get_active_variables(app)
     var = _lookup_variable(variables, variable_name, None)
@@ -411,17 +404,13 @@ def write_scalar_variable(
     except (BridgeOperationError, BridgePreconditionError):
         raise
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaParameterVariable", method="ValueConverted(set)"
-        ) from exc
+        raise map_com_error(exc, interface="IXaParameterVariable", method="ValueConverted(set)") from exc
 
 
 # ── Tool 6 — read_curve_variable ──────────────────────────────────────────────
 
 
-def read_curve_variable(
-    app: Any, variable_name: str, value_format: str = "Converted"
-) -> dict[str, Any]:
+def read_curve_variable(app: Any, variable_name: str, value_format: str = "Converted") -> dict[str, Any]:
     """Read axis and function values from a 1-D curve variable."""
     variables = _get_active_variables(app)
     var = _lookup_variable(variables, variable_name, None)
@@ -509,17 +498,13 @@ def write_curve_variable(
     except (BridgeOperationError, BridgePreconditionError):
         raise
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaCurveVariable", method="FunctionValues.ValueConverted(set)"
-        ) from exc
+        raise map_com_error(exc, interface="IXaCurveVariable", method="FunctionValues.ValueConverted(set)") from exc
 
 
 # ── Tool 8 — read_map_variable ────────────────────────────────────────────────
 
 
-def read_map_variable(
-    app: Any, variable_name: str, value_format: str = "Converted"
-) -> dict[str, Any]:
+def read_map_variable(app: Any, variable_name: str, value_format: str = "Converted") -> dict[str, Any]:
     """Read X axis, Y axis, and 2-D function matrix from a map variable."""
     variables = _get_active_variables(app)
     var = _lookup_variable(variables, variable_name, None)
@@ -653,9 +638,7 @@ def write_map_variable(
     except (BridgeOperationError, BridgePreconditionError):
         raise
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaMapVariable", method="FunctionValues.ValueConverted(set)"
-        ) from exc
+        raise map_com_error(exc, interface="IXaMapVariable", method="FunctionValues.ValueConverted(set)") from exc
 
 
 # ── Tool 10 — list_array_elements ─────────────────────────────────────────────
@@ -669,9 +652,7 @@ def list_array_elements(app: Any, variable_name: str) -> dict[str, Any]:
         sub_elements = var.SubElements
         count = int(sub_elements.Count)
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaMeasurementArrayVariable", method="SubElements"
-        ) from exc
+        raise map_com_error(exc, interface="IXaMeasurementArrayVariable", method="SubElements") from exc
 
     elements = []
     for i in range(0, count):
@@ -713,9 +694,7 @@ def list_array_elements(app: Any, variable_name: str) -> dict[str, Any]:
 # ── Tool 11 — read_array_element ──────────────────────────────────────────────
 
 
-def read_array_element(
-    app: Any, element_path: str, value_format: str = "Converted"
-) -> dict[str, Any]:
+def read_array_element(app: Any, element_path: str, value_format: str = "Converted") -> dict[str, Any]:
     """Read the value of a specific array element by its path."""
     variables = _get_active_variables(app)
     # Array elements are accessed via ItemByPath
@@ -824,9 +803,7 @@ def list_group_variables(app: Any, group_path: str = "") -> dict[str, Any]:
     try:
         root_group = var_desc.RootGroup
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaActiveVariableDescription", method="RootGroup"
-        ) from exc
+        raise map_com_error(exc, interface="IXaActiveVariableDescription", method="RootGroup") from exc
 
     # Navigate to the requested group
     group = root_group
@@ -837,8 +814,7 @@ def list_group_variables(app: Any, group_path: str = "") -> dict[str, Any]:
                 group = group.Groups.Item(part)
             except Exception as exc:
                 raise BridgePreconditionError(
-                    f"Group '{group_path}' not found. "
-                    "Use variable_list_all to discover available groups.",
+                    f"Group '{group_path}' not found. Use variable_list_all to discover available groups.",
                     error_code="BRIDGE_GROUP_NOT_FOUND",
                     recovery_hint="Check the group path spelling (case-sensitive).",
                 ) from exc
@@ -952,9 +928,7 @@ def list_variable_descriptions(app: Any, platform_name: str) -> dict[str, Any]:
         var_descs = plat.VariableDescriptions
         count = int(var_descs.Count)
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaExperimentPlatform", method="VariableDescriptions"
-        ) from exc
+        raise map_com_error(exc, interface="IXaExperimentPlatform", method="VariableDescriptions") from exc
 
     def _build_entry(vd: Any, fallback_name: str) -> dict[str, Any]:
         entry: dict[str, Any] = {}
@@ -1005,9 +979,7 @@ def list_variable_descriptions(app: Any, platform_name: str) -> dict[str, Any]:
 # ── Tool 17 — activate_variable_description ───────────────────────────────────
 
 
-def activate_variable_description(
-    app: Any, platform_name: str, description_name: str
-) -> dict[str, Any]:
+def activate_variable_description(app: Any, platform_name: str, description_name: str) -> dict[str, Any]:
     """Activate a named variable description on a platform."""
     plat = _get_platform(app, platform_name)
     try:
@@ -1033,9 +1005,7 @@ def activate_variable_description(
 # ── Tool 18 — remove_variable_description ─────────────────────────────────────
 
 
-def remove_variable_description(
-    app: Any, platform_name: str, description_name: str
-) -> dict[str, Any]:
+def remove_variable_description(app: Any, platform_name: str, description_name: str) -> dict[str, Any]:
     """Remove a named variable description from a platform."""
     plat = _get_platform(app, platform_name)
     var_descs = plat.VariableDescriptions

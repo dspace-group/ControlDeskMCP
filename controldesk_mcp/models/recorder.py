@@ -43,55 +43,43 @@ class RecorderMainConfigureInput(BaseModel):
     """Input for recorder_main_configure."""
 
     base_filename: str = Field(
-        description=(
-            "Output file name without directory (e.g., 'Recording.mf4'). Must end in '.mf4'."
-        ),
+        description=("Output file name without directory (e.g., 'Recording.mf4'). Must end in '.mf4'."),
         examples=["Recording.mf4", "TestRun.mf4"],
     )
     automatic_naming_enabled: bool = Field(
         default=False,
         description=(
-            "Set to True to enable sequential naming "
-            "(e.g., Recording_010.mf4, Recording_011.mf4). Defaults to False."
+            "Set to True to enable sequential naming (e.g., Recording_010.mf4, Recording_011.mf4). Defaults to False."
         ),
         examples=[False, True],
     )
     automatic_naming_start_index: int = Field(
         default=1,
-        description=(
-            "Starting counter for sequential naming (e.g., 10 → starts at 010). Defaults to 1."
-        ),
+        description=("Starting counter for sequential naming (e.g., 10 → starts at 010). Defaults to 1."),
         examples=[1, 10],
     )
     automatic_naming_minimum_digits: int = Field(
         default=3,
-        description=(
-            "Minimum number of digits in the sequential counter "
-            "(e.g., 3 → '010', '011'). Defaults to 3."
-        ),
+        description=("Minimum number of digits in the sequential counter (e.g., 3 → '010', '011'). Defaults to 3."),
         examples=[3, 4],
     )
     add_to_experiment_enabled: bool = Field(
         default=False,
         description=(
-            "Set to True to automatically add completed MF4 files to the active "
-            "experiment. Defaults to False."
+            "Set to True to automatically add completed MF4 files to the active experiment. Defaults to False."
         ),
         examples=[False, True],
     )
     open_in_data_pool_enabled: bool = Field(
         default=False,
         description=(
-            "Set to True to auto-open completed files in the Measurement Data Pool "
-            "window. Defaults to False."
+            "Set to True to auto-open completed files in the Measurement Data Pool window. Defaults to False."
         ),
         examples=[False, True],
     )
     write_to_file_enabled: bool = Field(
         default=True,
-        description=(
-            "Set to False for event-based (non-file) recording (advanced use). Defaults to True."
-        ),
+        description=("Set to False for event-based (non-file) recording (advanced use). Defaults to True."),
         examples=[True, False],
     )
     automatic_signal_configuration_enabled: bool = Field(
@@ -104,10 +92,7 @@ class RecorderMainConfigureInput(BaseModel):
     )
     description: str = Field(
         default="",
-        description=(
-            "Optional description stored inside the MF4 recording file. "
-            "Defaults to empty string."
-        ),
+        description=("Optional description stored inside the MF4 recording file. Defaults to empty string."),
         examples=["", "Test run on bench A"],
     )
 
@@ -167,10 +152,7 @@ class RecorderMainStartInput(BaseModel):
     )
     overwrite_existing: bool = Field(
         default=True,
-        description=(
-            "Set to False to append to an existing file instead of overwriting. "
-            "Defaults to True."
-        ),
+        description=("Set to False to append to an existing file instead of overwriting. Defaults to True."),
         examples=[True, False],
     )
     dry_run: bool = Field(

@@ -34,7 +34,6 @@ class MCPToolCategory(Enum):
 
 
 class MCPServer(FastMCP):
-
     tool_domain_dict: dict[str, list[str]] = {}
 
     def __init__(self, *args, **kwargs):
@@ -68,12 +67,8 @@ class MCPServer(FastMCP):
         def _patched(notification_options=None, experimental_capabilities=None):
             opts = NotificationOptions(
                 tools_changed=True,
-                resources_changed=(
-                    notification_options.resources_changed if notification_options else False
-                ),
-                prompts_changed=(
-                    notification_options.prompts_changed if notification_options else False
-                ),
+                resources_changed=(notification_options.resources_changed if notification_options else False),
+                prompts_changed=(notification_options.prompts_changed if notification_options else False),
             )
             return original(opts, experimental_capabilities or {})
 
@@ -123,23 +118,17 @@ class MCPServer(FastMCP):
 
         match tool_category:
             case MCPToolCategory.MAIN:
-                return super().tool(
-                    name, title, description, annotations, icons, meta, structured_output
-                )
+                return super().tool(name, title, description, annotations, icons, meta, structured_output)
             case MCPToolCategory.ADD_ON:
                 if lazy_loading:
                     self._domain_has_deferred_addon_tools[tool_domain] = True
                     self._flush_deferred_search_tools_for_domain(tool_domain)
                     return defer_decorator
                 else:
-                    return super().tool(
-                        name, title, description, annotations, icons, meta, structured_output
-                    )
+                    return super().tool(name, title, description, annotations, icons, meta, structured_output)
             case MCPToolCategory.SEARCH:
                 if self._domain_has_deferred_addon_tools.get(tool_domain, False):
-                    return super().tool(
-                        name, title, description, annotations, icons, meta, structured_output
-                    )
+                    return super().tool(name, title, description, annotations, icons, meta, structured_output)
                 else:
 
                     def deferred_search_decorator(fn):
@@ -168,9 +157,7 @@ class MCPServer(FastMCP):
                     self._flush_deferred_search_tools_for_domain(tool_domain)
                     return defer_decorator
                 else:
-                    return super().tool(
-                        name, title, description, annotations, icons, meta, structured_output
-                    )
+                    return super().tool(name, title, description, annotations, icons, meta, structured_output)
             case _:
                 raise ValueError(f"Invalid tool category: {tool_category}")
 

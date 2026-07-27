@@ -82,8 +82,7 @@ async def com_guard(
             yield
     except asyncio.TimeoutError as exc:
         _timeout_exc = BridgeTimeoutError(
-            f"'{operation}' timed out after {timeout_ms} ms — "
-            "ControlDesk may be waiting for user input.",
+            f"'{operation}' timed out after {timeout_ms} ms — ControlDesk may be waiting for user input.",
             error_code="COM_TIMEOUT",
             recovery_hint=(
                 "Dismiss any open ControlDesk dialog, "

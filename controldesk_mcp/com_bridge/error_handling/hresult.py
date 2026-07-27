@@ -34,8 +34,7 @@ _HRESULT_MAP: dict[int, tuple[str, type[BridgeError], bool, str]] = {
         "COM_UI_BLOCKING",
         BridgeUiBlockedError,
         True,
-        "Dismiss the open ControlDesk dialog, or set "
-        "Platform.DisplayStatusInformation = False before long operations.",
+        "Dismiss the open ControlDesk dialog, or set Platform.DisplayStatusInformation = False before long operations.",
     ),
     0x80010108: (
         "COM_DISCONNECTED",
@@ -85,8 +84,7 @@ _HRESULT_MAP: dict[int, tuple[str, type[BridgeError], bool, str]] = {
         "COM_VERSION_MISMATCH",
         BridgeVersionError,
         False,
-        "Property name not recognised — verify the ControlDesk version matches "
-        "CONTROLDESK_VERSION.",
+        "Property name not recognised — verify the ControlDesk version matches CONTROLDESK_VERSION.",
     ),
     0x80020009: (
         "BRIDGE_OPERATION_FAILED",

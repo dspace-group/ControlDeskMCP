@@ -47,9 +47,7 @@ def _now_utc() -> str:
 
 def _to_utc_timestamp(epoch_seconds: float) -> str:
     return (
-        datetime.fromtimestamp(epoch_seconds, tz=timezone.utc)
-        .isoformat(timespec="milliseconds")
-        .replace("+00:00", "Z")
+        datetime.fromtimestamp(epoch_seconds, tz=timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
     )
 
 
@@ -217,9 +215,7 @@ async def dry_run_start_or_attach(
             )
 
         running_version = com_bridge.get_connected_version()
-        version_switch_required = bool(
-            version and running_version and running_version.upper() != version.upper()
-        )
+        version_switch_required = bool(version and running_version and running_version.upper() != version.upper())
 
         current_state: dict[str, object] = {
             "requested_version": version or "",
@@ -291,9 +287,7 @@ async def set_window_visible(
     try:
         conn = com_bridge.get_connection()
         app = await com_bridge.dispatch(conn.get_app)
-        await com_bridge.dispatch(
-            com_bridge.domains.application_com.set_window_visible, app, params.visible
-        )
+        await com_bridge.dispatch(com_bridge.domains.application_com.set_window_visible, app, params.visible)
         return AppSetWindowVisibleResult(
             is_now_visible=params.visible,
             timestamp_utc=_now_utc(),
@@ -307,9 +301,7 @@ async def get_window_visibility() -> AppGetWindowVisibilityResult | ErrorEnvelop
     try:
         conn = com_bridge.get_connection()
         app = await com_bridge.dispatch(conn.get_app)
-        visible = await com_bridge.dispatch(
-            com_bridge.domains.application_com.get_window_visible, app
-        )
+        visible = await com_bridge.dispatch(com_bridge.domains.application_com.get_window_visible, app)
         return AppGetWindowVisibilityResult(
             is_visible=visible,
             timestamp_utc=_now_utc(),
@@ -325,9 +317,7 @@ async def set_window_state(
     try:
         conn = com_bridge.get_connection()
         app = await com_bridge.dispatch(conn.get_app)
-        await com_bridge.dispatch(
-            com_bridge.domains.application_com.set_window_state, app, params.window_state.value
-        )
+        await com_bridge.dispatch(com_bridge.domains.application_com.set_window_state, app, params.window_state.value)
         return AppSetWindowStateResult(
             window_state=params.window_state.value,
             timestamp_utc=_now_utc(),
@@ -342,9 +332,7 @@ async def get_window_state() -> AppGetWindowStateResult | ErrorEnvelope:
         conn = com_bridge.get_connection()
         app = await com_bridge.dispatch(conn.get_app)
         state = await com_bridge.dispatch(com_bridge.domains.application_com.get_window_state, app)
-        visible = await com_bridge.dispatch(
-            com_bridge.domains.application_com.get_window_visible, app
-        )
+        visible = await com_bridge.dispatch(com_bridge.domains.application_com.get_window_visible, app)
         return AppGetWindowStateResult(
             window_state=state,
             is_visible=visible,
@@ -441,9 +429,7 @@ async def set_fullscreen(params: AppSetFullscreenInput) -> AppSetFullscreenResul
     try:
         conn = com_bridge.get_connection()
         app = await com_bridge.dispatch(conn.get_app)
-        await com_bridge.dispatch(
-            com_bridge.domains.application_com.set_fullscreen, app, params.enabled
-        )
+        await com_bridge.dispatch(com_bridge.domains.application_com.set_fullscreen, app, params.enabled)
         return AppSetFullscreenResult(
             fullscreen_enabled=params.enabled,
             timestamp_utc=_now_utc(),

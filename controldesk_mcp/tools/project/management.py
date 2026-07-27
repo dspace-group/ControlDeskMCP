@@ -132,9 +132,7 @@ async def project_list_recent(
     result = await project_service.project_list_recent(params)
     if isinstance(result, ErrorEnvelope):
         return result
-    return ProjectListRecentResult(
-        **paginate(result.model_dump(), params.offset, params.limit, "projects")
-    )
+    return ProjectListRecentResult(**paginate(result.model_dump(), params.offset, params.limit, "projects"))
 
 
 # ── Tool 2 — project_open ─────────────────────────────────────────────────────
@@ -186,13 +184,7 @@ async def project_open(params: ProjectOpenInput) -> ProjectOpenResult | ErrorEnv
 )
 async def project_root_manage(
     params: ProjectRootManageInput,
-) -> (
-    ProjectRootAddResult
-    | ProjectRootActivateResult
-    | ProjectRootListResult
-    | ProjectRootRemoveResult
-    | ErrorEnvelope
-):
+) -> ProjectRootAddResult | ProjectRootActivateResult | ProjectRootListResult | ProjectRootRemoveResult | ErrorEnvelope:
     if params.action == ProjectRootManageAction.add:
         if params.path is None:
             return ErrorEnvelope(
@@ -210,16 +202,12 @@ async def project_root_manage(
                 message="path is required when action='activate'.",
                 recovery_hint="Set path to the absolute path of an already-registered project root.",
             )
-        return await project_service.project_root_activate(
-            ProjectRootActivateInput(path=params.path)
-        )
+        return await project_service.project_root_activate(ProjectRootActivateInput(path=params.path))
     if params.action == ProjectRootManageAction.list:
         result = await project_service.project_root_list()
         if isinstance(result, ErrorEnvelope):
             return result
-        return ProjectRootListResult(
-            **paginate(result.model_dump(), params.offset, params.limit, "roots")
-        )
+        return ProjectRootListResult(**paginate(result.model_dump(), params.offset, params.limit, "roots"))
     # remove
     if params.path is None:
         return ErrorEnvelope(
@@ -314,9 +302,7 @@ async def project_manage(
     result = await project_service.project_list()
     if isinstance(result, ErrorEnvelope):
         return result
-    return ProjectListResult(
-        **paginate(result.model_dump(), params.offset, params.limit, "projects")
-    )
+    return ProjectListResult(**paginate(result.model_dump(), params.offset, params.limit, "projects"))
 
 
 # ── Tool 5 — project_backup_manage ───────────────────────────────────────────
@@ -347,9 +333,7 @@ async def project_backup_manage(
                 message="backup_path is required when action='backup'.",
                 recovery_hint="Set backup_path to the absolute destination path for the zip archive.",
             )
-        return await project_service.project_backup(
-            ProjectBackupInput(backup_path=params.backup_path)
-        )
+        return await project_service.project_backup(ProjectBackupInput(backup_path=params.backup_path))
     # restore
     if params.backup_path is None:
         return ErrorEnvelope(
@@ -423,9 +407,7 @@ async def experiment_manage(
         result = await project_service.experiment_list()
         if isinstance(result, ErrorEnvelope):
             return result
-        return ExperimentListResult(
-            **paginate(result.model_dump(), params.offset, params.limit, "experiments")
-        )
+        return ExperimentListResult(**paginate(result.model_dump(), params.offset, params.limit, "experiments"))
     if params.action == ExperimentManageAction.remove:
         if params.name is None:
             return ErrorEnvelope(
@@ -464,13 +446,7 @@ async def experiment_manage(
 )
 async def experiment_io_manage(
     params: ExperimentIoManageInput,
-) -> (
-    ExperimentExportResult
-    | ExperimentImportResult
-    | ExperimentRenameResult
-    | ExperimentSaveAsResult
-    | ErrorEnvelope
-):
+) -> ExperimentExportResult | ExperimentImportResult | ExperimentRenameResult | ExperimentSaveAsResult | ErrorEnvelope:
     if params.action == ExperimentIoManageAction.export:
         if params.export_path is None:
             return ErrorEnvelope(
@@ -479,9 +455,7 @@ async def experiment_io_manage(
                 message="export_path is required when action='export'.",
                 recovery_hint="Set export_path to the absolute destination path for the .DSA file.",
             )
-        return await project_service.experiment_export(
-            ExperimentExportInput(export_path=params.export_path)
-        )
+        return await project_service.experiment_export(ExperimentExportInput(export_path=params.export_path))
     if params.action == ExperimentIoManageAction.import_:
         if params.import_path is None:
             return ErrorEnvelope(
@@ -504,9 +478,7 @@ async def experiment_io_manage(
                 message="new_name is required when action='rename'.",
                 recovery_hint="Set new_name to the desired new experiment name.",
             )
-        return await project_service.experiment_rename(
-            ExperimentRenameInput(new_name=params.new_name)
-        )
+        return await project_service.experiment_rename(ExperimentRenameInput(new_name=params.new_name))
     # save_as
     if params.new_name is None:
         return ErrorEnvelope(
@@ -598,9 +570,7 @@ async def project_discover(ctx: Context) -> ProjectDiscoverResult | ErrorEnvelop
             ),
             ToolActionEntry(
                 tool_name="experiment_manage",
-                purpose=(
-                    "Core experiment lifecycle: create, activate, list, remove, get metadata."
-                ),
+                purpose=("Core experiment lifecycle: create, activate, list, remove, get metadata."),
                 actions=["create", "activate", "list", "remove", "get_info"],
                 required_params_per_action={
                     "create": ["name"],
@@ -612,9 +582,7 @@ async def project_discover(ctx: Context) -> ProjectDiscoverResult | ErrorEnvelop
             ),
             ToolActionEntry(
                 tool_name="experiment_io_manage",
-                purpose=(
-                    "Experiment I/O and copy: export to .DSA, import from .DSA, rename, save as copy."
-                ),
+                purpose=("Experiment I/O and copy: export to .DSA, import from .DSA, rename, save as copy."),
                 actions=["export", "import", "rename", "save_as"],
                 required_params_per_action={
                     "export": ["export_path"],

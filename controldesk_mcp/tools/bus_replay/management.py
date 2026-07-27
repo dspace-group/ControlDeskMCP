@@ -221,9 +221,7 @@ async def bus_replay_query(
     )
     if isinstance(result, ErrorEnvelope):
         return result
-    return BusReplayListResult(
-        **paginate(result.model_dump(), params.offset, params.limit, "replays")
-    )
+    return BusReplayListResult(**paginate(result.model_dump(), params.offset, params.limit, "replays"))
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -375,10 +373,7 @@ async def bus_replay_discover(ctx: Context) -> BusReplayDiscoverResult:
             ),
             BusReplayToolActionEntry(
                 tool_name="bus_replay_admin_manage",
-                purpose=(
-                    "Perform administrative operations on bus replays: "
-                    "remove, clear_all, set_activated, rename."
-                ),
+                purpose=("Perform administrative operations on bus replays: remove, clear_all, set_activated, rename."),
                 actions=["remove", "clear_all", "set_activated", "rename"],
                 required_params_per_action={
                     "remove": ["replay_name"],

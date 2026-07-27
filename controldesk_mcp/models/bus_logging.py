@@ -49,9 +49,7 @@ class BusLoggerCreateInput(BaseModel):
         examples=["CANRecorder", "RxLogger"],
     )
     system_index: int = Field(
-        description=(
-            "Zero-based index of the target system " "(e.g. 0 for transceiver, 1 for receiver)."
-        ),
+        description=("Zero-based index of the target system (e.g. 0 for transceiver, 1 for receiver)."),
         examples=[0, 1],
     )
     bus_type: BusType = Field(
@@ -94,10 +92,7 @@ class BusLoggerConfigureInput(BaseModel):
         examples=["CAN"],
     )
     log_file_full_path: str = Field(
-        description=(
-            "Absolute file system path for the output log file "
-            "(e.g. 'C:\\\\Logs\\\\can_recording.asc')."
-        ),
+        description=("Absolute file system path for the output log file (e.g. 'C:\\\\Logs\\\\can_recording.asc')."),
         examples=["C:\\Logs\\can_recording.asc"],
     )
     overwrite_existing: bool = Field(
@@ -132,16 +127,12 @@ class BusLoggerConfigureInput(BaseModel):
     )
     file_rolling_interval_seconds: float = Field(
         default=3600.0,
-        description=(
-            "Time interval for rolling in seconds " "if file_rolling_type is Time (e.g. 3600.0)."
-        ),
+        description=("Time interval for rolling in seconds if file_rolling_type is Time (e.g. 3600.0)."),
         examples=[3600.0],
     )
     time_axis_mode: TimeAxis = Field(
         default=TimeAxis.Relative,
-        description=(
-            "Time axis for ASC format: Absolute or Relative. " "Ignored for BLF (e.g. 'Relative')."
-        ),
+        description=("Time axis for ASC format: Absolute or Relative. Ignored for BLF (e.g. 'Relative')."),
         examples=["Relative", "Absolute"],
     )
     bus_platform_index: int = Field(
@@ -281,9 +272,7 @@ class BusLoggerClearAllInput(BaseModel):
     )
     confirm: bool = Field(
         default=False,
-        description=(
-            "Must be True to proceed; safety guard " "against accidental invocation (e.g. True)."
-        ),
+        description=("Must be True to proceed; safety guard against accidental invocation (e.g. True)."),
         examples=[True, False],
     )
 
@@ -356,10 +345,7 @@ class BusFilterConfigureInput(BaseModel):
     )
     filter_mode: str = Field(
         default="Pass",
-        description=(
-            "Filter mode: 'Pass' (only matching pass) "
-            "or 'Block' (matching blocked) (e.g. 'Pass')."
-        ),
+        description=("Filter mode: 'Pass' (only matching pass) or 'Block' (matching blocked) (e.g. 'Pass')."),
         examples=["Pass", "Block"],
     )
     message_id: int = Field(
@@ -545,9 +531,7 @@ class BusLoggerQueryInput(BaseModel):
         examples=["CANRecorder"],
     )
     bus_platform_index: int = Field(default=0, description="Bus platform index.", examples=[0])
-    physical_bus_access_index: int = Field(
-        default=0, description="Physical bus access index.", examples=[0]
-    )
+    physical_bus_access_index: int = Field(default=0, description="Physical bus access index.", examples=[0])
     limit: int = Field(default=200, ge=1, le=1000, description="Maximum records for 'list'.")
     offset: int = Field(default=0, ge=0, description="Zero-based offset for 'list' pagination.")
 
@@ -571,9 +555,7 @@ class BusLoggerManageInput(BaseModel):
         examples=["CANRecorder"],
     )
     bus_platform_index: int = Field(default=0, description="Bus platform index.", examples=[0])
-    physical_bus_access_index: int = Field(
-        default=0, description="Physical bus access index.", examples=[0]
-    )
+    physical_bus_access_index: int = Field(default=0, description="Physical bus access index.", examples=[0])
 
 
 class BusLoggerAdminManageAction(str, Enum):
@@ -608,11 +590,7 @@ class BusLoggerAdminManageInput(BaseModel):
     )
     logger_name: Optional[str] = Field(
         default=None,
-        description=(
-            "Name of the logger. "
-            "Required for: remove, set_activated, rename. "
-            "Not required for: clear_all."
-        ),
+        description=("Name of the logger. Required for: remove, set_activated, rename. Not required for: clear_all."),
         examples=["CANRecorder"],
     )
     bus_platform_index: int = Field(
@@ -674,9 +652,7 @@ class BusFilterManageInput(BaseModel):
     )
     filter_name: Optional[str] = Field(
         default=None,
-        description=(
-            "Name of the filter. Required for: start, stop, remove. Not required for: list."
-        ),
+        description=("Name of the filter. Required for: start, stop, remove. Not required for: list."),
         examples=["CANFilter"],
     )
     bus_platform_index: int = Field(

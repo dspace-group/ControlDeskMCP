@@ -265,9 +265,7 @@ def project_backup(app: Any, backup_path: str) -> dict[str, Any]:
 # ── project_open_from_backup ──────────────────────────────────────────────────
 
 
-def project_open_from_backup(
-    app: Any, backup_path: str, project_name: str, overwrite: bool
-) -> dict[str, Any]:
+def project_open_from_backup(app: Any, backup_path: str, project_name: str, overwrite: bool) -> dict[str, Any]:
     """Restore a project from a backup archive and open it."""
     try:
         project = app.Projects.OpenFromBackup(backup_path, project_name, overwrite)
@@ -534,14 +532,10 @@ def project_configure_settings(
             try:
                 project.GeneralSettings.AutoSave = auto_save
             except Exception as exc:
-                raise map_com_error(
-                    exc, interface="IXaProjectGeneralSettings", method="AutoSave"
-                ) from exc
+                raise map_com_error(exc, interface="IXaProjectGeneralSettings", method="AutoSave") from exc
         if open_last_experiment_on_startup is not None:
             try:
-                project.GeneralSettings.OpenLastExperimentOnStartup = (
-                    open_last_experiment_on_startup
-                )
+                project.GeneralSettings.OpenLastExperimentOnStartup = open_last_experiment_on_startup
             except Exception as exc:
                 raise map_com_error(
                     exc,

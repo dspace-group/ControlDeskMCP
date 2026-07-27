@@ -8,24 +8,44 @@ version = "0.1.0"
 description = "MCP server for dSPACE ControlDesk automation via COM bridge"
 requires-python = ">=3.11"
 license = { file = "LICENSE.txt" }
-classifiers = ["License :: OSI Approved :: Apache Software License"]
+authors = [{ name = "dSPACE GmbH" }]
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: Microsoft :: Windows",
+    "Topic :: Scientific/Engineering",
+]
 dependencies = ["mcp>=1.6.0", "pydantic>=2.0", "pydantic-settings>=2.0"]
+
+[project.urls]
+Homepage = "https://github.com/dspace-group/ControlDeskMCP"
+Repository = "https://github.com/dspace-group/ControlDeskMCP"
+Documentation = "https://github.com/dspace-group/ControlDeskMCP/tree/main/docs"
+Changelog = "https://github.com/dspace-group/ControlDeskMCP/blob/main/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/dspace-group/ControlDeskMCP/issues"
 
 [project.optional-dependencies]
 dev = [
     "ruff>=0.4",
-    "black>=24.0",
     "pytest>=8.0",
     "pytest-asyncio>=0.23",
     "pytest-mock>=3.0",
     "pytest-cov>=5.0",
-    "build>=1.0",
+]
+# Windows-only: install before running scripts/build/build-exe.ps1
+packaging = [
+    "pyinstaller>=6.0",
+    "pywin32>=306; sys_platform == 'win32'",
+    "pyinstaller-hooks-contrib>=2024.0",
 ]
 
 [project.scripts]
 controldesk-mcp = "controldesk_mcp.main:main"
 
-[tool.hatch.build.targets.wheel]
+[tool.hatch.build]
 packages = ["controldesk_mcp"]
 
 [tool.ruff]
@@ -38,9 +58,6 @@ select = ["E", "F", "W", "I", "N", "T20"]
 # N999: invalid module name — some domain files use underscores intentionally
 ignore = ["N999"]
 
-[tool.black]
-line-length = 100
-target-version = ["py311"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

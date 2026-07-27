@@ -274,9 +274,7 @@ class TestGetReplayState:
             from controldesk_mcp.services.bus_replay_service import get_replay_state
 
             result = await get_replay_state(
-                BusReplayGetStateInput(
-                    replay_name="CANReplay", system_index=0, bus_type=BusType.CAN
-                )
+                BusReplayGetStateInput(replay_name="CANReplay", system_index=0, bus_type=BusType.CAN)
             )
 
         assert result["is_running"] is True
@@ -402,9 +400,7 @@ class TestClearAllReplays:
         ):
             from controldesk_mcp.services.bus_replay_service import clear_all_replays
 
-            result = await clear_all_replays(
-                BusReplayClearAllInput(system_index=0, bus_type=BusType.CAN, confirm=True)
-            )
+            result = await clear_all_replays(BusReplayClearAllInput(system_index=0, bus_type=BusType.CAN, confirm=True))
 
         assert result["cleared"] is True
         assert result["replays_removed"] == 2
@@ -476,9 +472,7 @@ class TestDryRunCreateReplay:
             from controldesk_mcp.services.bus_replay_service import dry_run_create_replay
 
             result = await dry_run_create_replay(
-                BusReplayCreateInput(
-                    replay_name="CANReplay", system_index=0, bus_type=BusType.CAN, dry_run=True
-                )
+                BusReplayCreateInput(replay_name="CANReplay", system_index=0, bus_type=BusType.CAN, dry_run=True)
             )
 
         assert result["would_execute"] is True
@@ -506,9 +500,7 @@ class TestDryRunCreateReplay:
             from controldesk_mcp.services.bus_replay_service import dry_run_create_replay
 
             result = await dry_run_create_replay(
-                BusReplayCreateInput(
-                    replay_name="CANReplay", system_index=0, bus_type=BusType.CAN, dry_run=True
-                )
+                BusReplayCreateInput(replay_name="CANReplay", system_index=0, bus_type=BusType.CAN, dry_run=True)
             )
 
         assert result["would_execute"] is False

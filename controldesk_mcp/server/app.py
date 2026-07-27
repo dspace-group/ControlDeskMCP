@@ -32,7 +32,7 @@ def _validate_runtime() -> None:
     """Raise RuntimeError if Python <3.11 or 32-bit on Windows."""
     # 1. Python version
     if sys.version_info < (3, 11):
-        msg = f"Python 3.11+ required; running {sys.version}. " "Upgrade the Python interpreter."
+        msg = f"Python 3.11+ required; running {sys.version}. Upgrade the Python interpreter."
         raise RuntimeError(msg)
 
     # 2. Process bitness — COM automation objects are 64-bit only on Windows

@@ -127,9 +127,7 @@ def create_replay(
     Raises: BridgeOperationError on COM error
     """
     try:
-        pba = _get_physical_bus_access(
-            app, system_index, bus_type, bus_platform_index, physical_bus_access_index
-        )
+        pba = _get_physical_bus_access(app, system_index, bus_type, bus_platform_index, physical_bus_access_index)
         replays = pba.Replays
 
         # Create replay via Replays.Add(name)
@@ -190,9 +188,7 @@ def configure_replay(
 
         if replay is None:
             # Fetch replay by name from PhysicalBusAccess
-            pba = _get_physical_bus_access(
-                app, system_index, bus_type, bus_platform_index, physical_bus_access_index
-            )
+            pba = _get_physical_bus_access(app, system_index, bus_type, bus_platform_index, physical_bus_access_index)
             replays = pba.Replays
             replay = replays.Item(replay_name)
             _replay_cache[cache_key] = replay
@@ -228,8 +224,7 @@ def configure_replay(
 
     except Exception as exc:
         raise BridgeOperationError(
-            f"Failed to configure replay '{replay_name}'. "
-            f"Source log file may not exist or replay may be running.",
+            f"Failed to configure replay '{replay_name}'. Source log file may not exist or replay may be running.",
             exc,
         )
 
@@ -258,9 +253,7 @@ def start_replay(
         replay = _replay_cache.get(cache_key)
 
         if replay is None:
-            pba = _get_physical_bus_access(
-                app, system_index, bus_type, bus_platform_index, physical_bus_access_index
-            )
+            pba = _get_physical_bus_access(app, system_index, bus_type, bus_platform_index, physical_bus_access_index)
             replays = pba.Replays
             replay = replays.Item(replay_name)
             _replay_cache[cache_key] = replay
@@ -285,8 +278,7 @@ def start_replay(
 
     except Exception as exc:
         raise BridgeOperationError(
-            f"Failed to start replay '{replay_name}'. "
-            f"Ensure the replay is configured and source log file is readable.",
+            f"Failed to start replay '{replay_name}'. Ensure the replay is configured and source log file is readable.",
             exc,
         )
 
@@ -315,9 +307,7 @@ def stop_replay(
         replay = _replay_cache.get(cache_key)
 
         if replay is None:
-            pba = _get_physical_bus_access(
-                app, system_index, bus_type, bus_platform_index, physical_bus_access_index
-            )
+            pba = _get_physical_bus_access(app, system_index, bus_type, bus_platform_index, physical_bus_access_index)
             replays = pba.Replays
             replay = replays.Item(replay_name)
             _replay_cache[cache_key] = replay
@@ -366,9 +356,7 @@ def get_replay_state(
     Raises: BridgeOperationError on COM error
     """
     try:
-        pba = _get_physical_bus_access(
-            app, system_index, bus_type, bus_platform_index, physical_bus_access_index
-        )
+        pba = _get_physical_bus_access(app, system_index, bus_type, bus_platform_index, physical_bus_access_index)
         replays = pba.Replays
 
         replay = replays.Item(replay_name)
@@ -416,9 +404,7 @@ def list_replays(
     Raises: BridgeOperationError on COM error
     """
     try:
-        pba = _get_physical_bus_access(
-            app, system_index, bus_type, bus_platform_index, physical_bus_access_index
-        )
+        pba = _get_physical_bus_access(app, system_index, bus_type, bus_platform_index, physical_bus_access_index)
         replays_collection = pba.Replays
 
         replays_list = []
@@ -476,9 +462,7 @@ def remove_replay(
     Raises: BridgeOperationError on COM error
     """
     try:
-        pba = _get_physical_bus_access(
-            app, system_index, bus_type, bus_platform_index, physical_bus_access_index
-        )
+        pba = _get_physical_bus_access(app, system_index, bus_type, bus_platform_index, physical_bus_access_index)
         replays = pba.Replays
 
         replay = replays.Item(replay_name)
@@ -497,8 +481,7 @@ def remove_replay(
 
     except Exception as exc:
         raise BridgeOperationError(
-            f"Failed to remove replay '{replay_name}'. "
-            f"Ensure replay is stopped before removing.",
+            f"Failed to remove replay '{replay_name}'. Ensure replay is stopped before removing.",
             exc,
         )
 
@@ -519,9 +502,7 @@ def clear_all_replays(
     Raises: BridgeOperationError on COM error
     """
     try:
-        pba = _get_physical_bus_access(
-            app, system_index, bus_type, bus_platform_index, physical_bus_access_index
-        )
+        pba = _get_physical_bus_access(app, system_index, bus_type, bus_platform_index, physical_bus_access_index)
         replays = pba.Replays
 
         count = replays.Count
@@ -543,8 +524,7 @@ def clear_all_replays(
 
     except Exception as exc:
         raise BridgeOperationError(
-            f"Failed to clear replays on system {system_index}, bus type {bus_type}. "
-            f"Ensure all replays are stopped.",
+            f"Failed to clear replays on system {system_index}, bus type {bus_type}. Ensure all replays are stopped.",
             exc,
         )
 
@@ -572,9 +552,7 @@ def set_replay_activated(
         replay = _replay_cache.get(cache_key)
 
         if replay is None:
-            pba = _get_physical_bus_access(
-                app, system_index, bus_type, bus_platform_index, physical_bus_access_index
-            )
+            pba = _get_physical_bus_access(app, system_index, bus_type, bus_platform_index, physical_bus_access_index)
             replays = pba.Replays
             replay = replays.Item(replay_name)
             _replay_cache[cache_key] = replay
@@ -631,9 +609,7 @@ def rename_replay(
         replay = _replay_cache.get(cache_key)
 
         if replay is None:
-            pba = _get_physical_bus_access(
-                app, system_index, bus_type, bus_platform_index, physical_bus_access_index
-            )
+            pba = _get_physical_bus_access(app, system_index, bus_type, bus_platform_index, physical_bus_access_index)
             replays = pba.Replays
             replay = replays.Item(replay_name)
 

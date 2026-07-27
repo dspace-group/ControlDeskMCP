@@ -14,8 +14,7 @@ try:
     from pydantic_settings import BaseSettings, SettingsConfigDict
 except ModuleNotFoundError:  # pragma: no cover - import-time guard
     warnings.warn(
-        "pydantic-settings is not installed; falling back to environment-only settings. "
-        "Install with: uv sync",
+        "pydantic-settings is not installed; falling back to environment-only settings. Install with: uv sync",
         RuntimeWarning,
         stacklevel=2,
     )
@@ -53,8 +52,7 @@ class Settings(BaseSettings):
 
     mcp_transport: Literal["stdio", "streamable-http"] = Field(
         default="stdio",
-        description="MCP transport to use: 'stdio' for local/VS Code, "
-        "'streamable-http' for remote/network access.",
+        description="MCP transport to use: 'stdio' for local/VS Code, 'streamable-http' for remote/network access.",
     )
     mcp_host: str = Field(
         default="127.0.0.1",
@@ -75,8 +73,7 @@ class Settings(BaseSettings):
     )
     mcp_debug: bool = Field(
         default=False,
-        description="When True, enables verbose protocol tracing. "
-        "Equivalent to log_level=DEBUG for MCP internals.",
+        description="When True, enables verbose protocol tracing. Equivalent to log_level=DEBUG for MCP internals.",
     )
 
     # ── COM bridge ────────────────────────────────────────────────────────────
@@ -118,8 +115,7 @@ class Settings(BaseSettings):
         default=3,
         ge=1,
         le=10,
-        description="Maximum number of reconnection attempts after "
-        "RPC_E_DISCONNECTED before the circuit opens.",
+        description="Maximum number of reconnection attempts after RPC_E_DISCONNECTED before the circuit opens.",
     )
 
     # ── Server identity ───────────────────────────────────────────────────────

@@ -85,8 +85,7 @@ def check_calibration_started(is_started: bool) -> None:
     """
     if not is_started:
         raise BridgePreconditionError(
-            "Calibration session is not active. "
-            "Start calibration before performing this operation.",
+            "Calibration session is not active. Start calibration before performing this operation.",
             error_code="BRIDGE_CALIBRATION_NOT_STARTED",
             recovery_hint="Call calibration_start.",
         )

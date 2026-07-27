@@ -73,9 +73,7 @@ async def find_variable(params: VariableFindInput) -> VariableFindResult | Error
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_find unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def list_all_variables() -> VariableListAllResult | ErrorEnvelope:
@@ -88,26 +86,20 @@ async def list_all_variables() -> VariableListAllResult | ErrorEnvelope:
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_list_all unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def get_variable_info(params: VariableGetInfoInput) -> VariableGetInfoResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app_lambda())
-        result = await com_bridge.dispatch(
-            com_bridge.domains.variable_com.get_variable_info, app, params.variable_name
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.variable_com.get_variable_info, app, params.variable_name)
         return VariableGetInfoResult(**result)
     except BridgeError as exc:
         _log.warning("variable_get_info failed: %s", exc)
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_get_info unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def read_scalar_variable(
@@ -127,9 +119,7 @@ async def read_scalar_variable(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_read_scalar unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def write_scalar_variable(
@@ -150,9 +140,7 @@ async def write_scalar_variable(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_write_scalar unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def read_curve_variable(
@@ -172,9 +160,7 @@ async def read_curve_variable(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_read_curve unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def write_curve_variable(
@@ -196,9 +182,7 @@ async def write_curve_variable(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_write_curve unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def read_map_variable(params: VariableReadMapInput) -> VariableReadMapResult | ErrorEnvelope:
@@ -216,9 +200,7 @@ async def read_map_variable(params: VariableReadMapInput) -> VariableReadMapResu
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_read_map unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def write_map_variable(
@@ -241,9 +223,7 @@ async def write_map_variable(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_write_map unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def list_array_elements(
@@ -260,9 +240,7 @@ async def list_array_elements(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_list_array_elements unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def read_array_element(
@@ -282,9 +260,7 @@ async def read_array_element(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_read_array_element unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def write_array_element(
@@ -305,9 +281,7 @@ async def write_array_element(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_write_array_element unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def list_group_variables(
@@ -315,52 +289,40 @@ async def list_group_variables(
 ) -> VariableListGroupVariablesResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app_lambda())
-        result = await com_bridge.dispatch(
-            com_bridge.domains.variable_com.list_group_variables, app, params.group_path
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.variable_com.list_group_variables, app, params.group_path)
         return VariableListGroupVariablesResult(**result)
     except BridgeError as exc:
         _log.warning("variable_list_group_variables failed: %s", exc)
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_list_group_variables unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def activate_working_page() -> DataSetActivateWorkingPageResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app_lambda())
-        result = await com_bridge.dispatch(
-            com_bridge.domains.variable_com.activate_working_page, app
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.variable_com.activate_working_page, app)
         return DataSetActivateWorkingPageResult(**result)
     except BridgeError as exc:
         _log.warning("data_set_activate_working_page failed: %s", exc)
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("data_set_activate_working_page unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def activate_reference_page() -> DataSetActivateReferencePageResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app_lambda())
-        result = await com_bridge.dispatch(
-            com_bridge.domains.variable_com.activate_reference_page, app
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.variable_com.activate_reference_page, app)
         return DataSetActivateReferencePageResult(**result)
     except BridgeError as exc:
         _log.warning("data_set_activate_reference_page failed: %s", exc)
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("data_set_activate_reference_page unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def list_variable_descriptions(
@@ -377,9 +339,7 @@ async def list_variable_descriptions(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_description_list unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def activate_variable_description(
@@ -399,9 +359,7 @@ async def activate_variable_description(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_description_activate unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def remove_variable_description(
@@ -421,9 +379,7 @@ async def remove_variable_description(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_description_remove unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def read_string_variable(
@@ -440,9 +396,7 @@ async def read_string_variable(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_read_string unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def write_string_variable(
@@ -462,9 +416,7 @@ async def write_string_variable(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_write_string unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def dry_run_write(
@@ -499,6 +451,4 @@ async def dry_run_write(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("variable_dry_run_write unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))

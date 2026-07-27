@@ -135,9 +135,7 @@ class InstrumentListInput(BaseModel):
     """Input for instrument_list."""
 
     offset: int = Field(default=0, ge=0, description="Zero-based start index for pagination.")
-    limit: int = Field(
-        default=50, ge=1, le=200, description="Maximum number of instruments to return."
-    )
+    limit: int = Field(default=50, ge=1, le=200, description="Maximum number of instruments to return.")
     list_types: bool = Field(
         default=False,
         description=(
@@ -207,9 +205,7 @@ class InstrumentManageInput(BaseModel):
         description="Foreground color in '#RRGGBB' hex format for action='configure'.",
         examples=["#000000", "#0000FF"],
     )
-    show_border: Optional[bool] = Field(
-        default=None, description="Border visibility for action='configure'."
-    )
+    show_border: Optional[bool] = Field(default=None, description="Border visibility for action='configure'.")
     arrange_action: Optional[ArrangeAction] = Field(
         default=None,
         description=(
@@ -248,8 +244,7 @@ class InstrumentSignalManageInput(BaseModel):
     signal_color: Optional[str] = Field(
         default=None,
         description=(
-            "Signal line color for Plotter instruments. RGB hex format '#RRGGBB'. "
-            "Example: '#0000FF' for blue."
+            "Signal line color for Plotter instruments. RGB hex format '#RRGGBB'. Example: '#0000FF' for blue."
         ),
     )
     axis_index: int = Field(

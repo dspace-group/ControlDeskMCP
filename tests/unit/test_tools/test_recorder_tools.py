@@ -248,9 +248,7 @@ class TestRecorderMainManage:
         with _patch_svc("invoke_trigger", return_value=expected):
             from controldesk_mcp.tools.recorder.management import recorder_main_manage
 
-            result = await recorder_main_manage(
-                RecorderMainManageInput(action=RecorderMainManageAction.invoke_trigger)
-            )
+            result = await recorder_main_manage(RecorderMainManageInput(action=RecorderMainManageAction.invoke_trigger))
 
         assert isinstance(result, RecorderMainInvokeTriggerResult)
         assert result["triggered"] is True
@@ -261,9 +259,7 @@ class TestRecorderMainManage:
         with _patch_svc("invoke_trigger", return_value=_ERROR):
             from controldesk_mcp.tools.recorder.management import recorder_main_manage
 
-            result = await recorder_main_manage(
-                RecorderMainManageInput(action=RecorderMainManageAction.invoke_trigger)
-            )
+            result = await recorder_main_manage(RecorderMainManageInput(action=RecorderMainManageAction.invoke_trigger))
 
         assert isinstance(result, ErrorEnvelope)
 

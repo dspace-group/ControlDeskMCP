@@ -46,9 +46,7 @@ _TAGGED_TOOLS = [
         "Create experiment",
         meta={"domain": "project", "group": "experiment_management"},
     ),
-    _make_tool(
-        "project_root_add", "Add project root", meta={"domain": "project", "group": "project_roots"}
-    ),
+    _make_tool("project_root_add", "Add project root", meta={"domain": "project", "group": "project_roots"}),
     _make_tool(
         "measurement_start",
         "Start measurement",

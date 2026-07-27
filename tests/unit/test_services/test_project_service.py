@@ -293,8 +293,7 @@ class TestProjectListRecent:
         conn = _make_connected_bridge()
         app_mock = conn.get_app.return_value
         com_result = [
-            {"root_path": "C:\\Root", "name": f"P{i}", "full_path": f"C:\\Root\\P{i}\\P{i}.cdxs"}
-            for i in range(5)
+            {"root_path": "C:\\Root", "name": f"P{i}", "full_path": f"C:\\Root\\P{i}\\P{i}.cdxs"} for i in range(5)
         ]
 
         with (

@@ -94,13 +94,9 @@ def _get_layout_item(layouts: Any, name: str) -> Any:
         return layouts.Item(name)
     except Exception as exc:
         raise BridgePreconditionError(
-            f"Layout '{name}' does not exist in the active experiment. "
-            "Call layout_list to see available layouts.",
+            f"Layout '{name}' does not exist in the active experiment. Call layout_list to see available layouts.",
             error_code="BRIDGE_LAYOUT_NOT_FOUND",
-            recovery_hint=(
-                "Use layout_list() to enumerate available layout names. "
-                "Layout names are case-sensitive."
-            ),
+            recovery_hint=("Use layout_list() to enumerate available layout names. Layout names are case-sensitive."),
         ) from exc
 
 
@@ -139,11 +135,7 @@ def layout_list(app: Any) -> list[dict[str, Any]]:
             name = str(layout.Name)
             file_path = str(layout.FilePath) if hasattr(layout, "FilePath") else ""
             is_open = bool(layout.IsOpen) if hasattr(layout, "IsOpen") else False
-            editing_mode = (
-                _parse_editing_mode(layout.EditingMode)
-                if hasattr(layout, "EditingMode")
-                else "Unknown"
-            )
+            editing_mode = _parse_editing_mode(layout.EditingMode) if hasattr(layout, "EditingMode") else "Unknown"
             is_active = name == active_name
             result.append(
                 {
@@ -190,9 +182,7 @@ def layout_open(app: Any, name: str) -> dict[str, Any]:
     try:
         layout.Open()
         file_path = str(layout.FilePath) if hasattr(layout, "FilePath") else ""
-        editing_mode = (
-            _parse_editing_mode(layout.EditingMode) if hasattr(layout, "EditingMode") else "Unknown"
-        )
+        editing_mode = _parse_editing_mode(layout.EditingMode) if hasattr(layout, "EditingMode") else "Unknown"
         return {"name": name, "file_path": file_path, "editing_mode": editing_mode}
     except Exception as exc:
         raise map_com_error(exc, interface="IXaLayout", method="Open") from exc
@@ -276,9 +266,7 @@ def layout_get_info(app: Any, name: str) -> dict[str, Any]:
     try:
         file_path = str(layout.FilePath) if hasattr(layout, "FilePath") else ""
         is_open = bool(layout.IsOpen) if hasattr(layout, "IsOpen") else False
-        editing_mode = (
-            _parse_editing_mode(layout.EditingMode) if hasattr(layout, "EditingMode") else "Unknown"
-        )
+        editing_mode = _parse_editing_mode(layout.EditingMode) if hasattr(layout, "EditingMode") else "Unknown"
         is_active = name == active_name
         return {
             "name": name,

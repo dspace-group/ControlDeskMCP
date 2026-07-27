@@ -189,9 +189,7 @@ async def measurement_manage(params: MeasurementManageInput) -> object:
                 message="connection_path is required when action='signal_add'.",
                 recovery_hint="Set connection_path to the signal path (e.g., 'XCP(5ms)://signal').",
             )
-        return await measurement_service.signal_add(
-            MeasurementSignalAddInput(connection_path=params.connection_path)
-        )
+        return await measurement_service.signal_add(MeasurementSignalAddInput(connection_path=params.connection_path))
     if params.action == MeasurementManageAction.signal_remove:
         if params.connection_path is None:
             return ErrorEnvelope(
@@ -211,9 +209,7 @@ async def measurement_manage(params: MeasurementManageInput) -> object:
             message="connection_path is required when action='signal_add'.",
             recovery_hint="Set connection_path to the signal path (e.g., 'XCP(5ms)://signal').",
         )
-    return await measurement_service.signal_add(
-        MeasurementSignalAddInput(connection_path=params.connection_path)
-    )
+    return await measurement_service.signal_add(MeasurementSignalAddInput(connection_path=params.connection_path))
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -252,9 +248,7 @@ async def measurement_query(params: MeasurementQueryInput) -> object:
         return result
     from controldesk_mcp.models.measurement import MeasurementListSignalsResult
 
-    return MeasurementListSignalsResult(
-        **paginate(result.model_dump(), params.offset, params.limit, "signals")
-    )
+    return MeasurementListSignalsResult(**paginate(result.model_dump(), params.offset, params.limit, "signals"))
 
 
 # ── GROUP: RASTERS ─────────────────────────────────────────────────────────────────
@@ -308,9 +302,7 @@ async def measurement_raster_manage(params: MeasurementRasterManageInput) -> obj
             return result
         from controldesk_mcp.models.measurement import MeasurementRasterListResult
 
-        return MeasurementRasterListResult(
-            **paginate(result.model_dump(), params.offset, params.limit, "rasters")
-        )
+        return MeasurementRasterListResult(**paginate(result.model_dump(), params.offset, params.limit, "rasters"))
     # raster_remove
     if params.platform_name is None:
         return ErrorEnvelope(
@@ -395,9 +387,7 @@ async def trigger_manage(params: TriggerManageInput) -> object:
                 message="rule_name is required when action='rule_remove'.",
                 recovery_hint="Set rule_name to the name of the rule to remove.",
             )
-        return await measurement_service.remove_trigger_rule(
-            TriggerRuleRemoveInput(rule_name=params.rule_name)
-        )
+        return await measurement_service.remove_trigger_rule(TriggerRuleRemoveInput(rule_name=params.rule_name))
     if params.action == TriggerManageAction.condition_time_limit:
         if params.enabled is None:
             return ErrorEnvelope(
@@ -567,9 +557,7 @@ async def recording_manage(params: RecordingManageInput) -> object:
             return result
         from controldesk_mcp.models.measurement import MeasurementBookmarkListResult
 
-        return MeasurementBookmarkListResult(
-            **paginate(result.model_dump(), params.offset, params.limit, "bookmarks")
-        )
+        return MeasurementBookmarkListResult(**paginate(result.model_dump(), params.offset, params.limit, "bookmarks"))
     # bookmark_remove
     if params.recording_index is None:
         return ErrorEnvelope(
@@ -626,9 +614,7 @@ async def data_logger_manage(params: DataLoggerManageInput) -> object:
                 message="logger_name is required when action='create'.",
                 recovery_hint="Set logger_name to a unique name for the data logger.",
             )
-        return await measurement_service.create_data_logger(
-            DataLoggerCreateInput(logger_name=params.logger_name)
-        )
+        return await measurement_service.create_data_logger(DataLoggerCreateInput(logger_name=params.logger_name))
     if params.action == DataLoggerManageAction.configure:
         if params.logger_name is None:
             return ErrorEnvelope(
@@ -660,9 +646,7 @@ async def data_logger_manage(params: DataLoggerManageInput) -> object:
                 message="logger_name is required when action='start'.",
                 recovery_hint="Set logger_name to the name of the logger to start.",
             )
-        return await measurement_service.start_data_logger(
-            DataLoggerStartInput(logger_name=params.logger_name)
-        )
+        return await measurement_service.start_data_logger(DataLoggerStartInput(logger_name=params.logger_name))
     if params.action == DataLoggerManageAction.stop:
         if params.logger_name is None:
             return ErrorEnvelope(
@@ -671,9 +655,7 @@ async def data_logger_manage(params: DataLoggerManageInput) -> object:
                 message="logger_name is required when action='stop'.",
                 recovery_hint="Set logger_name to the name of the logger to stop.",
             )
-        return await measurement_service.stop_data_logger(
-            DataLoggerStopInput(logger_name=params.logger_name)
-        )
+        return await measurement_service.stop_data_logger(DataLoggerStopInput(logger_name=params.logger_name))
     if params.action == DataLoggerManageAction.list:
         result = await measurement_service.list_data_loggers(
             DataLoggerListInput(limit=params.limit, offset=params.offset)
@@ -682,9 +664,7 @@ async def data_logger_manage(params: DataLoggerManageInput) -> object:
             return result
         from controldesk_mcp.models.measurement import DataLoggerListResult
 
-        return DataLoggerListResult(
-            **paginate(result.model_dump(), params.offset, params.limit, "loggers")
-        )
+        return DataLoggerListResult(**paginate(result.model_dump(), params.offset, params.limit, "loggers"))
     # remove
     if params.logger_name is None:
         return ErrorEnvelope(
@@ -693,9 +673,7 @@ async def data_logger_manage(params: DataLoggerManageInput) -> object:
             message="logger_name is required when action='remove'.",
             recovery_hint="Set logger_name to the name of the logger to remove.",
         )
-    return await measurement_service.remove_data_logger(
-        DataLoggerRemoveInput(logger_name=params.logger_name)
-    )
+    return await measurement_service.remove_data_logger(DataLoggerRemoveInput(logger_name=params.logger_name))
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -791,10 +769,7 @@ async def measurement_discover(ctx: Context) -> MeasurementDiscoverResult:
             ),
             ToolActionEntry(
                 tool_name="data_logger_manage",
-                purpose=(
-                    "Manage data logger lifecycle: "
-                    "create, configure, start, stop, list, or remove data loggers."
-                ),
+                purpose=("Manage data logger lifecycle: create, configure, start, stop, list, or remove data loggers."),
                 actions=["create", "configure", "start", "stop", "list", "remove"],
                 required_params_per_action={
                     "create": ["logger_name"],

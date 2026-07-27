@@ -146,10 +146,7 @@ def get_domain_tools(domain: str) -> str:
         "tools": tools,
     }
     if not tools:
-        result["hint"] = (
-            f"Domain '{domain}' is unknown or has no registered tools. "
-            f"Known domains: {_KNOWN_DOMAINS}"
-        )
+        result["hint"] = f"Domain '{domain}' is unknown or has no registered tools. Known domains: {_KNOWN_DOMAINS}"
     return json.dumps(result)
 
 

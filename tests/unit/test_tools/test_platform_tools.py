@@ -141,9 +141,7 @@ class TestPlatformManage:
         with _patch_svc("get_platform_info", return_value=expected):
             from controldesk_mcp.tools.platform.management import platform_query
 
-            result = await platform_query(
-                PlatformQueryInput(action=PlatformQueryAction.get_info, platform_name="XCP")
-            )
+            result = await platform_query(PlatformQueryInput(action=PlatformQueryAction.get_info, platform_name="XCP"))
 
         assert isinstance(result, PlatformGetInfoResult)
         assert result["name"] == "XCP"
@@ -169,9 +167,7 @@ class TestPlatformManage:
             from controldesk_mcp.tools.platform.management import platform_query
 
             result = await platform_query(
-                PlatformQueryInput(
-                    action=PlatformQueryAction.get_connection_state, platform_name="XCP"
-                )
+                PlatformQueryInput(action=PlatformQueryAction.get_connection_state, platform_name="XCP")
             )
 
         assert isinstance(result, PlatformGetConnectionStateResult)
@@ -181,9 +177,7 @@ class TestPlatformManage:
     async def test_get_connection_state_missing_platform_name(self) -> None:
         from controldesk_mcp.tools.platform.management import platform_query
 
-        result = await platform_query(
-            PlatformQueryInput(action=PlatformQueryAction.get_connection_state)
-        )
+        result = await platform_query(PlatformQueryInput(action=PlatformQueryAction.get_connection_state))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -197,9 +191,7 @@ class TestPlatformManage:
             from controldesk_mcp.tools.platform.management import platform_manage
 
             result = await platform_manage(
-                PlatformManageInput(
-                    action=PlatformManageAction.add, platform_type=PlatformType.XCPonCAN
-                )
+                PlatformManageInput(action=PlatformManageAction.add, platform_type=PlatformType.XCPonCAN)
             )
 
         assert isinstance(result, PlatformAddResult)
@@ -234,9 +226,7 @@ class TestPlatformManage:
     async def test_activate_registered_missing_unique_name(self) -> None:
         from controldesk_mcp.tools.platform.management import platform_manage
 
-        result = await platform_manage(
-            PlatformManageInput(action=PlatformManageAction.activate_registered)
-        )
+        result = await platform_manage(PlatformManageInput(action=PlatformManageAction.activate_registered))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -295,9 +285,7 @@ class TestPlatformManage:
         from controldesk_mcp.tools.platform.management import platform_manage
 
         result = await platform_manage(
-            PlatformManageInput(
-                action=PlatformManageAction.configure_calibration_behavior, platform_name="XCP"
-            )
+            PlatformManageInput(action=PlatformManageAction.configure_calibration_behavior, platform_name="XCP")
         )
 
         assert isinstance(result, ErrorEnvelope)
@@ -324,18 +312,14 @@ class TestPlatformManage:
     async def test_configure_transport_missing_platform_name(self) -> None:
         from controldesk_mcp.tools.platform.management import platform_manage
 
-        result = await platform_manage(
-            PlatformManageInput(action=PlatformManageAction.configure_transport)
-        )
+        result = await platform_manage(PlatformManageInput(action=PlatformManageAction.configure_transport))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
 
     @pytest.mark.asyncio
     async def test_set_api_version(self) -> None:
-        expected = PlatformSetApiVersionResult(
-            version_string="APIVersion2", version_integer=2, configured=True
-        )
+        expected = PlatformSetApiVersionResult(version_string="APIVersion2", version_integer=2, configured=True)
         with _patch_svc("set_api_version", return_value=expected):
             from controldesk_mcp.tools.platform.management import platform_manage
 
@@ -353,18 +337,14 @@ class TestPlatformManage:
     async def test_set_api_version_missing_version(self) -> None:
         from controldesk_mcp.tools.platform.management import platform_manage
 
-        result = await platform_manage(
-            PlatformManageInput(action=PlatformManageAction.set_api_version)
-        )
+        result = await platform_manage(PlatformManageInput(action=PlatformManageAction.set_api_version))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
 
     @pytest.mark.asyncio
     async def test_select_interface_manual(self) -> None:
-        expected = PlatformSelectInterfaceManualResult(
-            selected=True, platform_name="XCP", interface_name="Virtual"
-        )
+        expected = PlatformSelectInterfaceManualResult(selected=True, platform_name="XCP", interface_name="Virtual")
         with _patch_svc("select_interface_manual", return_value=expected):
             from controldesk_mcp.tools.platform.management import platform_manage
 
@@ -386,9 +366,7 @@ class TestPlatformManage:
         from controldesk_mcp.tools.platform.management import platform_manage
 
         result = await platform_manage(
-            PlatformManageInput(
-                action=PlatformManageAction.select_interface_manual, platform_name="XCP"
-            )
+            PlatformManageInput(action=PlatformManageAction.select_interface_manual, platform_name="XCP")
         )
 
         assert isinstance(result, ErrorEnvelope)
@@ -421,9 +399,7 @@ class TestPlatformManage:
         from controldesk_mcp.tools.platform.management import platform_manage
 
         result = await platform_manage(
-            PlatformManageInput(
-                action=PlatformManageAction.add_variable_description, platform_name="XCP"
-            )
+            PlatformManageInput(action=PlatformManageAction.add_variable_description, platform_name="XCP")
         )
 
         assert isinstance(result, ErrorEnvelope)
@@ -445,9 +421,7 @@ class TestPlatformManage:
     async def test_list_interfaces_missing_platform_name(self) -> None:
         from controldesk_mcp.tools.platform.management import platform_query
 
-        result = await platform_query(
-            PlatformQueryInput(action=PlatformQueryAction.list_interfaces)
-        )
+        result = await platform_query(PlatformQueryInput(action=PlatformQueryAction.list_interfaces))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -455,9 +429,7 @@ class TestPlatformManage:
     @pytest.mark.asyncio
     async def test_list_types(self) -> None:
         expected = PlatformListTypesResult(
-            categories=[
-                {"category": "Hardware", "types": [{"name": "SCALEXIO", "integer_value": 1}]}
-            ],
+            categories=[{"category": "Hardware", "types": [{"name": "SCALEXIO", "integer_value": 1}]}],
             usage_note="Use platform_add for direct-add types.",
         )
         with _patch_svc("list_platform_types", return_value=expected):
@@ -474,9 +446,7 @@ class TestPlatformManage:
         with _patch_svc("list_hardware_types", return_value=expected):
             from controldesk_mcp.tools.platform.management import platform_query
 
-            result = await platform_query(
-                PlatformQueryInput(action=PlatformQueryAction.list_hardware_types)
-            )
+            result = await platform_query(PlatformQueryInput(action=PlatformQueryAction.list_hardware_types))
 
         assert isinstance(result, PlatformListHardwareTypesResult)
 
@@ -521,16 +491,12 @@ class TestPlatformHardwareManage:
 
     @pytest.mark.asyncio
     async def test_clear_registered(self) -> None:
-        expected = PlatformClearRegisteredResult(
-            cleared=True, force_driver_reset=False, message="All cleared"
-        )
+        expected = PlatformClearRegisteredResult(cleared=True, force_driver_reset=False, message="All cleared")
         with _patch_svc("clear_registered_platforms", return_value=expected):
             from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
-                PlatformHardwareManageInput(
-                    action=PlatformHardwareManageAction.clear_registered, confirm=True
-                )
+                PlatformHardwareManageInput(action=PlatformHardwareManageAction.clear_registered, confirm=True)
             )
 
         assert isinstance(result, PlatformClearRegisteredResult)
@@ -543,9 +509,7 @@ class TestPlatformHardwareManage:
             from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
-                PlatformHardwareManageInput(
-                    action=PlatformHardwareManageAction.clear_registered, confirm=False
-                )
+                PlatformHardwareManageInput(action=PlatformHardwareManageAction.clear_registered, confirm=False)
             )
 
         assert isinstance(result, PlatformClearRegisteredAborted)
@@ -569,9 +533,7 @@ class TestPlatformHardwareManage:
             from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
-                PlatformHardwareManageInput(
-                    action=PlatformHardwareManageAction.list_registered_hardware
-                )
+                PlatformHardwareManageInput(action=PlatformHardwareManageAction.list_registered_hardware)
             )
 
         assert isinstance(result, PlatformListRegisteredHardwareResult)
@@ -582,9 +544,7 @@ class TestPlatformHardwareManage:
             from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
-                PlatformHardwareManageInput(
-                    action=PlatformHardwareManageAction.list_registered_hardware
-                )
+                PlatformHardwareManageInput(action=PlatformHardwareManageAction.list_registered_hardware)
             )
 
         assert isinstance(result, ErrorEnvelope)
@@ -596,9 +556,7 @@ class TestPlatformHardwareManage:
             from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
-                PlatformHardwareManageInput(
-                    action=PlatformHardwareManageAction.get_registered_info, index=0
-                )
+                PlatformHardwareManageInput(action=PlatformHardwareManageAction.get_registered_info, index=0)
             )
 
         assert isinstance(result, PlatformGetRegisteredInfoResult)
@@ -617,16 +575,12 @@ class TestPlatformHardwareManage:
 
     @pytest.mark.asyncio
     async def test_refresh_configuration(self) -> None:
-        expected = PlatformRefreshConfigurationResult(
-            refreshed=True, operation="RefreshPlatformConfiguration"
-        )
+        expected = PlatformRefreshConfigurationResult(refreshed=True, operation="RefreshPlatformConfiguration")
         with _patch_svc("refresh_platform_configuration", return_value=expected):
             from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
-                PlatformHardwareManageInput(
-                    action=PlatformHardwareManageAction.refresh_configuration
-                )
+                PlatformHardwareManageInput(action=PlatformHardwareManageAction.refresh_configuration)
             )
 
         assert isinstance(result, PlatformRefreshConfigurationResult)
@@ -641,9 +595,7 @@ class TestPlatformHardwareManage:
             from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
-                PlatformHardwareManageInput(
-                    action=PlatformHardwareManageAction.refresh_interface_connections
-                )
+                PlatformHardwareManageInput(action=PlatformHardwareManageAction.refresh_interface_connections)
             )
 
         assert isinstance(result, PlatformRefreshInterfaceConnectionsResult)
@@ -658,9 +610,7 @@ class TestPlatformAdminManage:
             from controldesk_mcp.tools.platform.management import platform_admin_manage
 
             result = await platform_admin_manage(
-                PlatformAdminManageInput(
-                    action=PlatformAdminManageAction.remove, platform_name="XCP"
-                )
+                PlatformAdminManageInput(action=PlatformAdminManageAction.remove, platform_name="XCP")
             )
 
         assert isinstance(result, PlatformRemoveResult)
@@ -670,18 +620,14 @@ class TestPlatformAdminManage:
     async def test_remove_missing_platform_name(self) -> None:
         from controldesk_mcp.tools.platform.management import platform_admin_manage
 
-        result = await platform_admin_manage(
-            PlatformAdminManageInput(action=PlatformAdminManageAction.remove)
-        )
+        result = await platform_admin_manage(PlatformAdminManageInput(action=PlatformAdminManageAction.remove))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
 
     @pytest.mark.asyncio
     async def test_rename(self) -> None:
-        expected = PlatformRenameResult(
-            renamed=True, platform_name="XCP", new_name="XCP_Renamed", timestamp_utc=_TS
-        )
+        expected = PlatformRenameResult(renamed=True, platform_name="XCP", new_name="XCP_Renamed", timestamp_utc=_TS)
         with _patch_svc("rename_platform", return_value=expected):
             from controldesk_mcp.tools.platform.management import platform_admin_manage
 
@@ -729,9 +675,7 @@ class TestPlatformAdminManage:
         from controldesk_mcp.tools.platform.management import platform_admin_manage
 
         result = await platform_admin_manage(
-            PlatformAdminManageInput(
-                action=PlatformAdminManageAction.set_enabled, platform_name="XCP"
-            )
+            PlatformAdminManageInput(action=PlatformAdminManageAction.set_enabled, platform_name="XCP")
         )
 
         assert isinstance(result, ErrorEnvelope)
@@ -768,7 +712,4 @@ class TestPlatformDiscover:
 class TestPlatformInputModels:
     def test_manage_input_instantiates(self) -> None:
         assert PlatformQueryInput(action=PlatformQueryAction.list) is not None
-        assert (
-            PlatformHardwareManageInput(action=PlatformHardwareManageAction.refresh_configuration)
-            is not None
-        )
+        assert PlatformHardwareManageInput(action=PlatformHardwareManageAction.refresh_configuration) is not None

@@ -87,9 +87,7 @@ async def instrument_list(
     result = await instrument_service.instrument_list()
     if isinstance(result, ErrorEnvelope):
         return result
-    return InstrumentListResult(
-        **paginate(result.model_dump(), params.offset, params.limit, "instruments")
-    )
+    return InstrumentListResult(**paginate(result.model_dump(), params.offset, params.limit, "instruments"))
 
 
 # ── Tool 2 — instrument_query ─────────────────────────────────────────────────
@@ -115,10 +113,7 @@ async def instrument_query(
             error_code="MISSING_PARAM",
             category="INPUT_VALIDATION",
             message="instrument_name is required for action='get_info'.",
-            recovery_hint=(
-                "Set instrument_name to the exact instrument name "
-                "(use instrument_list to discover names)."
-            ),
+            recovery_hint=("Set instrument_name to the exact instrument name (use instrument_list to discover names)."),
         )
     return await instrument_service.instrument_get_info(params.instrument_name)
 
@@ -206,10 +201,7 @@ async def instrument_manage(
             error_code="MISSING_PARAM",
             category="INPUT_VALIDATION",
             message=f"instrument_name is required for action='{action.value}'.",
-            recovery_hint=(
-                "Set instrument_name to the exact instrument name "
-                "(use instrument_list to discover names)."
-            ),
+            recovery_hint=("Set instrument_name to the exact instrument name (use instrument_list to discover names)."),
         )
 
     if action == InstrumentManageAction.remove:

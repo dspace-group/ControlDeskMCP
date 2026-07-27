@@ -151,14 +151,10 @@ async def variable_read(
                 error_code="MISSING_PARAM",
                 category="INPUT_VALIDATION",
                 message="variable_name is required when read_type='scalar'.",
-                recovery_hint=(
-                    "Set variable_name to the name or connection path of the scalar variable."
-                ),
+                recovery_hint=("Set variable_name to the name or connection path of the scalar variable."),
             )
         return await variable_service.read_scalar_variable(
-            VariableReadScalarInput(
-                variable_name=params.variable_name, value_format=params.value_format
-            )
+            VariableReadScalarInput(variable_name=params.variable_name, value_format=params.value_format)
         )
 
     if params.read_type == VariableReadType.curve:
@@ -167,14 +163,10 @@ async def variable_read(
                 error_code="MISSING_PARAM",
                 category="INPUT_VALIDATION",
                 message="variable_name is required when read_type='curve'.",
-                recovery_hint=(
-                    "Set variable_name to the name or connection path of the curve variable."
-                ),
+                recovery_hint=("Set variable_name to the name or connection path of the curve variable."),
             )
         return await variable_service.read_curve_variable(
-            VariableReadCurveInput(
-                variable_name=params.variable_name, value_format=params.value_format
-            )
+            VariableReadCurveInput(variable_name=params.variable_name, value_format=params.value_format)
         )
 
     if params.read_type == VariableReadType.map:
@@ -183,14 +175,10 @@ async def variable_read(
                 error_code="MISSING_PARAM",
                 category="INPUT_VALIDATION",
                 message="variable_name is required when read_type='map'.",
-                recovery_hint=(
-                    "Set variable_name to the name or connection path of the map variable."
-                ),
+                recovery_hint=("Set variable_name to the name or connection path of the map variable."),
             )
         return await variable_service.read_map_variable(
-            VariableReadMapInput(
-                variable_name=params.variable_name, value_format=params.value_format
-            )
+            VariableReadMapInput(variable_name=params.variable_name, value_format=params.value_format)
         )
 
     if params.read_type == VariableReadType.array_element:
@@ -200,14 +188,11 @@ async def variable_read(
                 category="INPUT_VALIDATION",
                 message="element_path is required when read_type='array_element'.",
                 recovery_hint=(
-                    "Set element_path to the fully qualified array element path, "
-                    "e.g. 'XCP()://ParamVector[0]'."
+                    "Set element_path to the fully qualified array element path, e.g. 'XCP()://ParamVector[0]'."
                 ),
             )
         return await variable_service.read_array_element(
-            VariableReadArrayElementInput(
-                element_path=params.element_path, value_format=params.value_format
-            )
+            VariableReadArrayElementInput(element_path=params.element_path, value_format=params.value_format)
         )
 
     # string
@@ -216,13 +201,9 @@ async def variable_read(
             error_code="MISSING_PARAM",
             category="INPUT_VALIDATION",
             message="variable_name is required when read_type='string'.",
-            recovery_hint=(
-                "Set variable_name to the name or connection path of the string variable."
-            ),
+            recovery_hint=("Set variable_name to the name or connection path of the string variable."),
         )
-    return await variable_service.read_string_variable(
-        VariableReadStringInput(variable_name=params.variable_name)
-    )
+    return await variable_service.read_string_variable(VariableReadStringInput(variable_name=params.variable_name))
 
 
 # ── Tool 3 — variable_write ───────────────────────────────────────────────────
@@ -271,8 +252,7 @@ async def variable_write(
                 error_code="MISSING_PARAM",
                 category="INPUT_VALIDATION",
                 message=(
-                    "variable_name (or element_path) and value (or function_values) "
-                    "are required for dry_run=True."
+                    "variable_name (or element_path) and value (or function_values) are required for dry_run=True."
                 ),
                 recovery_hint="Set the target variable identifier and the proposed value.",
             )
@@ -335,9 +315,7 @@ async def variable_write(
                 error_code="MISSING_PARAM",
                 category="INPUT_VALIDATION",
                 message="variable_name and function_values are required for action='curve'.",
-                recovery_hint=(
-                    "Set variable_name and function_values (list of floats) for the curve."
-                ),
+                recovery_hint=("Set variable_name and function_values (list of floats) for the curve."),
             )
         return await variable_service.write_curve_variable(
             VariableWriteCurveInput(
@@ -354,9 +332,7 @@ async def variable_write(
             error_code="MISSING_PARAM",
             category="INPUT_VALIDATION",
             message="variable_name and function_values are required for action='map'.",
-            recovery_hint=(
-                "Set variable_name and function_values (2-D list of floats) for the map."
-            ),
+            recovery_hint=("Set variable_name and function_values (2-D list of floats) for the map."),
         )
     return await variable_service.write_map_variable(
         VariableWriteMapInput(
@@ -397,12 +373,7 @@ async def variable_write(
 )
 async def variable_list(
     params: VariableListInput,
-) -> (
-    VariableListAllResult
-    | VariableListArrayElementsResult
-    | VariableListGroupVariablesResult
-    | ErrorEnvelope
-):
+) -> VariableListAllResult | VariableListArrayElementsResult | VariableListGroupVariablesResult | ErrorEnvelope:
     if params.action == VariableListAction.list_all:
         return await variable_service.list_all_variables()
 
@@ -412,9 +383,7 @@ async def variable_list(
                 error_code="MISSING_PARAM",
                 category="INPUT_VALIDATION",
                 message="variable_name is required for action='list_array_elements'.",
-                recovery_hint=(
-                    "Set variable_name to the name or connection path of the array variable."
-                ),
+                recovery_hint=("Set variable_name to the name or connection path of the array variable."),
             )
         result = await variable_service.list_array_elements(
             VariableListArrayElementsInput(
@@ -425,9 +394,7 @@ async def variable_list(
         )
         if isinstance(result, ErrorEnvelope):
             return result
-        return VariableListArrayElementsResult(
-            **paginate(result.model_dump(), params.offset, params.limit, "elements")
-        )
+        return VariableListArrayElementsResult(**paginate(result.model_dump(), params.offset, params.limit, "elements"))
 
     # list_group_variables
     result = await variable_service.list_group_variables(
@@ -439,9 +406,7 @@ async def variable_list(
     )
     if isinstance(result, ErrorEnvelope):
         return result
-    return VariableListGroupVariablesResult(
-        **paginate(result.model_dump(), params.offset, params.limit, "variables")
-    )
+    return VariableListGroupVariablesResult(**paginate(result.model_dump(), params.offset, params.limit, "variables"))
 
 
 # ── GROUP: PAGE_MANAGEMENT ────────────────────────────────────────────────────
@@ -499,10 +464,7 @@ async def data_set_manage(
 async def variable_description_manage(
     params: VariableDescriptionManageInput,
 ) -> (
-    VariableDescriptionListResult
-    | VariableDescriptionActivateResult
-    | VariableDescriptionRemoveResult
-    | ErrorEnvelope
+    VariableDescriptionListResult | VariableDescriptionActivateResult | VariableDescriptionRemoveResult | ErrorEnvelope
 ):
     if params.platform_name is None:
         return ErrorEnvelope(
@@ -531,9 +493,7 @@ async def variable_description_manage(
             error_code="MISSING_PARAM",
             category="INPUT_VALIDATION",
             message="variable_description_name is required for activate and remove actions.",
-            recovery_hint=(
-                "Set variable_description_name to the name of the variable description."
-            ),
+            recovery_hint=("Set variable_description_name to the name of the variable description."),
         )
 
     if params.action == VariableDescriptionManageAction.activate:
@@ -583,10 +543,7 @@ async def variable_discover(ctx: Context) -> VariableDiscoverResult:
         tools=[
             ToolActionEntry(
                 tool_name="variable_list",
-                purpose=(
-                    "List all variables by type, list array elements, "
-                    "or list variables within a group."
-                ),
+                purpose=("List all variables by type, list array elements, or list variables within a group."),
                 actions=["list_all", "list_array_elements", "list_group_variables"],
                 required_params_per_action={
                     "list_all": [],
@@ -596,10 +553,7 @@ async def variable_discover(ctx: Context) -> VariableDiscoverResult:
             ),
             ToolActionEntry(
                 tool_name="data_set_manage",
-                purpose=(
-                    "Activate working (RAM) or reference (flash) memory page "
-                    "for calibration sessions."
-                ),
+                purpose=("Activate working (RAM) or reference (flash) memory page for calibration sessions."),
                 actions=["activate_working_page", "activate_reference_page"],
                 required_params_per_action={
                     "activate_working_page": [],
@@ -608,10 +562,7 @@ async def variable_discover(ctx: Context) -> VariableDiscoverResult:
             ),
             ToolActionEntry(
                 tool_name="variable_description_manage",
-                purpose=(
-                    "List, activate, or remove variable descriptions "
-                    "(A2L calibration databases) for a platform."
-                ),
+                purpose=("List, activate, or remove variable descriptions (A2L calibration databases) for a platform."),
                 actions=["list", "activate", "remove"],
                 required_params_per_action={
                     "list": ["platform_name"],

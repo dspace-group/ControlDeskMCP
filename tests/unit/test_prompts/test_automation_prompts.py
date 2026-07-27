@@ -88,9 +88,7 @@ class TestDiagnoseConnection:
     def test_error_message_inserted_in_prompt(self) -> None:
         from controldesk_mcp.prompts.session_prompts import diagnose_connection
 
-        text = _first_message_text(
-            diagnose_connection(error_message="RPC_E_DISCONNECTED: 0x80010108")
-        )
+        text = _first_message_text(diagnose_connection(error_message="RPC_E_DISCONNECTED: 0x80010108"))
         assert "RPC_E_DISCONNECTED" in text
 
     def test_tool_name_inserted_in_prompt(self) -> None:
@@ -171,9 +169,7 @@ class TestReadWriteVariables:
     def test_write_value_included_when_provided(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import read_write_variables
 
-        text = _first_message_text(
-            read_write_variables(variable_path="Model/Root/Speed", write_value="42.0")
-        )
+        text = _first_message_text(read_write_variables(variable_path="Model/Root/Speed", write_value="42.0"))
         assert "42.0" in text
 
     def test_read_only_mode_when_no_write_value(self) -> None:

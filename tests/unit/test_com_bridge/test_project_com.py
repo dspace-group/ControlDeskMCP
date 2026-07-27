@@ -310,9 +310,7 @@ class TestProjectOpenFromBackup:
         restored.Name = "RestoredProject"
         app = MagicMock()
         app.Projects.OpenFromBackup.return_value = restored
-        result = project_com.project_open_from_backup(
-            app, "C:\\Backups\\proj.zip", "RestoredProject", False
-        )
+        result = project_com.project_open_from_backup(app, "C:\\Backups\\proj.zip", "RestoredProject", False)
         assert result["restored"] is True
         assert result["name"] == "RestoredProject"
 
@@ -498,9 +496,7 @@ class TestExperimentImport:
         app = _make_app(active_project=proj)
         app.ActiveProject.Experiments.Import.return_value = imported_exp
         result = project_com.experiment_import(app, "C:\\Exports\\exp.dsa", "MyExpName")
-        app.ActiveProject.Experiments.Import.assert_called_once_with(
-            "C:\\Exports\\exp.dsa", "MyExpName", False
-        )
+        app.ActiveProject.Experiments.Import.assert_called_once_with("C:\\Exports\\exp.dsa", "MyExpName", False)
         assert result["imported"] is True
         assert result["name"] == "ImportedExp"
 
@@ -552,9 +548,7 @@ class TestProjectConfigureSettings:
         proj = _make_project()
         proj.GeneralSettings = MagicMock()
         app = _make_app(active_project=proj)
-        result = project_com.project_configure_settings(
-            app, auto_save=True, open_last_experiment_on_startup=None
-        )
+        result = project_com.project_configure_settings(app, auto_save=True, open_last_experiment_on_startup=None)
         assert proj.GeneralSettings.AutoSave == True  # noqa: E712
         assert result == {"configured": True}
 
@@ -562,23 +556,17 @@ class TestProjectConfigureSettings:
         proj = _make_project()
         proj.GeneralSettings = MagicMock()
         app = _make_app(active_project=proj)
-        result = project_com.project_configure_settings(
-            app, auto_save=None, open_last_experiment_on_startup=True
-        )
+        result = project_com.project_configure_settings(app, auto_save=None, open_last_experiment_on_startup=True)
         assert proj.GeneralSettings.OpenLastExperimentOnStartup == True  # noqa: E712
         assert result == {"configured": True}
 
     def test_no_change_when_none(self) -> None:
         proj = _make_project()
         app = _make_app(active_project=proj)
-        result = project_com.project_configure_settings(
-            app, auto_save=None, open_last_experiment_on_startup=None
-        )
+        result = project_com.project_configure_settings(app, auto_save=None, open_last_experiment_on_startup=None)
         assert result == {"configured": True}
 
     def test_raises_when_no_active_project(self) -> None:
         app = _make_app(active_project=None)
         with pytest.raises(BridgePreconditionError):
-            project_com.project_configure_settings(
-                app, auto_save=True, open_last_experiment_on_startup=None
-            )
+            project_com.project_configure_settings(app, auto_save=True, open_last_experiment_on_startup=None)

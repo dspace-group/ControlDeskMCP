@@ -132,9 +132,7 @@ class TestGuardedDispatch:
     @pytest.mark.asyncio
     async def test_circuit_breaker_blocks_call_when_open(self) -> None:
         mock_breaker = MagicMock(spec=CircuitBreaker)
-        mock_breaker.assert_call_allowed.side_effect = BridgeCircuitOpenError(
-            "Circuit OPEN for 'start_controldesk'."
-        )
+        mock_breaker.assert_call_allowed.side_effect = BridgeCircuitOpenError("Circuit OPEN for 'start_controldesk'.")
 
         with patch(
             "controldesk_mcp.com_bridge.error_handling.guard.get_breaker",

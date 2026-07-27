@@ -75,9 +75,7 @@ class TestConfigureMainRecorder:
         ):
             from controldesk_mcp.services.recorder_service import configure_main_recorder
 
-            result = await configure_main_recorder(
-                RecorderMainConfigureInput(base_filename="Recording.mf4")
-            )
+            result = await configure_main_recorder(RecorderMainConfigureInput(base_filename="Recording.mf4"))
 
         assert result["configured"] is True
         assert result["base_filename"] == "Recording.mf4"
@@ -93,9 +91,7 @@ class TestConfigureMainRecorder:
         ):
             from controldesk_mcp.services.recorder_service import configure_main_recorder
 
-            result = await configure_main_recorder(
-                RecorderMainConfigureInput(base_filename="Recording.mf4")
-            )
+            result = await configure_main_recorder(RecorderMainConfigureInput(base_filename="Recording.mf4"))
 
         assert result.get("category") is not None
 
@@ -121,9 +117,7 @@ class TestAddSignal:
         ):
             from controldesk_mcp.services.recorder_service import add_signal
 
-            result = await add_signal(
-                RecorderMainAddSignalInput(connection_path="XCP(5ms)://control_out")
-            )
+            result = await add_signal(RecorderMainAddSignalInput(connection_path="XCP(5ms)://control_out"))
 
         assert result["added"] is True
         assert result["connection_path"] == "XCP(5ms)://control_out"
@@ -139,9 +133,7 @@ class TestAddSignal:
         ):
             from controldesk_mcp.services.recorder_service import add_signal
 
-            result = await add_signal(
-                RecorderMainAddSignalInput(connection_path="XCP(5ms)://control_out")
-            )
+            result = await add_signal(RecorderMainAddSignalInput(connection_path="XCP(5ms)://control_out"))
 
         assert result.get("category") is not None
 
@@ -167,9 +159,7 @@ class TestRemoveSignal:
         ):
             from controldesk_mcp.services.recorder_service import remove_signal
 
-            result = await remove_signal(
-                RecorderMainRemoveSignalInput(connection_path="XCP(5ms)://control_out")
-            )
+            result = await remove_signal(RecorderMainRemoveSignalInput(connection_path="XCP(5ms)://control_out"))
 
         assert result["removed"] is True
 
@@ -184,9 +174,7 @@ class TestRemoveSignal:
         ):
             from controldesk_mcp.services.recorder_service import remove_signal
 
-            result = await remove_signal(
-                RecorderMainRemoveSignalInput(connection_path="XCP(5ms)://control_out")
-            )
+            result = await remove_signal(RecorderMainRemoveSignalInput(connection_path="XCP(5ms)://control_out"))
 
         assert result.get("category") is not None
 
@@ -432,9 +420,7 @@ class TestExportRecorder:
         ):
             from controldesk_mcp.services.recorder_service import export_recorder
 
-            result = await export_recorder(
-                RecorderMainExportInput(full_path="C:\\\\Recordings\\\\cfg.mf4r")
-            )
+            result = await export_recorder(RecorderMainExportInput(full_path="C:\\\\Recordings\\\\cfg.mf4r"))
 
         assert result["exported"] is True
 
@@ -492,9 +478,7 @@ class TestImportSignalsFromFile:
         ):
             from controldesk_mcp.services.recorder_service import import_signals_from_file
 
-            result = await import_signals_from_file(
-                RecorderMainImportSignalsInput(full_path="C:\\\\cfg.mf4r")
-            )
+            result = await import_signals_from_file(RecorderMainImportSignalsInput(full_path="C:\\\\cfg.mf4r"))
 
         assert result.get("category") is not None
 

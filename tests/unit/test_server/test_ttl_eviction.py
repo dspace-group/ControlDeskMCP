@@ -156,9 +156,7 @@ class TestTTLTrackingStructures:
 
 
 class TestLazyEviction:
-    def _prime_active_domain(
-        self, srv: MCPServer, domain: ToolDomain, tool_names: list[str], last_used: float
-    ) -> None:
+    def _prime_active_domain(self, srv: MCPServer, domain: ToolDomain, tool_names: list[str], last_used: float) -> None:
         """Simulate a domain that was activated and last used at `last_used`."""
         srv._activated_addon_domains.add(domain)
         srv._domain_tool_names[domain] = tool_names

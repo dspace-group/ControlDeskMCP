@@ -146,8 +146,7 @@ def calibration_refresh_parameters(app: Any) -> dict[str, Any]:
         return {"refreshed": True, "timestamp_utc": _timestamp_utc()}
     except Exception as exc:
         raise BridgeOperationError(
-            "Failed to refresh calibration parameters. "
-            "Ensure online calibration is running and ECU is connected.",
+            "Failed to refresh calibration parameters. Ensure online calibration is running and ECU is connected.",
         ) from exc
 
 

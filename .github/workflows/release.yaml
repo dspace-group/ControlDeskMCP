@@ -17,9 +17,9 @@ permissions:
   id-token: write
 
 jobs:
-  build-python-package:
-    name: Build Python package
-    runs-on: ubuntu-latest
+  build-windows-exe:
+    name: Build Windows executable
+    runs-on: windows-latest
     env:
       RELEASE_TAG: ${{ github.event.release.tag_name || inputs.tag }}
 
@@ -30,13 +30,6 @@ jobs:
           ref: refs/tags/${{ github.event.release.tag_name || inputs.tag }}
           fetch-depth: 0
 
-      - name: Verify annotated release tag
-        shell: bash
-        run: |
-          set -euo pipefail
-          git show-ref --verify --quiet "refs/tags/$RELEASE_TAG"
-          test "$(git cat-file -t "refs/tags/$RELEASE_TAG")" = "tag"
-
       - name: Set up uv
         uses: astral-sh/setup-uv@v9.0.0
 
@@ -44,30 +37,50 @@ jobs:
         run: uv python install 3.11
 
       - name: Verify release version and changelog
-        run: uv run --locked --python 3.11 python scripts/verify_release_version.py --tag "$RELEASE_TAG"
+        run: uv run --locked --python 3.11 python scripts/verify_release_version.py --tag "$env:RELEASE_TAG"
 
-      - name: Build package artifacts
-        run: uv run --locked --with build python -m build
+      - name: Install runtime and packaging dependencies
+        run: uv sync --locked --python 3.11 --extra packaging
 
-      - name: Generate artifact checksums
-        run: sha256sum dist/*.whl dist/*.tar.gz > dist/SHA256SUMS.txt
+      - name: Run pywin32 post-install
+        # Required so pywin32 COM modules are importable on the build runner.
+        shell: pwsh
+        run: |
+          $site = uv run python -c "import site; print(site.getsitepackages()[0])"
+          $script = Join-Path $site "pywin32_postinstall.py"
+          if (Test-Path $script) {
+            uv run python $script -install -silent
+          }
+
+      - name: Build Windows executable
+        run: uv run pyinstaller packaging/ControlDeskMCP.spec --distpath dist-exe
+
+      - name: Verify executable starts and reports version
+        run: dist-exe\ControlDeskMCP.exe --version
+
+      - name: Generate SHA-256 checksum
+        shell: pwsh
+        run: |
+          $hash = (Get-FileHash dist-exe\ControlDeskMCP.exe -Algorithm SHA256).Hash
+          "$hash  ControlDeskMCP.exe" | Out-File -Encoding ascii dist-exe\ControlDeskMCP.exe.sha256
+          Write-Host "SHA-256: $hash"
 
       - name: Generate build provenance
         uses: actions/attest@v4
         with:
-          subject-path: |
-            dist/*.whl
-            dist/*.tar.gz
+          subject-path: dist-exe\ControlDeskMCP.exe
 
-      - name: Upload release artifact
+      - name: Upload executable artifact
         uses: actions/upload-artifact@v7
         with:
-          name: python-dist
-          path: dist/*
+          name: windows-exe
+          path: dist-exe/*
           if-no-files-found: error
 
-      - name: Attach artifacts to GitHub release
+      - name: Attach executable to GitHub release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v3
         with:
-          files: dist/*
+          files: |
+            dist-exe/ControlDeskMCP.exe
+            dist-exe/ControlDeskMCP.exe.sha256

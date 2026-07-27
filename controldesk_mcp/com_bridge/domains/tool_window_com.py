@@ -227,12 +227,9 @@ def set_window_dock_state(app: Any, window_name: str, dock_state: str) -> dict[s
     state_int = _STATE_TO_INT.get(dock_state)
     if state_int is None:
         raise BridgePreconditionError(
-            f"Unknown dock state '{dock_state}'. "
-            "Use one of: Docked, DockedAsDocument, AutoHidden, Floating, Closed.",
+            f"Unknown dock state '{dock_state}'. Use one of: Docked, DockedAsDocument, AutoHidden, Floating, Closed.",
             error_code="BRIDGE_INVALID_ARGUMENT",
-            recovery_hint=(
-                "Pass one of: 'Docked', 'DockedAsDocument', 'AutoHidden', 'Floating', 'Closed'."
-            ),
+            recovery_hint=("Pass one of: 'Docked', 'DockedAsDocument', 'AutoHidden', 'Floating', 'Closed'."),
         )
 
     windows = _get_windows(app)

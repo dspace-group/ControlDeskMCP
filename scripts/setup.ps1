@@ -209,5 +209,5 @@ Write-Host "    uv run python -m controldesk_mcp   # start the MCP server (stdio
 Write-Host "    .\scripts\quality-gate.ps1 # lint + format + tests" -ForegroundColor Gray
 Write-Host "    .\scripts\inspect.ps1      # MCP Inspector UI (browser)" -ForegroundColor Gray
 Write-Host ""
-Write-Host "  Build a wheel for distribution:" -ForegroundColor White
-Write-Host "    .\scripts\build\build-wheel.ps1" -ForegroundColor Gray
+Write-Host "  Build the Windows executable for distribution:" -ForegroundColor White
+Write-Host "    .\scripts\build\build-exe.ps1" -ForegroundColor Gray

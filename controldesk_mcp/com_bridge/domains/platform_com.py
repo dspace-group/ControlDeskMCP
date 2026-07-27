@@ -24,14 +24,10 @@ def _utc_now() -> str:
 # CANMonitoring/LINMonitoring/EthernetMonitoring/FlexRayMonitoring support
 # VariableDescriptions.Add() with .dbc, .ldf, .arxml, .fibex files.
 # GNSS does not support variable descriptions.
-_BUS_DEVICE_TYPES = frozenset(
-    ["CANMonitoring", "EthernetMonitoring", "LINMonitoring", "FlexRayMonitoring", "GNSS"]
-)
+_BUS_DEVICE_TYPES = frozenset(["CANMonitoring", "EthernetMonitoring", "LINMonitoring", "FlexRayMonitoring", "GNSS"])
 # Bus monitoring types that accept bus configuration files via VariableDescriptions.Add()
 # Source: BNV_Migration/generate.py lines 241-244; LayoutAndInstrumentHandling.py lines 1368-1369
-_BUS_CONFIG_TYPES = frozenset(
-    ["CANMonitoring", "EthernetMonitoring", "LINMonitoring", "FlexRayMonitoring"]
-)
+_BUS_CONFIG_TYPES = frozenset(["CANMonitoring", "EthernetMonitoring", "LINMonitoring", "FlexRayMonitoring"])
 # Types with no variable description support at all
 _NO_VARIABLE_DESCRIPTION_TYPES = frozenset(["Diagnostic2", "GNSS"])
 # Diagnostics — added via Platforms.Add(); ODX-based workflow; no A2L/SDF
@@ -50,9 +46,7 @@ _SUBNET_REG_TYPES = frozenset(["SCALEXIO", "DS1202", "DS1203", "DS1403"])
 # Platforms that use reg_info.NetClient directly
 _NETCLIENT_REG_TYPES = frozenset(["MABX", "VEOS"])
 # Types that support CAN-bus interface selection (InterfaceSelection.Vendors)
-_MONITORING_INTERFACE_TYPES = frozenset(
-    ["XCPonCAN", "CANMonitoring", "LINMonitoring", "FlexRayMonitoring", "CCP"]
-)
+_MONITORING_INTERFACE_TYPES = frozenset(["XCPonCAN", "CANMonitoring", "LINMonitoring", "FlexRayMonitoring", "CCP"])
 # CAN-baud-rate-configurable types
 _CAN_BAUD_TYPES = frozenset(["XCPonCAN", "CANMonitoring", "LINMonitoring", "CCP"])
 # Hardware types that use SMART assignment (Assignment.Assignments collection)
@@ -65,17 +59,12 @@ _VEOS_ASSIGNMENT_TYPES = frozenset(["VEOS"])
 _DS1104_ASSIGNMENT_TYPES = frozenset(["DS1104", "DS1005", "DS1006", "DS1007"])
 # All hardware types that have Assignment settings
 _ASSIGNMENT_TYPES = (
-    _SMART_ASSIGNMENT_TYPES
-    | _NETCLIENT_ASSIGNMENT_TYPES
-    | _VEOS_ASSIGNMENT_TYPES
-    | _DS1104_ASSIGNMENT_TYPES
+    _SMART_ASSIGNMENT_TYPES | _NETCLIENT_ASSIGNMENT_TYPES | _VEOS_ASSIGNMENT_TYPES | _DS1104_ASSIGNMENT_TYPES
 )
 # Platforms that require APIVersion 2 for registration
 # Source: SQSCalDeskToolautomationHelper.py _VerifyPlatformAgainstAPIVersion()
 # SCALEXIO and related platforms must have APIVersion=2 set before RegisterPlatform
-_REQUIRES_API_VERSION_2: frozenset[str] = frozenset(
-    ["SCALEXIO", "DS1202", "DS1203", "DS1403", "MABX", "VEOS"]
-)
+_REQUIRES_API_VERSION_2: frozenset[str] = frozenset(["SCALEXIO", "DS1202", "DS1203", "DS1403", "MABX", "VEOS"])
 # Platform types that expose GeneralSettings.StartOnlineCalibrationBehavior.
 # Bus Device types (CANMonitoring etc.) and Diagnostic2 do NOT have this property.
 _CALIBRATION_BEHAVIOR_TYPES = _XCP_PLATFORM_TYPES | _HARDWARE_PLATFORM_TYPES
@@ -339,8 +328,7 @@ def add_platform(app: Any, platform_type: str) -> dict[str, Any]:
     _require_active_experiment(app)
     if platform_type not in _PLATFORM_TYPE_INT:
         raise BridgePreconditionError(
-            f"Unknown platform type '{platform_type}'. "
-            f"Valid types: {sorted(_PLATFORM_TYPE_INT.keys())}",
+            f"Unknown platform type '{platform_type}'. Valid types: {sorted(_PLATFORM_TYPE_INT.keys())}",
             error_code="BRIDGE_INVALID_ARGUMENT",
             recovery_hint="Call platform_list_types to see all supported platform types.",
         )
@@ -437,14 +425,12 @@ def register_hardware_platform(app: Any, platform_type: str, ip_address: str) ->
                 "SCALEXIO, DS1202, DS1203, DS1403, MABX, VEOS.",
                 error_code="BRIDGE_INVALID_ARGUMENT",
                 recovery_hint=(
-                    "Use platform_add for Bus, XCP, or Diagnostics. "
-                    "Call platform_list_types for available types."
+                    "Use platform_add for Bus, XCP, or Diagnostics. Call platform_list_types for available types."
                 ),
             )
         elif platform_type == "DS1104":
             raise BridgePreconditionError(
-                f"'{platform_type}' does not support IP-based registration. "
-                "Use platform_add instead.",
+                f"'{platform_type}' does not support IP-based registration. Use platform_add instead.",
                 error_code="BRIDGE_INVALID_ARGUMENT",
                 recovery_hint="Use platform_add for DS1104.",
             )
@@ -487,9 +473,7 @@ def register_hardware_platform(app: Any, platform_type: str, ip_address: str) ->
     except BridgePreconditionError:
         raise
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IPmPlatformManagement", method="RegisterPlatform"
-        ) from exc
+        raise map_com_error(exc, interface="IPmPlatformManagement", method="RegisterPlatform") from exc
 
 
 # ── platform_list_registered_hardware ─────────────────────────────────────────
@@ -558,9 +542,7 @@ def list_registered_hardware(app: Any) -> dict[str, Any]:
             "count": len(registered),
         }
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IPmPlatformManagement", method="RecentPlatformConfiguration"
-        ) from exc
+        raise map_com_error(exc, interface="IPmPlatformManagement", method="RecentPlatformConfiguration") from exc
 
 
 # ── platform_get_registered_info ──────────────────────────────────────────────
@@ -620,9 +602,7 @@ def get_registered_info(app: Any, index: int) -> dict[str, Any]:
     except BridgePreconditionError:
         raise
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IPmPlatformManagement", method="RecentPlatformConfiguration"
-        ) from exc
+        raise map_com_error(exc, interface="IPmPlatformManagement", method="RecentPlatformConfiguration") from exc
 
 
 def _snake_case(camel_case: str) -> str:
@@ -667,9 +647,7 @@ def refresh_platform_configuration(app: Any) -> dict[str, Any]:
         app.PlatformManagement.RefreshPlatformConfiguration()
         return {"refreshed": True, "operation": "RefreshPlatformConfiguration"}
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IPmPlatformManagement", method="RefreshPlatformConfiguration"
-        ) from exc
+        raise map_com_error(exc, interface="IPmPlatformManagement", method="RefreshPlatformConfiguration") from exc
 
 
 # ── platform_refresh_interface_connections ────────────────────────────────────
@@ -698,9 +676,7 @@ def refresh_interface_connections(app: Any, force_driver_reset: bool = True) -> 
             "force_driver_reset": force_driver_reset,
         }
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IPmPlatformManagement", method="RefreshInterfaceConnections"
-        ) from exc
+        raise map_com_error(exc, interface="IPmPlatformManagement", method="RefreshInterfaceConnections") from exc
 
 
 # ── platform_set_enabled ──────────────────────────────────────────────────────
@@ -726,9 +702,7 @@ def set_platform_enabled(app: Any, platform_name: str, enabled: bool) -> dict[st
             "enabled": enabled,
         }
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaExperimentPlatform", method="GeneralSettings.EnablePlatform"
-        ) from exc
+        raise map_com_error(exc, interface="IXaExperimentPlatform", method="GeneralSettings.EnablePlatform") from exc
 
 
 # ── platform_add_variable_description ────────────────────────────────────────
@@ -871,16 +845,13 @@ def configure_calibration_behavior(
         )
     if initial_page not in _INITIAL_PAGE:
         raise BridgePreconditionError(
-            f"Unknown initial_page '{initial_page}'. "
-            f"Valid values: {sorted(_INITIAL_PAGE.keys())}",
+            f"Unknown initial_page '{initial_page}'. Valid values: {sorted(_INITIAL_PAGE.keys())}",
             error_code="BRIDGE_INVALID_ARGUMENT",
             recovery_hint="Use one of the listed initial_page values.",
         )
     plat = _get_platform(app, platform_name)
     try:
-        plat.GeneralSettings.StartOnlineCalibrationBehavior = _ONLINE_CALIBRATION_BEHAVIOR[
-            calibration_behavior
-        ]
+        plat.GeneralSettings.StartOnlineCalibrationBehavior = _ONLINE_CALIBRATION_BEHAVIOR[calibration_behavior]
         plat.GeneralSettings.InitialPage = _INITIAL_PAGE[initial_page]
         return {
             "configured": True,
@@ -891,9 +862,7 @@ def configure_calibration_behavior(
     except BridgePreconditionError:
         raise
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaExperimentPlatform", method="GeneralSettings"
-        ) from exc
+        raise map_com_error(exc, interface="IXaExperimentPlatform", method="GeneralSettings") from exc
 
 
 # ── platform_set_api_version ──────────────────────────────────────────────────
@@ -914,7 +883,7 @@ def set_api_version(app: Any, version: str) -> dict[str, Any]:
     """
     if version not in _API_VERSION:
         raise BridgePreconditionError(
-            f"Unknown API version '{version}'. " f"Valid values: {sorted(_API_VERSION.keys())}",
+            f"Unknown API version '{version}'. Valid values: {sorted(_API_VERSION.keys())}",
             error_code="BRIDGE_INVALID_ARGUMENT",
             recovery_hint="Use 'APIVersion1' or 'APIVersion2'.",
         )
@@ -964,9 +933,7 @@ def configure_transport(
                 plat.EthernetSettings.EthernetProtocol = ethernet_protocol
                 result["ethernet_protocol"] = ethernet_protocol
             except Exception as exc:
-                raise map_com_error(
-                    exc, interface="IPmEthernetSettings", method="EthernetProtocol"
-                ) from exc
+                raise map_com_error(exc, interface="IPmEthernetSettings", method="EthernetProtocol") from exc
 
         if automatic_adapter is True:
             try:
@@ -987,10 +954,7 @@ def configure_transport(
                 # Discovery mode: return available adapters
                 try:
                     adapters_com = plat.NetworkAdapterSelection.NetworkAdapters
-                    adapters = [
-                        str(adapters_com.Item(i).Description)
-                        for i in range(1, int(adapters_com.Count) + 1)
-                    ]
+                    adapters = [str(adapters_com.Item(i).Description) for i in range(1, int(adapters_com.Count) + 1)]
                     return {
                         "configured": False,
                         "platform_name": platform_name,
@@ -1109,9 +1073,7 @@ def select_interface_manual(
     except BridgePreconditionError:
         raise
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaInterfaceSelection", method="Channels.Select"
-        ) from exc
+        raise map_com_error(exc, interface="IXaInterfaceSelection", method="Channels.Select") from exc
 
 
 # ── platform_connect ──────────────────────────────────────────────────────────
@@ -1176,9 +1138,7 @@ def get_connection_state(app: Any, platform_name: str) -> dict[str, Any]:
     except BridgePreconditionError:
         raise
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaExperimentPlatform", method="ConnectionState"
-        ) from exc
+        raise map_com_error(exc, interface="IXaExperimentPlatform", method="ConnectionState") from exc
 
 
 # ── platform_configure ───────────────────────────────────────────────────────
@@ -1226,10 +1186,7 @@ def configure_platform(
         ``calibration_behavior`` → sets GeneralSettings.StartOnlineCalibrationBehavior
     """
     _require_active_experiment(app)
-    if (
-        calibration_behavior is not None
-        and calibration_behavior not in _ONLINE_CALIBRATION_BEHAVIOR
-    ):
+    if calibration_behavior is not None and calibration_behavior not in _ONLINE_CALIBRATION_BEHAVIOR:
         raise BridgePreconditionError(
             f"Unknown calibration_behavior '{calibration_behavior}'. "
             f"Valid values: {sorted(_ONLINE_CALIBRATION_BEHAVIOR.keys())}",
@@ -1238,8 +1195,7 @@ def configure_platform(
         )
     if assignment_mode is not None and assignment_mode not in _ASSIGNMENT_MODE:
         raise BridgePreconditionError(
-            f"Unknown assignment_mode '{assignment_mode}'. "
-            f"Valid values: {sorted(_ASSIGNMENT_MODE.keys())}",
+            f"Unknown assignment_mode '{assignment_mode}'. Valid values: {sorted(_ASSIGNMENT_MODE.keys())}",
             error_code="BRIDGE_INVALID_ARGUMENT",
             recovery_hint="Use 'FirstAvailable', 'AnyEqual', or 'Identical'.",
         )
@@ -1275,9 +1231,7 @@ def configure_platform(
                         f"CAN interface '{can_interface}' not found on platform '{platform_name}'. "
                         "Call platform_list_interfaces to see available interfaces.",
                         error_code="BRIDGE_INVALID_ARGUMENT",
-                        recovery_hint=(
-                            "Use platform_list_interfaces to discover valid interface names."
-                        ),
+                        recovery_hint=("Use platform_list_interfaces to discover valid interface names."),
                     )
 
         # ── SMART assignment (SCALEXIO / DS1202 / DS1203 / DS1403) ────────────
@@ -1350,9 +1304,7 @@ def configure_platform(
         # ── Calibration behavior (XCP + Hardware types only) ──────────────────
         # Bus Device types and Diagnostic2 do not expose StartOnlineCalibrationBehavior.
         if calibration_behavior is not None and plat_type in _CALIBRATION_BEHAVIOR_TYPES:
-            plat.GeneralSettings.StartOnlineCalibrationBehavior = _ONLINE_CALIBRATION_BEHAVIOR[
-                calibration_behavior
-            ]
+            plat.GeneralSettings.StartOnlineCalibrationBehavior = _ONLINE_CALIBRATION_BEHAVIOR[calibration_behavior]
             result["calibration_behavior"] = calibration_behavior
 
         result["configured"] = True
@@ -1361,9 +1313,7 @@ def configure_platform(
     except BridgePreconditionError:
         raise
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaExperimentPlatform", method="configure_platform"
-        ) from exc
+        raise map_com_error(exc, interface="IXaExperimentPlatform", method="configure_platform") from exc
 
 
 # ── platform_rename ───────────────────────────────────────────────────────────

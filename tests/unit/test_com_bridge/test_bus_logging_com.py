@@ -119,9 +119,7 @@ class TestConfigureLogger:
     def test_returns_configured_dict(self) -> None:
         lgr = _make_logger("L1")
         app = _make_app(loggers=[lgr])
-        result = configure_logger(
-            app, "L1", 0, "CAN", "C:\\Logs\\out.asc", max_duration_seconds=30.0
-        )
+        result = configure_logger(app, "L1", 0, "CAN", "C:\\Logs\\out.asc", max_duration_seconds=30.0)
         assert result["configured"] is True
         assert result["logger_name"] == "L1"
         assert result["log_file_full_path"] == "C:\\Logs\\out.asc"

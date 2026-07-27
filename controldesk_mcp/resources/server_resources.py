@@ -73,9 +73,7 @@ def get_tool_catalog() -> str:
     ToolManager — because FastMCP provides no public non-protocol API for this.
     The tool list is stable after startup so this is safe to call at any time.
     """
-    tools = [
-        {"name": t.name, "description": t.description or ""} for t in mcp._tool_manager.list_tools()
-    ]
+    tools = [{"name": t.name, "description": t.description or ""} for t in mcp._tool_manager.list_tools()]
     tools.sort(key=lambda t: t["name"])
     return json.dumps({"count": len(tools), "tools": tools})
 
@@ -106,9 +104,6 @@ def get_connection_status() -> str:
             {
                 "connected": False,
                 "state": "NOT_STARTED",
-                "message": (
-                    "COM bridge not started. "
-                    "Call start_controldesk to launch or attach to ControlDesk."
-                ),
+                "message": ("COM bridge not started. Call start_controldesk to launch or attach to ControlDesk."),
             }
         )

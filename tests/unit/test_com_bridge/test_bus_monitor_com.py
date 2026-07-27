@@ -332,9 +332,7 @@ class TestSaveMonitorDataWithTimeAxis:
         mon = _make_monitor(name="CANMonitor")
         monitors_col = _make_monitors_collection([mon])
         app = _make_app(monitors_col=monitors_col)
-        result = save_monitor_data_with_time_axis(
-            app, "CANMonitor", 0, "CAN", "C:\\Logs\\out.mf4", "Absolute"
-        )
+        result = save_monitor_data_with_time_axis(app, "CANMonitor", 0, "CAN", "C:\\Logs\\out.mf4", "Absolute")
         assert result["monitor_name"] == "CANMonitor"
         assert result["time_axis"] == "Absolute"
         mon.SaveDataWithOptions.assert_called_once_with("C:\\Logs\\out.mf4", 3, 1, False)
@@ -343,9 +341,7 @@ class TestSaveMonitorDataWithTimeAxis:
         mon = _make_monitor(name="CANMonitor")
         monitors_col = _make_monitors_collection([mon])
         app = _make_app(monitors_col=monitors_col)
-        result = save_monitor_data_with_time_axis(
-            app, "CANMonitor", 0, "CAN", "C:\\Logs\\out.mf4", "Relative"
-        )
+        result = save_monitor_data_with_time_axis(app, "CANMonitor", 0, "CAN", "C:\\Logs\\out.mf4", "Relative")
         assert result["time_axis"] == "Relative"
         mon.SaveDataWithOptions.assert_called_once_with("C:\\Logs\\out.mf4", 3, 0, False)
 
@@ -353,9 +349,7 @@ class TestSaveMonitorDataWithTimeAxis:
         mon = _make_monitor(name="CANMonitor")
         monitors_col = _make_monitors_collection([mon])
         app = _make_app(monitors_col=monitors_col)
-        result = save_monitor_data_with_time_axis(
-            app, "CANMonitor", 0, "CAN", "C:\\Logs\\out.mf4", "RecordingTime"
-        )
+        result = save_monitor_data_with_time_axis(app, "CANMonitor", 0, "CAN", "C:\\Logs\\out.mf4", "RecordingTime")
         assert result["time_axis"] == "RecordingTime"
         mon.SaveDataWithOptions.assert_called_once_with("C:\\Logs\\out.mf4", 3, 2, False)
 
@@ -364,17 +358,13 @@ class TestSaveMonitorDataWithTimeAxis:
         monitors_col = _make_monitors_collection([mon])
         app = _make_app(monitors_col=monitors_col)
         with pytest.raises(BridgePreconditionError, match="Invalid time_axis"):
-            save_monitor_data_with_time_axis(
-                app, "CANMonitor", 0, "CAN", "C:\\Logs\\out.mf4", "BadAxis"
-            )
+            save_monitor_data_with_time_axis(app, "CANMonitor", 0, "CAN", "C:\\Logs\\out.mf4", "BadAxis")
 
     def test_raises_when_monitor_not_found(self) -> None:
         monitors_col = _make_monitors_collection([])
         app = _make_app(monitors_col=monitors_col)
         with pytest.raises(BridgePreconditionError, match="not found"):
-            save_monitor_data_with_time_axis(
-                app, "Missing", 0, "CAN", "C:\\Logs\\out.mf4", "Absolute"
-            )
+            save_monitor_data_with_time_axis(app, "Missing", 0, "CAN", "C:\\Logs\\out.mf4", "Absolute")
 
 
 # ── load_monitor_data ─────────────────────────────────────────────────────────
@@ -395,9 +385,7 @@ class TestLoadMonitorData:
         mon = _make_monitor(name="CANMonitor")
         monitors_col = _make_monitors_collection([mon])
         app = _make_app(monitors_col=monitors_col)
-        result = load_monitor_data(
-            app, "CANMonitor", 0, "CAN", "C:\\Logs\\out.asc", log_file_section=2
-        )
+        result = load_monitor_data(app, "CANMonitor", 0, "CAN", "C:\\Logs\\out.asc", log_file_section=2)
         assert result["log_file_section"] == 2
         mon.LoadData.assert_called_once_with("C:\\Logs\\out.asc", 2)
 

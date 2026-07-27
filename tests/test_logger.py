@@ -23,9 +23,7 @@ class TestGetLogger:
         from controldesk_mcp.utils.logger import get_logger
 
         lg = get_logger("test.stderr_check")
-        assert any(
-            isinstance(h, logging.StreamHandler) and h.stream is sys.stderr for h in lg.handlers
-        )
+        assert any(isinstance(h, logging.StreamHandler) and h.stream is sys.stderr for h in lg.handlers)
 
     def test_propagate_is_false(self) -> None:
         """Logger must not forward to root — root handler may use stdout."""
