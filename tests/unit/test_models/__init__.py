@@ -1,4 +1,4 @@
-"""Unit tests for sources.com_bridge.domains.variable_com."""
+"""Unit tests for controldesk_mcp.com_bridge.domains.variable_com."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, PropertyMock
 
 import pytest
 
-from sources.com_bridge.domains.variable_com import (
+from controldesk_mcp.com_bridge.domains.variable_com import (
     activate_reference_page,
     activate_variable_description,
     activate_working_page,
@@ -28,7 +28,7 @@ from sources.com_bridge.domains.variable_com import (
     write_scalar_variable,
     write_string_variable,
 )
-from sources.com_bridge.errors import BridgePreconditionError
+from controldesk_mcp.com_bridge.errors import BridgePreconditionError
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 

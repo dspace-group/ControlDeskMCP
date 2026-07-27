@@ -10,8 +10,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from sources.models.errors import ErrorEnvelope
-from sources.models.recorder import (
+from controldesk_mcp.models.errors import ErrorEnvelope
+from controldesk_mcp.models.recorder import (
     RecorderConfigManageAction,
     RecorderConfigManageInput,
     RecorderDiscoverResult,
@@ -41,7 +41,7 @@ _ERROR = ErrorEnvelope(error_code="E001", category="UNKNOWN", message="fail", re
 
 def _patch_svc(method: str, *, return_value):
     return patch(
-        f"sources.services.recorder_service.{method}",
+        f"controldesk_mcp.services.recorder_service.{method}",
         new_callable=AsyncMock,
         return_value=return_value,
     )
@@ -58,7 +58,7 @@ class TestRecorderMainStart:
             timestamp_utc=_TS,
         )
         with _patch_svc("start_recorder", return_value=expected):
-            from sources.tools.recorder.management import recorder_main_start
+            from controldesk_mcp.tools.recorder.management import recorder_main_start
 
             result = await recorder_main_start(RecorderMainStartInput())
 
@@ -69,7 +69,7 @@ class TestRecorderMainStart:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("start_recorder", return_value=_ERROR):
-            from sources.tools.recorder.management import recorder_main_start
+            from controldesk_mcp.tools.recorder.management import recorder_main_start
 
             result = await recorder_main_start(RecorderMainStartInput())
 
@@ -78,7 +78,7 @@ class TestRecorderMainStart:
 
     @pytest.mark.asyncio
     async def test_dry_run_delegates_to_preview_without_starting(self) -> None:
-        from sources.models.base import DryRunPreviewResult
+        from controldesk_mcp.models.base import DryRunPreviewResult
 
         preview = DryRunPreviewResult(
             tool="recorder_main_start",
@@ -92,7 +92,7 @@ class TestRecorderMainStart:
             _patch_svc("dry_run_start_recorder", return_value=preview) as mock_dry_run,
             _patch_svc("start_recorder", return_value=_ERROR) as mock_start,
         ):
-            from sources.tools.recorder.management import recorder_main_start
+            from controldesk_mcp.tools.recorder.management import recorder_main_start
 
             result = await recorder_main_start(RecorderMainStartInput(dry_run=True))
 
@@ -111,7 +111,7 @@ class TestRecorderMainStop:
             timestamp_utc=_TS,
         )
         with _patch_svc("stop_recorder", return_value=expected):
-            from sources.tools.recorder.management import recorder_main_stop
+            from controldesk_mcp.tools.recorder.management import recorder_main_stop
 
             result = await recorder_main_stop(RecorderMainStopInput())
 
@@ -122,7 +122,7 @@ class TestRecorderMainStop:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("stop_recorder", return_value=_ERROR):
-            from sources.tools.recorder.management import recorder_main_stop
+            from controldesk_mcp.tools.recorder.management import recorder_main_stop
 
             result = await recorder_main_stop(RecorderMainStopInput())
 
@@ -130,7 +130,7 @@ class TestRecorderMainStop:
 
     @pytest.mark.asyncio
     async def test_dry_run_delegates_to_preview_without_stopping(self) -> None:
-        from sources.models.base import DryRunPreviewResult
+        from controldesk_mcp.models.base import DryRunPreviewResult
 
         preview = DryRunPreviewResult(
             tool="recorder_main_stop",
@@ -144,7 +144,7 @@ class TestRecorderMainStop:
             _patch_svc("dry_run_stop_recorder", return_value=preview) as mock_dry_run,
             _patch_svc("stop_recorder", return_value=_ERROR) as mock_stop,
         ):
-            from sources.tools.recorder.management import recorder_main_stop
+            from controldesk_mcp.tools.recorder.management import recorder_main_stop
 
             result = await recorder_main_stop(RecorderMainStopInput(dry_run=True))
 
@@ -164,7 +164,7 @@ class TestRecorderQuery:
             timestamp_utc=_TS,
         )
         with _patch_svc("get_state", return_value=expected):
-            from sources.tools.recorder.management import recorder_query
+            from controldesk_mcp.tools.recorder.management import recorder_query
 
             result = await recorder_query(RecorderQueryInput(action=RecorderQueryAction.get_state))
 
@@ -175,7 +175,7 @@ class TestRecorderQuery:
     @pytest.mark.asyncio
     async def test_get_state_returns_error(self) -> None:
         with _patch_svc("get_state", return_value=_ERROR):
-            from sources.tools.recorder.management import recorder_query
+            from controldesk_mcp.tools.recorder.management import recorder_query
 
             result = await recorder_query(RecorderQueryInput(action=RecorderQueryAction.get_state))
 
@@ -197,7 +197,7 @@ class TestRecorderMainManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("configure_main_recorder", return_value=expected):
-            from sources.tools.recorder.management import recorder_main_manage
+            from controldesk_mcp.tools.recorder.management import recorder_main_manage
 
             result = await recorder_main_manage(
                 RecorderMainManageInput(
@@ -212,7 +212,7 @@ class TestRecorderMainManage:
 
     @pytest.mark.asyncio
     async def test_configure_missing_base_filename(self) -> None:
-        from sources.tools.recorder.management import recorder_main_manage
+        from controldesk_mcp.tools.recorder.management import recorder_main_manage
 
         result = await recorder_main_manage(
             RecorderMainManageInput(
@@ -227,7 +227,7 @@ class TestRecorderMainManage:
     @pytest.mark.asyncio
     async def test_configure_returns_error(self) -> None:
         with _patch_svc("configure_main_recorder", return_value=_ERROR):
-            from sources.tools.recorder.management import recorder_main_manage
+            from controldesk_mcp.tools.recorder.management import recorder_main_manage
 
             result = await recorder_main_manage(
                 RecorderMainManageInput(
@@ -246,7 +246,7 @@ class TestRecorderMainManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("invoke_trigger", return_value=expected):
-            from sources.tools.recorder.management import recorder_main_manage
+            from controldesk_mcp.tools.recorder.management import recorder_main_manage
 
             result = await recorder_main_manage(
                 RecorderMainManageInput(action=RecorderMainManageAction.invoke_trigger)
@@ -259,7 +259,7 @@ class TestRecorderMainManage:
     @pytest.mark.asyncio
     async def test_invoke_trigger_returns_error(self) -> None:
         with _patch_svc("invoke_trigger", return_value=_ERROR):
-            from sources.tools.recorder.management import recorder_main_manage
+            from controldesk_mcp.tools.recorder.management import recorder_main_manage
 
             result = await recorder_main_manage(
                 RecorderMainManageInput(action=RecorderMainManageAction.invoke_trigger)
@@ -277,7 +277,7 @@ class TestRecorderSignalManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("add_signal", return_value=expected):
-            from sources.tools.recorder.management import recorder_signal_manage
+            from controldesk_mcp.tools.recorder.management import recorder_signal_manage
 
             result = await recorder_signal_manage(
                 RecorderSignalManageInput(
@@ -292,7 +292,7 @@ class TestRecorderSignalManage:
 
     @pytest.mark.asyncio
     async def test_add_signal_missing_connection_path(self) -> None:
-        from sources.tools.recorder.management import recorder_signal_manage
+        from controldesk_mcp.tools.recorder.management import recorder_signal_manage
 
         result = await recorder_signal_manage(
             RecorderSignalManageInput(
@@ -312,7 +312,7 @@ class TestRecorderSignalManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("remove_signal", return_value=expected):
-            from sources.tools.recorder.management import recorder_signal_manage
+            from controldesk_mcp.tools.recorder.management import recorder_signal_manage
 
             result = await recorder_signal_manage(
                 RecorderSignalManageInput(
@@ -326,7 +326,7 @@ class TestRecorderSignalManage:
 
     @pytest.mark.asyncio
     async def test_remove_signal_missing_connection_path(self) -> None:
-        from sources.tools.recorder.management import recorder_signal_manage
+        from controldesk_mcp.tools.recorder.management import recorder_signal_manage
 
         result = await recorder_signal_manage(
             RecorderSignalManageInput(
@@ -343,7 +343,7 @@ class TestRecorderSignalManage:
         signals = [{"connection_path": "XCP(5ms)://control_out", "platform_name": "XCP"}]
         expected = RecorderMainListSignalsResult(total_count=1, signals=signals)
         with _patch_svc("list_signals", return_value=expected):
-            from sources.tools.recorder.management import recorder_signal_manage
+            from controldesk_mcp.tools.recorder.management import recorder_signal_manage
 
             result = await recorder_signal_manage(
                 RecorderSignalManageInput(action=RecorderSignalManageAction.list_signals)
@@ -356,7 +356,7 @@ class TestRecorderSignalManage:
     @pytest.mark.asyncio
     async def test_list_signals_returns_error(self) -> None:
         with _patch_svc("list_signals", return_value=_ERROR):
-            from sources.tools.recorder.management import recorder_signal_manage
+            from controldesk_mcp.tools.recorder.management import recorder_signal_manage
 
             result = await recorder_signal_manage(
                 RecorderSignalManageInput(action=RecorderSignalManageAction.list_signals)
@@ -374,7 +374,7 @@ class TestRecorderConfigManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("export_recorder", return_value=expected):
-            from sources.tools.recorder.management import recorder_config_manage
+            from controldesk_mcp.tools.recorder.management import recorder_config_manage
 
             result = await recorder_config_manage(
                 RecorderConfigManageInput(
@@ -395,7 +395,7 @@ class TestRecorderConfigManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("import_signals_from_file", return_value=expected):
-            from sources.tools.recorder.management import recorder_config_manage
+            from controldesk_mcp.tools.recorder.management import recorder_config_manage
 
             result = await recorder_config_manage(
                 RecorderConfigManageInput(
@@ -409,7 +409,7 @@ class TestRecorderConfigManage:
 
     @pytest.mark.asyncio
     async def test_missing_full_path_returns_error(self) -> None:
-        from sources.tools.recorder.management import recorder_config_manage
+        from controldesk_mcp.tools.recorder.management import recorder_config_manage
 
         result = await recorder_config_manage(
             RecorderConfigManageInput(
@@ -424,7 +424,7 @@ class TestRecorderConfigManage:
     @pytest.mark.asyncio
     async def test_export_returns_error(self) -> None:
         with _patch_svc("export_recorder", return_value=_ERROR):
-            from sources.tools.recorder.management import recorder_config_manage
+            from controldesk_mcp.tools.recorder.management import recorder_config_manage
 
             result = await recorder_config_manage(
                 RecorderConfigManageInput(
@@ -439,7 +439,7 @@ class TestRecorderConfigManage:
 class TestRecorderDiscover:
     @pytest.mark.asyncio
     async def test_returns_discover_result(self) -> None:
-        from sources.tools.recorder.management import recorder_discover
+        from controldesk_mcp.tools.recorder.management import recorder_discover
 
         result = await recorder_discover(AsyncMock())
 
@@ -449,7 +449,7 @@ class TestRecorderDiscover:
 
     @pytest.mark.asyncio
     async def test_discover_has_query_tool(self) -> None:
-        from sources.tools.recorder.management import recorder_discover
+        from controldesk_mcp.tools.recorder.management import recorder_discover
 
         result = await recorder_discover(AsyncMock())
 
@@ -458,7 +458,7 @@ class TestRecorderDiscover:
 
     @pytest.mark.asyncio
     async def test_discover_has_signal_manage_tool(self) -> None:
-        from sources.tools.recorder.management import recorder_discover
+        from controldesk_mcp.tools.recorder.management import recorder_discover
 
         result = await recorder_discover(AsyncMock())
 
@@ -467,7 +467,7 @@ class TestRecorderDiscover:
 
     @pytest.mark.asyncio
     async def test_discover_has_config_manage_tool(self) -> None:
-        from sources.tools.recorder.management import recorder_discover
+        from controldesk_mcp.tools.recorder.management import recorder_discover
 
         result = await recorder_discover(AsyncMock())
 
@@ -476,7 +476,7 @@ class TestRecorderDiscover:
 
     @pytest.mark.asyncio
     async def test_discover_signal_manage_actions(self) -> None:
-        from sources.tools.recorder.management import recorder_discover
+        from controldesk_mcp.tools.recorder.management import recorder_discover
 
         result = await recorder_discover(AsyncMock())
 
@@ -487,7 +487,7 @@ class TestRecorderDiscover:
 
     @pytest.mark.asyncio
     async def test_discover_config_manage_actions(self) -> None:
-        from sources.tools.recorder.management import recorder_discover
+        from controldesk_mcp.tools.recorder.management import recorder_discover
 
         result = await recorder_discover(AsyncMock())
 

@@ -3,9 +3,9 @@
     Kill any running ControlDesk MCP server process and restart it.
 
 .DESCRIPTION
-    Finds Python processes running `sources` (the MCP server module), terminates
+    Finds Python processes running `controldesk_mcp` (the MCP server module), terminates
     them, then relaunches the server in the background. Useful after editing any
-    file under sources/ that requires a live server reload.
+    file under controldesk_mcp/ that requires a live server reload.
 
 .PARAMETER Transport
     MCP transport to use. Defaults to 'stdio'. Set to 'http' for SSE/HTTP.
@@ -44,7 +44,7 @@ Write-Host ""
 $killed = 0
 Get-Process -Name python -ErrorAction SilentlyContinue | ForEach-Object {
     $cmdLine = (Get-WmiObject Win32_Process -Filter "ProcessId=$($_.Id)" -ErrorAction SilentlyContinue).CommandLine
-    if ($cmdLine -match "-m sources") {
+    if ($cmdLine -match "-m controldesk_mcp") {
         Write-Host "Stopping PID $($_.Id) — $cmdLine" -ForegroundColor Yellow
         Stop-Process -Id $_.Id -Force -ErrorAction SilentlyContinue
         $killed++
@@ -76,8 +76,8 @@ Write-Host ""
 
 # ── Launch ────────────────────────────────────────────────────────────────────
 if ($Transport -eq "http") {
-    uv run python -m sources --transport streamable-http
+    uv run python -m controldesk_mcp --transport streamable-http
 }
 else {
-    uv run python -m sources
+    uv run python -m controldesk_mcp
 }

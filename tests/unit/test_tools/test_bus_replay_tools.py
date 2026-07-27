@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from sources.models.bus_replay import (
+from controldesk_mcp.models.bus_replay import (
     BusReplayAdminManageAction,
     BusReplayAdminManageInput,
     BusReplayClearAllAborted,
@@ -29,7 +29,7 @@ from sources.models.bus_replay import (
     BusType,
     ReplayMode,
 )
-from sources.models.errors import ErrorEnvelope
+from controldesk_mcp.models.errors import ErrorEnvelope
 
 _TS = "2024-01-01T00:00:00Z"
 _ERROR = ErrorEnvelope(error_code="E001", category="UNKNOWN", message="fail", retryable=False)
@@ -37,7 +37,7 @@ _ERROR = ErrorEnvelope(error_code="E001", category="UNKNOWN", message="fail", re
 
 def _patch_svc(method: str, *, return_value):
     return patch(
-        f"sources.services.bus_replay_service.{method}",
+        f"controldesk_mcp.services.bus_replay_service.{method}",
         new_callable=AsyncMock,
         return_value=return_value,
     )
@@ -59,7 +59,7 @@ class TestBusReplayCreate:
             timestamp_utc=_TS,
         )
         with _patch_svc("create_replay", return_value=expected):
-            from sources.tools.bus_replay.management import bus_replay_create
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_create
 
             result = await bus_replay_create(
                 BusReplayCreateInput(replay_name="CANReplay", system_index=0, bus_type=BusType.CAN)
@@ -72,7 +72,7 @@ class TestBusReplayCreate:
     @pytest.mark.asyncio
     async def test_returns_error_on_service_error(self) -> None:
         with _patch_svc("create_replay", return_value=_ERROR):
-            from sources.tools.bus_replay.management import bus_replay_create
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_create
 
             result = await bus_replay_create(
                 BusReplayCreateInput(replay_name="CANReplay", system_index=0, bus_type=BusType.CAN)
@@ -83,7 +83,7 @@ class TestBusReplayCreate:
 
     @pytest.mark.asyncio
     async def test_dry_run_delegates_to_preview_without_creating(self) -> None:
-        from sources.models.base import DryRunPreviewResult
+        from controldesk_mcp.models.base import DryRunPreviewResult
 
         preview = DryRunPreviewResult(
             tool="bus_replay_create",
@@ -97,7 +97,7 @@ class TestBusReplayCreate:
             _patch_svc("dry_run_create_replay", return_value=preview) as mock_dry_run,
             _patch_svc("create_replay", return_value=_ERROR) as mock_create,
         ):
-            from sources.tools.bus_replay.management import bus_replay_create
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_create
 
             result = await bus_replay_create(
                 BusReplayCreateInput(
@@ -128,7 +128,7 @@ class TestBusReplayConfigure:
             timestamp_utc=_TS,
         )
         with _patch_svc("configure_replay", return_value=expected):
-            from sources.tools.bus_replay.management import bus_replay_configure
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_configure
 
             result = await bus_replay_configure(
                 BusReplayConfigureInput(
@@ -148,7 +148,7 @@ class TestBusReplayConfigure:
     @pytest.mark.asyncio
     async def test_returns_error_on_service_error(self) -> None:
         with _patch_svc("configure_replay", return_value=_ERROR):
-            from sources.tools.bus_replay.management import bus_replay_configure
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_configure
 
             result = await bus_replay_configure(
                 BusReplayConfigureInput(
@@ -176,7 +176,7 @@ class TestBusReplayManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("start_replay", return_value=expected):
-            from sources.tools.bus_replay.management import bus_replay_manage
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_manage
 
             result = await bus_replay_manage(
                 BusReplayManageInput(
@@ -193,7 +193,7 @@ class TestBusReplayManage:
 
     @pytest.mark.asyncio
     async def test_start_missing_replay_name_returns_error(self) -> None:
-        from sources.tools.bus_replay.management import bus_replay_manage
+        from controldesk_mcp.tools.bus_replay.management import bus_replay_manage
 
         result = await bus_replay_manage(
             BusReplayManageInput(
@@ -216,7 +216,7 @@ class TestBusReplayManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("stop_replay", return_value=expected):
-            from sources.tools.bus_replay.management import bus_replay_manage
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_manage
 
             result = await bus_replay_manage(
                 BusReplayManageInput(
@@ -233,7 +233,7 @@ class TestBusReplayManage:
 
     @pytest.mark.asyncio
     async def test_stop_missing_replay_name_returns_error(self) -> None:
-        from sources.tools.bus_replay.management import bus_replay_manage
+        from controldesk_mcp.tools.bus_replay.management import bus_replay_manage
 
         result = await bus_replay_manage(
             BusReplayManageInput(
@@ -258,7 +258,7 @@ class TestBusReplayManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("get_replay_state", return_value=expected):
-            from sources.tools.bus_replay.management import bus_replay_query
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_query
 
             result = await bus_replay_query(
                 BusReplayQueryInput(
@@ -275,7 +275,7 @@ class TestBusReplayManage:
 
     @pytest.mark.asyncio
     async def test_get_state_missing_replay_name_returns_error(self) -> None:
-        from sources.tools.bus_replay.management import bus_replay_query
+        from controldesk_mcp.tools.bus_replay.management import bus_replay_query
 
         result = await bus_replay_query(
             BusReplayQueryInput(
@@ -298,7 +298,7 @@ class TestBusReplayManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("list_replays", return_value=expected):
-            from sources.tools.bus_replay.management import bus_replay_query
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_query
 
             result = await bus_replay_query(
                 BusReplayQueryInput(
@@ -315,7 +315,7 @@ class TestBusReplayManage:
     @pytest.mark.asyncio
     async def test_list_returns_error_envelope(self) -> None:
         with _patch_svc("list_replays", return_value=_ERROR):
-            from sources.tools.bus_replay.management import bus_replay_query
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_query
 
             result = await bus_replay_query(
                 BusReplayQueryInput(
@@ -336,7 +336,7 @@ class TestBusReplayAdminManage:
     async def test_remove_returns_removed_on_success(self) -> None:
         expected = BusReplayRemoveResult(removed=True, replay_name="CANReplay", timestamp_utc=_TS)
         with _patch_svc("remove_replay", return_value=expected):
-            from sources.tools.bus_replay.management import bus_replay_admin_manage
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_admin_manage
 
             result = await bus_replay_admin_manage(
                 BusReplayAdminManageInput(
@@ -352,7 +352,7 @@ class TestBusReplayAdminManage:
 
     @pytest.mark.asyncio
     async def test_remove_missing_replay_name_returns_error(self) -> None:
-        from sources.tools.bus_replay.management import bus_replay_admin_manage
+        from controldesk_mcp.tools.bus_replay.management import bus_replay_admin_manage
 
         result = await bus_replay_admin_manage(
             BusReplayAdminManageInput(
@@ -369,7 +369,7 @@ class TestBusReplayAdminManage:
     async def test_clear_all_when_confirmed(self) -> None:
         expected = BusReplayClearAllResult(cleared=True, replays_removed=2, timestamp_utc=_TS)
         with _patch_svc("clear_all_replays", return_value=expected):
-            from sources.tools.bus_replay.management import bus_replay_admin_manage
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_admin_manage
 
             result = await bus_replay_admin_manage(
                 BusReplayAdminManageInput(
@@ -388,7 +388,7 @@ class TestBusReplayAdminManage:
     async def test_clear_all_aborted_when_not_confirmed(self) -> None:
         expected = BusReplayClearAllAborted()
         with _patch_svc("clear_all_replays", return_value=expected):
-            from sources.tools.bus_replay.management import bus_replay_admin_manage
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_admin_manage
 
             result = await bus_replay_admin_manage(
                 BusReplayAdminManageInput(
@@ -412,7 +412,7 @@ class TestBusReplayAdminManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("set_replay_activated", return_value=expected):
-            from sources.tools.bus_replay.management import bus_replay_admin_manage
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_admin_manage
 
             result = await bus_replay_admin_manage(
                 BusReplayAdminManageInput(
@@ -429,7 +429,7 @@ class TestBusReplayAdminManage:
 
     @pytest.mark.asyncio
     async def test_set_activated_missing_replay_name_returns_error(self) -> None:
-        from sources.tools.bus_replay.management import bus_replay_admin_manage
+        from controldesk_mcp.tools.bus_replay.management import bus_replay_admin_manage
 
         result = await bus_replay_admin_manage(
             BusReplayAdminManageInput(
@@ -445,7 +445,7 @@ class TestBusReplayAdminManage:
 
     @pytest.mark.asyncio
     async def test_set_activated_missing_activated_returns_error(self) -> None:
-        from sources.tools.bus_replay.management import bus_replay_admin_manage
+        from controldesk_mcp.tools.bus_replay.management import bus_replay_admin_manage
 
         result = await bus_replay_admin_manage(
             BusReplayAdminManageInput(
@@ -465,7 +465,7 @@ class TestBusReplayAdminManage:
             renamed=True, old_name="CANReplay", new_name="TxReplay", timestamp_utc=_TS
         )
         with _patch_svc("rename_replay", return_value=expected):
-            from sources.tools.bus_replay.management import bus_replay_admin_manage
+            from controldesk_mcp.tools.bus_replay.management import bus_replay_admin_manage
 
             result = await bus_replay_admin_manage(
                 BusReplayAdminManageInput(
@@ -484,7 +484,7 @@ class TestBusReplayAdminManage:
 
     @pytest.mark.asyncio
     async def test_rename_missing_replay_name_returns_error(self) -> None:
-        from sources.tools.bus_replay.management import bus_replay_admin_manage
+        from controldesk_mcp.tools.bus_replay.management import bus_replay_admin_manage
 
         result = await bus_replay_admin_manage(
             BusReplayAdminManageInput(
@@ -500,7 +500,7 @@ class TestBusReplayAdminManage:
 
     @pytest.mark.asyncio
     async def test_rename_missing_new_name_returns_error(self) -> None:
-        from sources.tools.bus_replay.management import bus_replay_admin_manage
+        from controldesk_mcp.tools.bus_replay.management import bus_replay_admin_manage
 
         result = await bus_replay_admin_manage(
             BusReplayAdminManageInput(
@@ -521,7 +521,7 @@ class TestBusReplayAdminManage:
 class TestBusReplayDiscover:
     @pytest.mark.asyncio
     async def test_returns_one_tool(self) -> None:
-        from sources.tools.bus_replay.management import bus_replay_discover
+        from controldesk_mcp.tools.bus_replay.management import bus_replay_discover
 
         result = await bus_replay_discover(AsyncMock())
 
@@ -530,7 +530,7 @@ class TestBusReplayDiscover:
 
     @pytest.mark.asyncio
     async def test_discover_has_admin_manage_tool(self) -> None:
-        from sources.tools.bus_replay.management import bus_replay_discover
+        from controldesk_mcp.tools.bus_replay.management import bus_replay_discover
 
         result = await bus_replay_discover(AsyncMock())
 
@@ -539,7 +539,7 @@ class TestBusReplayDiscover:
 
     @pytest.mark.asyncio
     async def test_discover_admin_manage_actions(self) -> None:
-        from sources.tools.bus_replay.management import bus_replay_discover
+        from controldesk_mcp.tools.bus_replay.management import bus_replay_discover
 
         result = await bus_replay_discover(AsyncMock())
 

@@ -8,7 +8,7 @@ class TestErrorEnvelope:
     """ErrorEnvelope construction and Markdown rendering."""
 
     def _minimal(self) -> "ErrorEnvelope":  # noqa: F821
-        from sources.models.errors import ErrorEnvelope
+        from controldesk_mcp.models.errors import ErrorEnvelope
 
         return ErrorEnvelope(
             error_code="COM_DISCONNECTED",
@@ -35,7 +35,7 @@ class TestErrorEnvelope:
         assert "Yes" in md  # retryable=True
 
     def test_to_markdown_hresult_formatted_as_hex(self) -> None:
-        from sources.models.errors import ErrorEnvelope
+        from controldesk_mcp.models.errors import ErrorEnvelope
 
         env = ErrorEnvelope(
             error_code="COM_DISCONNECTED",
@@ -55,7 +55,7 @@ class TestErrorEnvelope:
         assert "COM:" not in md
 
     def test_invalid_category_raises(self) -> None:
-        from sources.models.errors import ErrorEnvelope
+        from controldesk_mcp.models.errors import ErrorEnvelope
 
         with pytest.raises(ValidationError):
             ErrorEnvelope(

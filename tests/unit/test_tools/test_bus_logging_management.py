@@ -1,4 +1,4 @@
-"""Unit tests for sources.tools.bus_logging.management (8 tools)."""
+"""Unit tests for controldesk_mcp.tools.bus_logging.management (8 tools)."""
 
 from __future__ import annotations
 
@@ -6,8 +6,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from sources.com_bridge.errors import BridgePreconditionError
-from sources.models.bus_logging import (
+from controldesk_mcp.com_bridge.errors import BridgePreconditionError
+from controldesk_mcp.models.bus_logging import (
     BusFilterConfigureInput,
     BusFilterConfigureResult,
     BusFilterCreateInput,
@@ -39,7 +39,7 @@ from sources.models.bus_logging import (
     BusLoggerStopResult,
     BusType,
 )
-from sources.models.errors import ErrorEnvelope
+from controldesk_mcp.models.errors import ErrorEnvelope
 
 _TS = "2024-01-01T00:00:00Z"
 _ERROR = ErrorEnvelope(error_code="E001", category="UNKNOWN", message="fail", retryable=False)
@@ -47,7 +47,7 @@ _ERROR = ErrorEnvelope(error_code="E001", category="UNKNOWN", message="fail", re
 
 def _patch_svc(method: str, *, return_value):
     return patch(
-        f"sources.services.bus_logging_service.{method}",
+        f"controldesk_mcp.services.bus_logging_service.{method}",
         new_callable=AsyncMock,
         return_value=return_value,
     )
@@ -69,7 +69,7 @@ class TestBusLoggerCreate:
             timestamp_utc=_TS,
         )
         with _patch_svc("create_logger", return_value=expected):
-            from sources.tools.bus_logging.management import bus_logger_create
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_create
 
             result = await bus_logger_create(
                 BusLoggerCreateInput(
@@ -85,7 +85,7 @@ class TestBusLoggerCreate:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("create_logger", return_value=_ERROR):
-            from sources.tools.bus_logging.management import bus_logger_create
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_create
 
             result = await bus_logger_create(
                 BusLoggerCreateInput(logger_name="L1", system_index=0, bus_type=BusType.CAN)
@@ -96,7 +96,7 @@ class TestBusLoggerCreate:
 
     @pytest.mark.asyncio
     async def test_dry_run_delegates_to_preview_without_creating(self) -> None:
-        from sources.models.base import DryRunPreviewResult
+        from controldesk_mcp.models.base import DryRunPreviewResult
 
         preview = DryRunPreviewResult(
             tool="bus_logger_create",
@@ -110,7 +110,7 @@ class TestBusLoggerCreate:
             _patch_svc("dry_run_create_logger", return_value=preview) as mock_dry_run,
             _patch_svc("create_logger", return_value=_ERROR) as mock_create,
         ):
-            from sources.tools.bus_logging.management import bus_logger_create
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_create
 
             result = await bus_logger_create(
                 BusLoggerCreateInput(
@@ -143,7 +143,7 @@ class TestBusLoggerConfigure:
             timestamp_utc=_TS,
         )
         with _patch_svc("configure_logger", return_value=expected):
-            from sources.tools.bus_logging.management import bus_logger_configure
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_configure
 
             result = await bus_logger_configure(
                 BusLoggerConfigureInput(
@@ -163,7 +163,7 @@ class TestBusLoggerConfigure:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("configure_logger", return_value=_ERROR):
-            from sources.tools.bus_logging.management import bus_logger_configure
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_configure
 
             result = await bus_logger_configure(
                 BusLoggerConfigureInput(
@@ -191,7 +191,7 @@ class TestBusLoggerManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("start_logger", return_value=expected):
-            from sources.tools.bus_logging.management import bus_logger_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_manage
 
             result = await bus_logger_manage(
                 BusLoggerManageInput(
@@ -208,7 +208,7 @@ class TestBusLoggerManage:
 
     @pytest.mark.asyncio
     async def test_start_missing_logger_name_returns_error(self) -> None:
-        from sources.tools.bus_logging.management import bus_logger_manage
+        from controldesk_mcp.tools.bus_logging.management import bus_logger_manage
 
         result = await bus_logger_manage(
             BusLoggerManageInput(
@@ -229,7 +229,7 @@ class TestBusLoggerManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("stop_logger", return_value=expected):
-            from sources.tools.bus_logging.management import bus_logger_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_manage
 
             result = await bus_logger_manage(
                 BusLoggerManageInput(
@@ -246,7 +246,7 @@ class TestBusLoggerManage:
 
     @pytest.mark.asyncio
     async def test_stop_missing_logger_name_returns_error(self) -> None:
-        from sources.tools.bus_logging.management import bus_logger_manage
+        from controldesk_mcp.tools.bus_logging.management import bus_logger_manage
 
         result = await bus_logger_manage(
             BusLoggerManageInput(
@@ -260,7 +260,7 @@ class TestBusLoggerManage:
     @pytest.mark.asyncio
     async def test_start_returns_error_on_bridge_error(self) -> None:
         with _patch_svc("start_logger", return_value=_ERROR):
-            from sources.tools.bus_logging.management import bus_logger_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_manage
 
             result = await bus_logger_manage(
                 BusLoggerManageInput(
@@ -283,7 +283,7 @@ class TestBusLoggerAdminManage:
     async def test_remove_returns_removed_on_success(self) -> None:
         expected = BusLoggerRemoveResult(removed=True, logger_name="CANRecorder", timestamp_utc=_TS)
         with _patch_svc("remove_logger", return_value=expected):
-            from sources.tools.bus_logging.management import bus_logger_admin_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_admin_manage
 
             result = await bus_logger_admin_manage(
                 BusLoggerAdminManageInput(
@@ -299,7 +299,7 @@ class TestBusLoggerAdminManage:
 
     @pytest.mark.asyncio
     async def test_remove_missing_logger_name_returns_error(self) -> None:
-        from sources.tools.bus_logging.management import bus_logger_admin_manage
+        from controldesk_mcp.tools.bus_logging.management import bus_logger_admin_manage
 
         result = await bus_logger_admin_manage(
             BusLoggerAdminManageInput(
@@ -314,7 +314,7 @@ class TestBusLoggerAdminManage:
     async def test_clear_all_aborts_when_not_confirmed(self) -> None:
         expected = BusLoggerClearAllAborted()
         with _patch_svc("clear_all_loggers", return_value=expected):
-            from sources.tools.bus_logging.management import bus_logger_admin_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_admin_manage
 
             result = await bus_logger_admin_manage(
                 BusLoggerAdminManageInput(
@@ -338,7 +338,7 @@ class TestBusLoggerAdminManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("clear_all_loggers", return_value=expected):
-            from sources.tools.bus_logging.management import bus_logger_admin_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_admin_manage
 
             result = await bus_logger_admin_manage(
                 BusLoggerAdminManageInput(
@@ -363,7 +363,7 @@ class TestBusLoggerAdminManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("set_logger_activated", return_value=expected):
-            from sources.tools.bus_logging.management import bus_logger_admin_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_admin_manage
 
             result = await bus_logger_admin_manage(
                 BusLoggerAdminManageInput(
@@ -381,7 +381,7 @@ class TestBusLoggerAdminManage:
 
     @pytest.mark.asyncio
     async def test_set_activated_missing_logger_name_returns_error(self) -> None:
-        from sources.tools.bus_logging.management import bus_logger_admin_manage
+        from controldesk_mcp.tools.bus_logging.management import bus_logger_admin_manage
 
         result = await bus_logger_admin_manage(
             BusLoggerAdminManageInput(
@@ -397,7 +397,7 @@ class TestBusLoggerAdminManage:
 
     @pytest.mark.asyncio
     async def test_set_activated_missing_activated_flag_returns_error(self) -> None:
-        from sources.tools.bus_logging.management import bus_logger_admin_manage
+        from controldesk_mcp.tools.bus_logging.management import bus_logger_admin_manage
 
         result = await bus_logger_admin_manage(
             BusLoggerAdminManageInput(
@@ -417,7 +417,7 @@ class TestBusLoggerAdminManage:
             renamed=True, old_name="CAN Logger", new_name="TxLogger", timestamp_utc=_TS
         )
         with _patch_svc("rename_logger", return_value=expected):
-            from sources.tools.bus_logging.management import bus_logger_admin_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_admin_manage
 
             result = await bus_logger_admin_manage(
                 BusLoggerAdminManageInput(
@@ -435,7 +435,7 @@ class TestBusLoggerAdminManage:
 
     @pytest.mark.asyncio
     async def test_rename_missing_logger_name_returns_error(self) -> None:
-        from sources.tools.bus_logging.management import bus_logger_admin_manage
+        from controldesk_mcp.tools.bus_logging.management import bus_logger_admin_manage
 
         result = await bus_logger_admin_manage(
             BusLoggerAdminManageInput(
@@ -451,7 +451,7 @@ class TestBusLoggerAdminManage:
 
     @pytest.mark.asyncio
     async def test_rename_missing_new_name_returns_error(self) -> None:
-        from sources.tools.bus_logging.management import bus_logger_admin_manage
+        from controldesk_mcp.tools.bus_logging.management import bus_logger_admin_manage
 
         result = await bus_logger_admin_manage(
             BusLoggerAdminManageInput(
@@ -481,7 +481,7 @@ class TestBusLoggerQuery:
             timestamp_utc=_TS,
         )
         with _patch_svc("get_logger_state", return_value=expected):
-            from sources.tools.bus_logging.management import bus_logger_query
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_query
 
             result = await bus_logger_query(
                 BusLoggerQueryInput(
@@ -507,7 +507,7 @@ class TestBusLoggerQuery:
             ],
         )
         with _patch_svc("list_loggers", return_value=expected):
-            from sources.tools.bus_logging.management import bus_logger_query
+            from controldesk_mcp.tools.bus_logging.management import bus_logger_query
 
             result = await bus_logger_query(
                 BusLoggerQueryInput(
@@ -522,7 +522,7 @@ class TestBusLoggerQuery:
 class TestBusLoggingDiscover:
     @pytest.mark.asyncio
     async def test_returns_four_tools(self) -> None:
-        from sources.tools.bus_logging.management import bus_logging_discover
+        from controldesk_mcp.tools.bus_logging.management import bus_logging_discover
 
         result = await bus_logging_discover(AsyncMock())
 
@@ -531,7 +531,7 @@ class TestBusLoggingDiscover:
 
     @pytest.mark.asyncio
     async def test_discover_has_query_tool(self) -> None:
-        from sources.tools.bus_logging.management import bus_logging_discover
+        from controldesk_mcp.tools.bus_logging.management import bus_logging_discover
 
         result = await bus_logging_discover(AsyncMock())
 
@@ -540,7 +540,7 @@ class TestBusLoggingDiscover:
 
     @pytest.mark.asyncio
     async def test_discover_has_admin_manage_tool(self) -> None:
-        from sources.tools.bus_logging.management import bus_logging_discover
+        from controldesk_mcp.tools.bus_logging.management import bus_logging_discover
 
         result = await bus_logging_discover(AsyncMock())
 
@@ -549,7 +549,7 @@ class TestBusLoggingDiscover:
 
     @pytest.mark.asyncio
     async def test_discover_admin_manage_actions(self) -> None:
-        from sources.tools.bus_logging.management import bus_logging_discover
+        from controldesk_mcp.tools.bus_logging.management import bus_logging_discover
 
         result = await bus_logging_discover(AsyncMock())
 
@@ -576,7 +576,7 @@ class TestBusFilterCreate:
             timestamp_utc=_TS,
         )
         with _patch_svc("create_filter", return_value=expected):
-            from sources.tools.bus_logging.management import bus_filter_create
+            from controldesk_mcp.tools.bus_logging.management import bus_filter_create
 
             result = await bus_filter_create(
                 BusFilterCreateInput(filter_name="CANFilter", system_index=1, bus_type=BusType.CAN)
@@ -589,7 +589,7 @@ class TestBusFilterCreate:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("create_filter", return_value=_ERROR):
-            from sources.tools.bus_logging.management import bus_filter_create
+            from controldesk_mcp.tools.bus_logging.management import bus_filter_create
 
             result = await bus_filter_create(
                 BusFilterCreateInput(filter_name="F1", system_index=0, bus_type=BusType.CAN)
@@ -614,7 +614,7 @@ class TestBusFilterConfigure:
             timestamp_utc=_TS,
         )
         with _patch_svc("configure_filter", return_value=expected):
-            from sources.tools.bus_logging.management import bus_filter_configure
+            from controldesk_mcp.tools.bus_logging.management import bus_filter_configure
 
             result = await bus_filter_configure(
                 BusFilterConfigureInput(
@@ -644,7 +644,7 @@ class TestBusFilterManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("start_filter", return_value=expected):
-            from sources.tools.bus_logging.management import bus_filter_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_filter_manage
 
             result = await bus_filter_manage(
                 BusFilterManageInput(
@@ -661,7 +661,7 @@ class TestBusFilterManage:
 
     @pytest.mark.asyncio
     async def test_start_missing_filter_name_returns_error(self) -> None:
-        from sources.tools.bus_logging.management import bus_filter_manage
+        from controldesk_mcp.tools.bus_logging.management import bus_filter_manage
 
         result = await bus_filter_manage(
             BusFilterManageInput(
@@ -678,7 +678,7 @@ class TestBusFilterManage:
     async def test_stop_returns_stopped_on_success(self) -> None:
         expected = BusFilterStopResult(stopped=True, filter_name="CANFilter", timestamp_utc=_TS)
         with _patch_svc("stop_filter", return_value=expected):
-            from sources.tools.bus_logging.management import bus_filter_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_filter_manage
 
             result = await bus_filter_manage(
                 BusFilterManageInput(
@@ -694,7 +694,7 @@ class TestBusFilterManage:
 
     @pytest.mark.asyncio
     async def test_stop_missing_filter_name_returns_error(self) -> None:
-        from sources.tools.bus_logging.management import bus_filter_manage
+        from controldesk_mcp.tools.bus_logging.management import bus_filter_manage
 
         result = await bus_filter_manage(
             BusFilterManageInput(
@@ -714,7 +714,7 @@ class TestBusFilterManage:
             filters=[{"name": "CANFilter", "state": "Running", "activated": True}],
         )
         with _patch_svc("list_filters", return_value=expected):
-            from sources.tools.bus_logging.management import bus_filter_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_filter_manage
 
             result = await bus_filter_manage(
                 BusFilterManageInput(
@@ -732,7 +732,7 @@ class TestBusFilterManage:
     async def test_list_returns_empty_on_success(self) -> None:
         expected = BusFilterListResult(total_count=0, filters=[])
         with _patch_svc("list_filters", return_value=expected):
-            from sources.tools.bus_logging.management import bus_filter_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_filter_manage
 
             result = await bus_filter_manage(
                 BusFilterManageInput(
@@ -749,7 +749,7 @@ class TestBusFilterManage:
     @pytest.mark.asyncio
     async def test_list_returns_error_envelope(self) -> None:
         with _patch_svc("list_filters", return_value=_ERROR):
-            from sources.tools.bus_logging.management import bus_filter_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_filter_manage
 
             result = await bus_filter_manage(
                 BusFilterManageInput(
@@ -765,7 +765,7 @@ class TestBusFilterManage:
     async def test_remove_returns_removed_on_success(self) -> None:
         expected = BusFilterRemoveResult(removed=True, filter_name="CANFilter", timestamp_utc=_TS)
         with _patch_svc("remove_filter", return_value=expected):
-            from sources.tools.bus_logging.management import bus_filter_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_filter_manage
 
             result = await bus_filter_manage(
                 BusFilterManageInput(
@@ -781,7 +781,7 @@ class TestBusFilterManage:
 
     @pytest.mark.asyncio
     async def test_remove_missing_filter_name_returns_error(self) -> None:
-        from sources.tools.bus_logging.management import bus_filter_manage
+        from controldesk_mcp.tools.bus_logging.management import bus_filter_manage
 
         result = await bus_filter_manage(
             BusFilterManageInput(
@@ -797,7 +797,7 @@ class TestBusFilterManage:
     @pytest.mark.asyncio
     async def test_remove_returns_error_envelope(self) -> None:
         with _patch_svc("remove_filter", return_value=_ERROR):
-            from sources.tools.bus_logging.management import bus_filter_manage
+            from controldesk_mcp.tools.bus_logging.management import bus_filter_manage
 
             result = await bus_filter_manage(
                 BusFilterManageInput(
@@ -816,17 +816,17 @@ class TestBusFilterManage:
 
 
 class TestBusLoggingComHelpers:
-    """Unit tests for sources.com_bridge.domains.bus_logging_com helpers."""
+    """Unit tests for controldesk_mcp.com_bridge.domains.bus_logging_com helpers."""
 
     def test_get_physical_bus_access_unknown_bus_type(self) -> None:
-        from sources.com_bridge.domains.bus_logging_com import _get_physical_bus_access
+        from controldesk_mcp.com_bridge.domains.bus_logging_com import _get_physical_bus_access
 
         app = MagicMock()
         with pytest.raises(BridgePreconditionError, match="Unknown bus_type"):
             _get_physical_bus_access(app, 0, 0, "INVALID", 0)
 
     def test_get_logger_by_name_not_found(self) -> None:
-        from sources.com_bridge.domains.bus_logging_com import _get_logger_by_name
+        from controldesk_mcp.com_bridge.domains.bus_logging_com import _get_logger_by_name
 
         loggers = MagicMock()
         loggers.Count = 0
@@ -834,7 +834,7 @@ class TestBusLoggingComHelpers:
             _get_logger_by_name(loggers, "NonExistent")
 
     def test_get_filter_by_name_not_found(self) -> None:
-        from sources.com_bridge.domains.bus_logging_com import _get_filter_by_name
+        from controldesk_mcp.com_bridge.domains.bus_logging_com import _get_filter_by_name
 
         filters = MagicMock()
         filters.Count = 0
@@ -842,7 +842,7 @@ class TestBusLoggingComHelpers:
             _get_filter_by_name(filters, "NonExistent")
 
     def test_get_logger_by_name_found(self) -> None:
-        from sources.com_bridge.domains.bus_logging_com import _get_logger_by_name
+        from controldesk_mcp.com_bridge.domains.bus_logging_com import _get_logger_by_name
 
         lgr_mock = MagicMock()
         lgr_mock.Name = "MyLogger"
@@ -854,7 +854,7 @@ class TestBusLoggingComHelpers:
         assert result is lgr_mock
 
     def test_get_filter_by_name_found(self) -> None:
-        from sources.com_bridge.domains.bus_logging_com import _get_filter_by_name
+        from controldesk_mcp.com_bridge.domains.bus_logging_com import _get_filter_by_name
 
         flt_mock = MagicMock()
         flt_mock.Name = "MyFilter"

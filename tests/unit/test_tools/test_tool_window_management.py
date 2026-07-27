@@ -10,8 +10,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from sources.models.errors import ErrorEnvelope
-from sources.models.tool_window import (
+from controldesk_mcp.models.errors import ErrorEnvelope
+from controldesk_mcp.models.tool_window import (
     ToolWindowCheckExistsResult,
     ToolWindowCloseResult,
     ToolWindowDiscoverResult,
@@ -36,7 +36,7 @@ _ERROR = ErrorEnvelope(error_code="E001", category="UNKNOWN", message="fail", re
 
 def _patch_svc(method: str, *, return_value):
     return patch(
-        f"sources.services.tool_window_service.{method}",
+        f"controldesk_mcp.services.tool_window_service.{method}",
         new_callable=AsyncMock,
         return_value=return_value,
     )
@@ -53,7 +53,7 @@ class TestToolWindowList:
         ]
         expected = ToolWindowListResult(total_windows=2, windows=windows, timestamp_utc=_TS)
         with _patch_svc("list_windows", return_value=expected):
-            from sources.tools.tool_window.management import tool_window_list
+            from controldesk_mcp.tools.tool_window.management import tool_window_list
 
             result = await tool_window_list(ToolWindowListInput())
 
@@ -64,7 +64,7 @@ class TestToolWindowList:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("list_windows", return_value=_ERROR):
-            from sources.tools.tool_window.management import tool_window_list
+            from controldesk_mcp.tools.tool_window.management import tool_window_list
 
             result = await tool_window_list(ToolWindowListInput())
 
@@ -83,7 +83,7 @@ class TestToolWindowShow:
             timestamp_utc=_TS,
         )
         with _patch_svc("show_window", return_value=expected):
-            from sources.tools.tool_window.management import tool_window_show
+            from controldesk_mcp.tools.tool_window.management import tool_window_show
 
             result = await tool_window_show(ToolWindowShowInput(window_name="Variables"))
 
@@ -94,7 +94,7 @@ class TestToolWindowShow:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("show_window", return_value=_ERROR):
-            from sources.tools.tool_window.management import tool_window_show
+            from controldesk_mcp.tools.tool_window.management import tool_window_show
 
             result = await tool_window_show(ToolWindowShowInput(window_name="NonExistent"))
 
@@ -112,7 +112,7 @@ class TestToolWindowManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("close_window", return_value=expected):
-            from sources.tools.tool_window.management import tool_window_manage
+            from controldesk_mcp.tools.tool_window.management import tool_window_manage
 
             result = await tool_window_manage(
                 ToolWindowManageInput(
@@ -128,7 +128,7 @@ class TestToolWindowManage:
     @pytest.mark.asyncio
     async def test_close_returns_error(self) -> None:
         with _patch_svc("close_window", return_value=_ERROR):
-            from sources.tools.tool_window.management import tool_window_manage
+            from controldesk_mcp.tools.tool_window.management import tool_window_manage
 
             result = await tool_window_manage(
                 ToolWindowManageInput(
@@ -149,7 +149,7 @@ class TestToolWindowManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("get_window_state", return_value=expected):
-            from sources.tools.tool_window.management import tool_window_query
+            from controldesk_mcp.tools.tool_window.management import tool_window_query
 
             result = await tool_window_query(
                 ToolWindowQueryInput(
@@ -165,7 +165,7 @@ class TestToolWindowManage:
     @pytest.mark.asyncio
     async def test_get_state_returns_error(self) -> None:
         with _patch_svc("get_window_state", return_value=_ERROR):
-            from sources.tools.tool_window.management import tool_window_query
+            from controldesk_mcp.tools.tool_window.management import tool_window_query
 
             result = await tool_window_query(
                 ToolWindowQueryInput(
@@ -186,7 +186,7 @@ class TestToolWindowManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("set_window_dock_state", return_value=expected):
-            from sources.tools.tool_window.management import tool_window_manage
+            from controldesk_mcp.tools.tool_window.management import tool_window_manage
 
             result = await tool_window_manage(
                 ToolWindowManageInput(
@@ -202,7 +202,7 @@ class TestToolWindowManage:
 
     @pytest.mark.asyncio
     async def test_set_dock_state_missing_dock_state(self) -> None:
-        from sources.tools.tool_window.management import tool_window_manage
+        from controldesk_mcp.tools.tool_window.management import tool_window_manage
 
         result = await tool_window_manage(
             ToolWindowManageInput(
@@ -217,7 +217,7 @@ class TestToolWindowManage:
 
     @pytest.mark.asyncio
     async def test_missing_window_name_returns_error(self) -> None:
-        from sources.tools.tool_window.management import tool_window_manage
+        from controldesk_mcp.tools.tool_window.management import tool_window_manage
 
         result = await tool_window_manage(
             ToolWindowManageInput(
@@ -237,7 +237,7 @@ class TestToolWindowQuery:
             window_name="BusNavigator", exists=True, timestamp_utc=_TS
         )
         with _patch_svc("check_window_exists", return_value=expected):
-            from sources.tools.tool_window.management import tool_window_query
+            from controldesk_mcp.tools.tool_window.management import tool_window_query
 
             result = await tool_window_query(
                 ToolWindowQueryInput(
@@ -256,7 +256,7 @@ class TestToolWindowQuery:
             window_name="EESPort Configurations", exists=False, timestamp_utc=_TS
         )
         with _patch_svc("check_window_exists", return_value=expected):
-            from sources.tools.tool_window.management import tool_window_query
+            from controldesk_mcp.tools.tool_window.management import tool_window_query
 
             result = await tool_window_query(
                 ToolWindowQueryInput(
@@ -280,7 +280,7 @@ class TestToolWindowQuery:
             timestamp_utc=_TS,
         )
         with _patch_svc("get_window_geometry", return_value=expected):
-            from sources.tools.tool_window.management import tool_window_query
+            from controldesk_mcp.tools.tool_window.management import tool_window_query
 
             result = await tool_window_query(
                 ToolWindowQueryInput(
@@ -295,7 +295,7 @@ class TestToolWindowQuery:
 
     @pytest.mark.asyncio
     async def test_missing_window_name_returns_error(self) -> None:
-        from sources.tools.tool_window.management import tool_window_query
+        from controldesk_mcp.tools.tool_window.management import tool_window_query
 
         result = await tool_window_query(
             ToolWindowQueryInput(
@@ -310,7 +310,7 @@ class TestToolWindowQuery:
     @pytest.mark.asyncio
     async def test_get_geometry_returns_error(self) -> None:
         with _patch_svc("get_window_geometry", return_value=_ERROR):
-            from sources.tools.tool_window.management import tool_window_query
+            from controldesk_mcp.tools.tool_window.management import tool_window_query
 
             result = await tool_window_query(
                 ToolWindowQueryInput(
@@ -325,7 +325,7 @@ class TestToolWindowQuery:
 class TestToolWindowDiscover:
     @pytest.mark.asyncio
     async def test_returns_discover_result(self) -> None:
-        from sources.tools.tool_window.management import tool_window_discover
+        from controldesk_mcp.tools.tool_window.management import tool_window_discover
 
         result = await tool_window_discover(AsyncMock())
 
@@ -336,7 +336,7 @@ class TestToolWindowDiscover:
 
     @pytest.mark.asyncio
     async def test_discover_has_correct_actions(self) -> None:
-        from sources.tools.tool_window.management import tool_window_discover
+        from controldesk_mcp.tools.tool_window.management import tool_window_discover
 
         result = await tool_window_discover(AsyncMock())
 

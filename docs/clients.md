@@ -101,10 +101,11 @@ Inside the workspace folder, create `.vscode/mcp.json`:
 ```json
 {
     "servers": {
-        "ControlDesk MCP": {
-            "command": "controldesk-mcp",
+        "controlDesk": {
+            "command": "${workspaceFolder}/ControlDeskMCP.cmd",
             "args": [],
             "type": "stdio",
+            "cwd": "${workspaceFolder}",
             "env": {
                 "LOG_LEVEL": "INFO"
             }
@@ -126,10 +127,11 @@ Add `CONTROLDESK_VERSION` to `env` to avoid auto-detection on every start:
 ```json
 {
     "servers": {
-        "ControlDesk MCP": {
-            "command": "controldesk-mcp",
+        "controlDesk": {
+            "command": "${workspaceFolder}/ControlDeskMCP.cmd",
             "args": [],
             "type": "stdio",
+            "cwd": "${workspaceFolder}",
             "env": {
                 "LOG_LEVEL": "INFO",
                 "CONTROLDESK_VERSION": "2026-A"
@@ -417,7 +419,7 @@ INFO     Serving on http://0.0.0.0:8000/mcp
 ```json
 {
     "servers": {
-        "ControlDesk MCP (HTTP)": {
+        "controlDeskHttp": {
             "url": "http://192.168.1.100:8000/mcp",
             "type": "http"
         }
@@ -608,7 +610,7 @@ List the calibration objects available on the main platform.
 Check the VS Code Output panel (`View → Output → MCP (ControlDesk MCP)`) for the
 Python traceback. Common causes:
 
-- `ModuleNotFoundError: No module named 'sources'` — the package is not installed;
+- `ModuleNotFoundError: No module named 'controldesk_mcp'` — the package is not installed;
   reinstall with `scripts\build\install-wheel.ps1`.
 - `ImportError: No module named 'win32com'` — the `pywin32` dependency is missing;
   run `pip install pywin32` in the same environment.

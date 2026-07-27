@@ -1,4 +1,4 @@
-"""Unit tests for sources.resources.domain_resources.
+"""Unit tests for controldesk_mcp.resources.domain_resources.
 
 Tests cover:
   get_domain_list()         — returns all known domains including 'experiment'
@@ -63,14 +63,14 @@ _TAGGED_TOOLS = [
 
 class TestGetDomainList:
     def test_returns_json_string(self) -> None:
-        from sources.resources.domain_resources import get_domain_list
+        from controldesk_mcp.resources.domain_resources import get_domain_list
 
         result = get_domain_list()
         data = json.loads(result)
         assert isinstance(data, dict)
 
     def test_contains_known_domains(self) -> None:
-        from sources.resources.domain_resources import get_domain_list
+        from controldesk_mcp.resources.domain_resources import get_domain_list
 
         data = json.loads(get_domain_list())
         domains = data["domains"]
@@ -90,26 +90,26 @@ class TestGetDomainList:
             assert expected in domains
 
     def test_experiment_is_own_domain(self) -> None:
-        from sources.resources.domain_resources import get_domain_list
+        from controldesk_mcp.resources.domain_resources import get_domain_list
 
         data = json.loads(get_domain_list())
         assert "experiment" in data["domains"]
 
     def test_domain_count_matches_list(self) -> None:
-        from sources.resources.domain_resources import get_domain_list
+        from controldesk_mcp.resources.domain_resources import get_domain_list
 
         data = json.loads(get_domain_list())
         assert data["count"] == len(data["domains"])
 
     def test_includes_uri_template(self) -> None:
-        from sources.resources.domain_resources import get_domain_list
+        from controldesk_mcp.resources.domain_resources import get_domain_list
 
         data = json.loads(get_domain_list())
         assert "uri_template" in data
         assert "{domain}" in data["uri_template"]
 
     def test_domains_are_sorted(self) -> None:
-        from sources.resources.domain_resources import get_domain_list
+        from controldesk_mcp.resources.domain_resources import get_domain_list
 
         data = json.loads(get_domain_list())
         assert data["domains"] == sorted(data["domains"])
@@ -121,10 +121,10 @@ class TestGetDomainList:
 class TestGetDomainTools:
     def _call(self, domain: str) -> dict:
         with patch(
-            "sources.resources.domain_resources.mcp._tool_manager.list_tools",
+            "controldesk_mcp.resources.domain_resources.mcp._tool_manager.list_tools",
             return_value=_SAMPLE_TOOLS,
         ):
-            from sources.resources.domain_resources import get_domain_tools
+            from controldesk_mcp.resources.domain_resources import get_domain_tools
 
             return json.loads(get_domain_tools(domain))
 
@@ -202,10 +202,10 @@ class TestGetDomainTools:
 class TestGetToolGroupHierarchy:
     def _call(self) -> dict:
         with patch(
-            "sources.resources.domain_resources.mcp._tool_manager.list_tools",
+            "controldesk_mcp.resources.domain_resources.mcp._tool_manager.list_tools",
             return_value=_TAGGED_TOOLS,
         ):
-            from sources.resources.domain_resources import get_tool_group_hierarchy
+            from controldesk_mcp.resources.domain_resources import get_tool_group_hierarchy
 
             return json.loads(get_tool_group_hierarchy())
 
@@ -244,10 +244,10 @@ class TestGetToolGroupHierarchy:
 class TestGetGroupTools:
     def _call(self, domain: str, group: str) -> dict:
         with patch(
-            "sources.resources.domain_resources.mcp._tool_manager.list_tools",
+            "controldesk_mcp.resources.domain_resources.mcp._tool_manager.list_tools",
             return_value=_TAGGED_TOOLS,
         ):
-            from sources.resources.domain_resources import get_group_tools
+            from controldesk_mcp.resources.domain_resources import get_group_tools
 
             return json.loads(get_group_tools(domain, group))
 

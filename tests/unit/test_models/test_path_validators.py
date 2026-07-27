@@ -5,17 +5,17 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from sources.models.measurement import (
+from controldesk_mcp.models.measurement import (
     MeasurementExportRecordingInput,
     MeasurementImportRecordingInput,
 )
-from sources.models.project import (
+from controldesk_mcp.models.project import (
     ExperimentExportInput,
     ExperimentImportInput,
     ProjectBackupInput,
     ProjectOpenFromBackupInput,
 )
-from sources.models.recorder import RecorderMainExportInput, RecorderMainImportSignalsInput
+from controldesk_mcp.models.recorder import RecorderMainExportInput, RecorderMainImportSignalsInput
 
 # ── ProjectBackupInput ─────────────────────────────────────────────────────────
 

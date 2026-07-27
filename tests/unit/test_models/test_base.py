@@ -1,9 +1,9 @@
-"""Unit tests for sources.models.base — DictModelMixin and ToolResult."""
+"""Unit tests for controldesk_mcp.models.base — DictModelMixin and ToolResult."""
 
 import pytest
 
-from sources.models.base import DryRunPreviewResult, ToolResult
-from sources.models.errors import ErrorEnvelope
+from controldesk_mcp.models.base import DryRunPreviewResult, ToolResult
+from controldesk_mcp.models.errors import ErrorEnvelope
 
 
 class TestDictModelMixin:

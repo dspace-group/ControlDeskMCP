@@ -1,4 +1,4 @@
-"""Unit tests for sources/com_bridge/domains/calibration_com.py.
+"""Unit tests for controldesk_mcp/com_bridge/domains/calibration_com.py.
 
 All tests mock the COM app object — no ControlDesk required.
 """
@@ -9,8 +9,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-import sources.com_bridge.domains.calibration_com as cal_com
-from sources.com_bridge.errors import BridgeOperationError
+import controldesk_mcp.com_bridge.domains.calibration_com as cal_com
+from controldesk_mcp.com_bridge.errors import BridgeOperationError
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
@@ -360,7 +360,7 @@ class TestCalibrationCopyWorkingPageToReference:
         app = _make_app()
         plat = MagicMock()
         with patch(
-            "sources.com_bridge.domains.calibration_com._get_platform",
+            "controldesk_mcp.com_bridge.domains.calibration_com._get_platform",
             return_value=plat,
         ):
             result = cal_com.calibration_copy_working_page_to_reference(app, "XCP")
@@ -373,7 +373,7 @@ class TestCalibrationCopyWorkingPageToReference:
         app = _make_app()
         plat = MagicMock()
         with patch(
-            "sources.com_bridge.domains.calibration_com._get_platform",
+            "controldesk_mcp.com_bridge.domains.calibration_com._get_platform",
             return_value=plat,
         ):
             cal_com.calibration_copy_working_page_to_reference(app, "XCP")
@@ -384,7 +384,7 @@ class TestCalibrationCopyWorkingPageToReference:
         plat = MagicMock()
         plat.CopyWorkingPageToReferencePage.side_effect = Exception("COM error")
         with patch(
-            "sources.com_bridge.domains.calibration_com._get_platform",
+            "controldesk_mcp.com_bridge.domains.calibration_com._get_platform",
             return_value=plat,
         ):
             with pytest.raises(BridgeOperationError):
@@ -399,7 +399,7 @@ class TestCalibrationCopyReferencePageToWorking:
         app = _make_app()
         plat = MagicMock()
         with patch(
-            "sources.com_bridge.domains.calibration_com._get_platform",
+            "controldesk_mcp.com_bridge.domains.calibration_com._get_platform",
             return_value=plat,
         ):
             result = cal_com.calibration_copy_reference_page_to_working(app, "XCP")
@@ -412,7 +412,7 @@ class TestCalibrationCopyReferencePageToWorking:
         app = _make_app()
         plat = MagicMock()
         with patch(
-            "sources.com_bridge.domains.calibration_com._get_platform",
+            "controldesk_mcp.com_bridge.domains.calibration_com._get_platform",
             return_value=plat,
         ):
             cal_com.calibration_copy_reference_page_to_working(app, "XCP")
@@ -423,7 +423,7 @@ class TestCalibrationCopyReferencePageToWorking:
         plat = MagicMock()
         plat.CopyReferencePageToWorkingPage.side_effect = Exception("COM error")
         with patch(
-            "sources.com_bridge.domains.calibration_com._get_platform",
+            "controldesk_mcp.com_bridge.domains.calibration_com._get_platform",
             return_value=plat,
         ):
             with pytest.raises(BridgeOperationError):

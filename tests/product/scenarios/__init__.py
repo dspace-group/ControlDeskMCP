@@ -27,8 +27,8 @@ import json
 
 import pytest
 
-import sources.tools.platform.management as _platform_module  # noqa: F401 — triggers @mcp.tool registration
-from sources.models.platform import (
+import controldesk_mcp.tools.platform.management as _platform_module  # noqa: F401 — triggers @mcp.tool registration
+from controldesk_mcp.models.platform import (
     PlatformClearRegisteredInput,
     PlatformGetConnectionStateInput,
     PlatformGetInfoInput,
@@ -36,7 +36,7 @@ from sources.models.platform import (
     PlatformRemoveInput,
     PlatformType,
 )
-from sources.tools.platform.management import (
+from controldesk_mcp.tools.platform.management import (
     platform_clear_registered,
     platform_get_connection_state,
     platform_get_info,

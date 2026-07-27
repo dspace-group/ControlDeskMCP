@@ -1,4 +1,4 @@
-"""Unit tests for sources.com_bridge.error_handling.preconditions."""
+"""Unit tests for controldesk_mcp.com_bridge.error_handling.preconditions."""
 
 from __future__ import annotations
 
@@ -7,14 +7,14 @@ from unittest.mock import patch
 
 import pytest
 
-from sources.com_bridge.error_handling.preconditions import (
+from controldesk_mcp.com_bridge.error_handling.preconditions import (
     check_64bit_process,
     check_calibration_started,
     check_experiment_active,
     check_measurement_not_active,
     check_platform_connected,
 )
-from sources.com_bridge.errors import BridgePreconditionError
+from controldesk_mcp.com_bridge.errors import BridgePreconditionError
 
 
 class TestCheckExperimentActive:
@@ -85,8 +85,8 @@ class TestCheck64BitProcess:
     def test_raises_when_32bit_process(self) -> None:
         # Patch calcsize to simulate a 32-bit pointer (4 bytes)
         with (
-            patch("sources.com_bridge.error_handling.preconditions.struct") as mock_struct,
-            patch("sources.com_bridge.error_handling.preconditions.sys") as mock_sys,
+            patch("controldesk_mcp.com_bridge.error_handling.preconditions.struct") as mock_struct,
+            patch("controldesk_mcp.com_bridge.error_handling.preconditions.sys") as mock_sys,
         ):
             mock_struct.calcsize.return_value = 4
             mock_sys.maxsize = 2**31 - 1
@@ -102,8 +102,8 @@ class TestCheck64BitProcess:
 
     def test_recovery_hint_references_64bit(self) -> None:
         with (
-            patch("sources.com_bridge.error_handling.preconditions.struct") as mock_struct,
-            patch("sources.com_bridge.error_handling.preconditions.sys") as mock_sys,
+            patch("controldesk_mcp.com_bridge.error_handling.preconditions.struct") as mock_struct,
+            patch("controldesk_mcp.com_bridge.error_handling.preconditions.sys") as mock_sys,
         ):
             mock_struct.calcsize.return_value = 4
             mock_sys.maxsize = 2**31 - 1

@@ -1,6 +1,6 @@
-"""Unit tests for sources/utils/pagination.py."""
+"""Unit tests for controldesk_mcp/utils/pagination.py."""
 
-from sources.utils.pagination import paginate
+from controldesk_mcp.utils.pagination import paginate
 
 
 def test_flat_list_first_page():

@@ -1,1 +1,1 @@
-# Unit tests for sources.resources
+# Unit tests for controldesk_mcp.resources

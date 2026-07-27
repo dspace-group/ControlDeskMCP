@@ -132,7 +132,7 @@ class ToolRegistry:
         Parameters
         ----------
         mcp:
-            The live FastMCP instance (``sources.server.app.mcp``).
+            The live FastMCP instance (``controldesk_mcp.server.app.mcp``).
         include:
             If provided, only these tool names are registered.  If None, all
             tools in the instance are registered.

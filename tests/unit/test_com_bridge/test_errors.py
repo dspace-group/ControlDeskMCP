@@ -1,10 +1,10 @@
-"""Unit tests for sources.com_bridge.errors."""
+"""Unit tests for controldesk_mcp.com_bridge.errors."""
 
 from __future__ import annotations
 
 import pytest
 
-from sources.com_bridge.errors import (
+from controldesk_mcp.com_bridge.errors import (
     BridgeCircuitOpenError,
     BridgeConnectionError,
     BridgeError,

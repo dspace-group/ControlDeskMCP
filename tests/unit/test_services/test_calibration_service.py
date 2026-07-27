@@ -1,4 +1,4 @@
-"""Unit tests for sources.services.calibration_service.
+"""Unit tests for controldesk_mcp.services.calibration_service.
 
 Tests mock com_bridge.dispatch; no real COM is invoked.
 """
@@ -9,9 +9,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import sources.com_bridge as bridge
-from sources.com_bridge.errors import BridgeConnectionError, BridgeOperationError
-from sources.models.calibration import (
+import controldesk_mcp.com_bridge as bridge
+from controldesk_mcp.com_bridge.errors import BridgeConnectionError, BridgeOperationError
+from controldesk_mcp.models.calibration import (
     CalibrationActivateReferencePageInput,
     CalibrationActivateWorkingPageInput,
     CalibrationRefreshParametersInput,
@@ -29,7 +29,7 @@ from sources.models.calibration import (
 @pytest.fixture(autouse=True)
 def _reset_bridge():
     bridge._connection = None
-    import sources.com_bridge.sta_thread as _sta
+    import controldesk_mcp.com_bridge.sta_thread as _sta
 
     _sta._sta_thread = None
     yield
@@ -38,7 +38,7 @@ def _reset_bridge():
 
 
 def _make_connected_bridge() -> MagicMock:
-    from sources.com_bridge.connection import ConnectionState
+    from controldesk_mcp.com_bridge.connection import ConnectionState
 
     conn = MagicMock()
     conn.state = ConnectionState.CONNECTED
@@ -58,11 +58,11 @@ class TestStartCalibration:
         expected = {"started": True}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.calibration_service import start_calibration
+            from controldesk_mcp.services.calibration_service import start_calibration
 
             result = await start_calibration(CalibrationStartInput())
 
@@ -73,11 +73,11 @@ class TestStartCalibration:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("no connection"),
         ):
-            from sources.services.calibration_service import start_calibration
+            from controldesk_mcp.services.calibration_service import start_calibration
 
             result = await start_calibration(CalibrationStartInput())
 
@@ -95,11 +95,11 @@ class TestStopCalibration:
         expected = {"stopped": True}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.calibration_service import stop_calibration
+            from controldesk_mcp.services.calibration_service import stop_calibration
 
             result = await stop_calibration(CalibrationStopInput())
 
@@ -110,14 +110,14 @@ class TestStopCalibration:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[
                 MagicMock(),
                 BridgeOperationError("stop failed"),
             ],
         ):
-            from sources.services.calibration_service import stop_calibration
+            from controldesk_mcp.services.calibration_service import stop_calibration
 
             result = await stop_calibration(CalibrationStopInput())
 
@@ -135,11 +135,11 @@ class TestActivateReferencePage:
         expected = {"activated": True, "page": "ReferencePage"}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.calibration_service import activate_reference_page
+            from controldesk_mcp.services.calibration_service import activate_reference_page
 
             result = await activate_reference_page(CalibrationActivateReferencePageInput())
 
@@ -151,14 +151,14 @@ class TestActivateReferencePage:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[
                 MagicMock(),
                 BridgeOperationError("ref page failed"),
             ],
         ):
-            from sources.services.calibration_service import activate_reference_page
+            from controldesk_mcp.services.calibration_service import activate_reference_page
 
             result = await activate_reference_page(CalibrationActivateReferencePageInput())
 
@@ -176,11 +176,11 @@ class TestActivateWorkingPage:
         expected = {"activated": True, "page": "WorkingPage"}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.calibration_service import activate_working_page
+            from controldesk_mcp.services.calibration_service import activate_working_page
 
             result = await activate_working_page(CalibrationActivateWorkingPageInput())
 
@@ -199,11 +199,11 @@ class TestRefreshParameters:
         expected = {"refreshed": True, "timestamp_utc": "2026-05-04T10:00:00.000Z"}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.calibration_service import refresh_parameters
+            from controldesk_mcp.services.calibration_service import refresh_parameters
 
             result = await refresh_parameters(CalibrationRefreshParametersInput())
 
@@ -215,14 +215,14 @@ class TestRefreshParameters:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[
                 MagicMock(),
                 BridgeOperationError("refresh failed"),
             ],
         ):
-            from sources.services.calibration_service import refresh_parameters
+            from controldesk_mcp.services.calibration_service import refresh_parameters
 
             result = await refresh_parameters(CalibrationRefreshParametersInput())
 
@@ -240,11 +240,11 @@ class TestStartProposedCalibration:
         expected = {"started": True, "proposed_calibration_active": True}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.calibration_service import start_proposed_calibration
+            from controldesk_mcp.services.calibration_service import start_proposed_calibration
 
             result = await start_proposed_calibration(ProposedCalibrationStartInput())
 
@@ -256,11 +256,11 @@ class TestStartProposedCalibration:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("no connection"),
         ):
-            from sources.services.calibration_service import start_proposed_calibration
+            from controldesk_mcp.services.calibration_service import start_proposed_calibration
 
             result = await start_proposed_calibration(ProposedCalibrationStartInput())
 
@@ -282,11 +282,11 @@ class TestStopProposedCalibration:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.calibration_service import stop_proposed_calibration
+            from controldesk_mcp.services.calibration_service import stop_proposed_calibration
 
             result = await stop_proposed_calibration(ProposedCalibrationStopInput())
 
@@ -306,11 +306,11 @@ class TestApplyProposedCalibration:
         expected = {"applied": True, "proposed_calibration_active": False}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.calibration_service import apply_proposed_calibration
+            from controldesk_mcp.services.calibration_service import apply_proposed_calibration
 
             result = await apply_proposed_calibration(ProposedCalibrationApplyInput())
 
@@ -322,14 +322,14 @@ class TestApplyProposedCalibration:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[
                 MagicMock(),
                 BridgeOperationError("apply failed"),
             ],
         ):
-            from sources.services.calibration_service import apply_proposed_calibration
+            from controldesk_mcp.services.calibration_service import apply_proposed_calibration
 
             result = await apply_proposed_calibration(ProposedCalibrationApplyInput())
 
@@ -347,11 +347,11 @@ class TestCancelProposedCalibration:
         expected = {"cancelled": True, "proposed_calibration_active": False}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.calibration_service import cancel_proposed_calibration
+            from controldesk_mcp.services.calibration_service import cancel_proposed_calibration
 
             result = await cancel_proposed_calibration(ProposedCalibrationCancelInput())
 
@@ -363,14 +363,14 @@ class TestCancelProposedCalibration:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[
                 MagicMock(),
                 BridgeOperationError("cancel failed"),
             ],
         ):
-            from sources.services.calibration_service import cancel_proposed_calibration
+            from controldesk_mcp.services.calibration_service import cancel_proposed_calibration
 
             result = await cancel_proposed_calibration(ProposedCalibrationCancelInput())
 
@@ -393,11 +393,11 @@ class TestDryRunStartCalibration:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, state],
         ):
-            from sources.services.calibration_service import dry_run_start_calibration
+            from controldesk_mcp.services.calibration_service import dry_run_start_calibration
 
             result = await dry_run_start_calibration(CalibrationStartInput(dry_run=True))
 
@@ -415,11 +415,11 @@ class TestDryRunStartCalibration:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, state],
         ):
-            from sources.services.calibration_service import dry_run_start_calibration
+            from controldesk_mcp.services.calibration_service import dry_run_start_calibration
 
             result = await dry_run_start_calibration(CalibrationStartInput(dry_run=True))
 

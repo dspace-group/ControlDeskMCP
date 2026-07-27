@@ -17,7 +17,6 @@ dist/
 *.egg-info/
 *.pyi
 .python-version
-uv.lock
 
 # .NET (clients)
 [Bb]in/

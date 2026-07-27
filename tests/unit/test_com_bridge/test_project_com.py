@@ -1,4 +1,4 @@
-"""Unit tests for sources.com_bridge.domains.project_com."""
+"""Unit tests for controldesk_mcp.com_bridge.domains.project_com."""
 
 from __future__ import annotations
 
@@ -6,8 +6,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from sources.com_bridge.domains import project_com
-from sources.com_bridge.errors import BridgePreconditionError
+from controldesk_mcp.com_bridge.domains import project_com
+from controldesk_mcp.com_bridge.errors import BridgePreconditionError
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 

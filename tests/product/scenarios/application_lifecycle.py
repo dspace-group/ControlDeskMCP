@@ -5,7 +5,7 @@ Each ``LLMScenario`` defines:
 - Which tools MUST appear in the audit trail (``expected_tools``)
 - Whether the tool results must be free of errors (``assert_tool_success``)
 
-Tools used here are the 8 confirmed tools from sources/tools/application/lifecycle.py:
+Tools used here are the 8 confirmed tools from controldesk_mcp/tools/application/lifecycle.py:
   start_controldesk, app_set_window_visible, app_get_window_visibility,
   app_set_window_state, app_get_window_state, app_set_window_position,
   app_set_fullscreen, stop_controldesk

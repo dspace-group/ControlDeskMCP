@@ -1,6 +1,6 @@
-"""Unit tests for sources.models.tooldecrator.metainfo."""
+"""Unit tests for controldesk_mcp.models.tooldecrator.metainfo."""
 
-from sources.models.tooldecorator.metainfo import (
+from controldesk_mcp.models.tooldecorator.metainfo import (
     AnnotationInfo,
     MetaInfo,
     ToolDomain,

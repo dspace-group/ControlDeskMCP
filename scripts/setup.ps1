@@ -205,7 +205,7 @@ Write-Host "  Setup complete!" -ForegroundColor Green
 Write-Host "================================================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "  Next steps:" -ForegroundColor White
-Write-Host "    uv run python -m sources   # start the MCP server (stdio)" -ForegroundColor Gray
+Write-Host "    uv run python -m controldesk_mcp   # start the MCP server (stdio)" -ForegroundColor Gray
 Write-Host "    .\scripts\quality-gate.ps1 # lint + format + tests" -ForegroundColor Gray
 Write-Host "    .\scripts\inspect.ps1      # MCP Inspector UI (browser)" -ForegroundColor Gray
 Write-Host ""

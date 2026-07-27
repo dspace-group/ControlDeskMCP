@@ -1,4 +1,4 @@
-"""Unit tests for sources.com_bridge.domains.application_com."""
+"""Unit tests for controldesk_mcp.com_bridge.domains.application_com."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, PropertyMock
 
 import pytest
 
-from sources.com_bridge.domains.application_com import (
+from controldesk_mcp.com_bridge.domains.application_com import (
     get_version,
     get_window_state,
     get_window_visible,
@@ -18,7 +18,7 @@ from sources.com_bridge.domains.application_com import (
     set_window_visible,
     show_window,
 )
-from sources.com_bridge.errors import BridgeError, BridgePreconditionError, BridgeTimeoutError
+from controldesk_mcp.com_bridge.errors import BridgeError, BridgePreconditionError, BridgeTimeoutError
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 

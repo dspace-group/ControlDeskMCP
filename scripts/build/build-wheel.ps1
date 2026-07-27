@@ -302,7 +302,7 @@ uv pip install --python .\controldesk-mcp-venv\Scripts\python.exe .\controldesk_
 → You used the bare command name instead of the full path in your config.
 Replace `"command": "controldesk-mcp"` with the **full path** from install script output.
 
-### "ModuleNotFoundError: No module named 'sources'"
+### "ModuleNotFoundError: No module named 'controldesk_mcp'"
 → Installation failed. Re-run with `-Force` and check output for errors:
 ``````powershell
 .\install-wheel.ps1 -Force
@@ -338,7 +338,7 @@ Test the installation:
 C:\tools\controldesk-mcp-venv\Scripts\controldesk-mcp.exe --help
 
 # Or test import
-python -c "import sources; print('OK')"
+python -c "import controldesk_mcp; print('OK')"
 ``````
 
 ---

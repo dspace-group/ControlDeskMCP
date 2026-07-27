@@ -1,10 +1,10 @@
-"""Unit tests for sources.models.envelope_builder."""
+"""Unit tests for controldesk_mcp.models.envelope_builder."""
 
 from __future__ import annotations
 
 import json
 
-from sources.com_bridge.errors import (
+from controldesk_mcp.com_bridge.errors import (
     BridgeCircuitOpenError,
     BridgeConnectionError,
     BridgeOperationError,
@@ -13,8 +13,8 @@ from sources.com_bridge.errors import (
     BridgeUiBlockedError,
     BridgeVersionError,
 )
-from sources.models.envelope_builder import build_envelope, tool_error_result
-from sources.models.errors import ErrorEnvelope
+from controldesk_mcp.models.envelope_builder import build_envelope, tool_error_result
+from controldesk_mcp.models.errors import ErrorEnvelope
 
 # ── build_envelope ────────────────────────────────────────────────────────────
 

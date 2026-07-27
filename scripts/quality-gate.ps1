@@ -14,11 +14,11 @@ if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Write-Host '--- Ruff lint (E/F/W/I/N/T20) ---' -ForegroundColor Cyan
-& uv run ruff check sources tests
+& uv run ruff check controldesk_mcp tests
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Write-Host '--- Black format check ---' -ForegroundColor Cyan
-& uv run black --check sources tests
+& uv run black --check controldesk_mcp tests
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 # ── MCP tool decorator validation ─────────────────────────────────────────────
@@ -28,8 +28,8 @@ Write-Host '--- MCP tool decorators ---' -ForegroundColor Cyan
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 # ── Layer boundary enforcement ────────────────────────────────────────────────
-# Rule: sources/server/ and sources/tools/ must NEVER import com_bridge internals
-# directly. Only sources.com_bridge.dispatch is permitted.
+# Rule: controldesk_mcp/server/ and controldesk_mcp/tools/ must NEVER import com_bridge internals
+# directly. Only controldesk_mcp.com_bridge.dispatch is permitted.
 Write-Host '--- Layering check ---' -ForegroundColor Cyan
 & .\scripts\check_layer_boundaries.ps1
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

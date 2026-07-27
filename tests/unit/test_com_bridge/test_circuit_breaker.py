@@ -1,4 +1,4 @@
-"""Unit tests for sources.com_bridge.error_handling.circuit_breaker."""
+"""Unit tests for controldesk_mcp.com_bridge.error_handling.circuit_breaker."""
 
 from __future__ import annotations
 
@@ -6,12 +6,12 @@ import time
 
 import pytest
 
-from sources.com_bridge.error_handling.circuit_breaker import (
+from controldesk_mcp.com_bridge.error_handling.circuit_breaker import (
     CircuitBreaker,
     CircuitState,
     get_breaker,
 )
-from sources.com_bridge.errors import BridgeCircuitOpenError
+from controldesk_mcp.com_bridge.errors import BridgeCircuitOpenError
 
 
 class TestCircuitBreakerInitialState:

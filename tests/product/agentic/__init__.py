@@ -27,16 +27,16 @@ try:
 except ImportError:
     pass  # python-dotenv not installed — rely on system env vars
 
-import sources.com_bridge as com_bridge
-from sources.models.application import AppStartOrAttachInput
-from sources.server.app import mcp
-from sources.tools.application import (
+import controldesk_mcp.com_bridge as com_bridge
+from controldesk_mcp.models.application import AppStartOrAttachInput
+from controldesk_mcp.server.app import mcp
+from controldesk_mcp.tools.application import (
     lifecycle as _lifecycle_module,  # noqa: F401 — triggers @mcp.tool registration
 )
-from sources.tools.project import (
+from controldesk_mcp.tools.project import (
     management as _project_module,  # noqa: F401 — triggers @mcp.tool registration
 )
-from sources.tools.tool_window import (
+from controldesk_mcp.tools.tool_window import (
     management as _tool_window_module,  # noqa: F401 — triggers @mcp.tool registration
 )
 from tests.product.agents.llm_agent import ToolRegistry

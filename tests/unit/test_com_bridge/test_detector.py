@@ -1,4 +1,4 @@
-"""Unit tests for sources.com_bridge.detector."""
+"""Unit tests for controldesk_mcp.com_bridge.detector."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from sources.com_bridge.detector import (
+from controldesk_mcp.com_bridge.detector import (
     _parse_version,
     detect_prog_id,
     is_version_installed,
@@ -16,7 +16,7 @@ from sources.com_bridge.detector import (
     resolve_prog_id,
     version_to_prog_id,
 )
-from sources.com_bridge.errors import BridgeNotInstalledError
+from controldesk_mcp.com_bridge.errors import BridgeNotInstalledError
 
 # ── version_to_prog_id ─────────────────────────────────────────────────────────
 

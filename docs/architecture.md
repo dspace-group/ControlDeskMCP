@@ -28,9 +28,9 @@ root/
 ├── pyproject.toml                     ✅ PEP 517 project + pip/hatch deps
 ├── README.md                          ✅
 │
-├── sources/                           ✅ Python MCP server package
+├── controldesk_mcp/                           ✅ Python MCP server package
 │   ├── __init__.py                    ✅
-│   ├── __main__.py                    ✅ `python -m sources` support
+│   ├── __main__.py                    ✅ `python -m controldesk_mcp` support
 │   ├── main.py                        ✅ Entry point — runs FastMCP via stdio/HTTP
 │   │
 │   ├── server/                        ✅ MCP server bootstrap
@@ -146,7 +146,7 @@ root/
                     │ tools/
 ┌───────────────────▼─────────────────────────┐
 │  Layer 2 — Tools (thin adapters)             │
-│  sources/tools/<domain>/                     │
+│  controldesk_mcp/tools/<domain>/                     │
 │  Handles: @mcp.tool decorator only           │
 │  Every function body: single-line delegate   │
 └───────────────────┬─────────────────────────┘
@@ -161,7 +161,7 @@ root/
                     │  com_bridge.dispatch()
 ┌───────────────────▼─────────────────────────┐
 │  Layer 4 — Dispatch Gateway                  │
-│  sources/com_bridge/__init__.dispatch()      │
+│  controldesk_mcp/com_bridge/__init__.dispatch()      │
 │  Single async crossing point to STA thread  │
 │  Timeout + enqueue; returns awaitable Future │
 └───────────────────┬─────────────────────────┘
@@ -197,14 +197,14 @@ root/
 **Skipping a layer is forbidden.**
 
 ```
-Layer 1 (sources/server/, sources/main.py)
+Layer 1 (controldesk_mcp/server/, controldesk_mcp/main.py)
     Must NOT: import com_bridge, call COM, check domain state
-Layer 2 (sources/tools/)
+Layer 2 (controldesk_mcp/tools/)
     Must NOT: contain business logic, call COM, handle BridgeError
     Must NOT: import win32com/comtypes or com_bridge internals (only dispatch)
     Rule: every function body is a single-line service/dispatch delegate
 Layer 3 (service helpers)
-    Must NOT: import from sources.server or sources.tools
+    Must NOT: import from controldesk_mcp.server or controldesk_mcp.tools
     Must NOT: import win32com/comtypes directly
 Layer 4 (com_bridge dispatch gateway)
     Single function: com_bridge.dispatch()
@@ -218,8 +218,8 @@ Layer 5 (com_bridge internals)
 ```powershell
 # scripts/quality-gate.ps1
 Select-String `
-    -Path "sources/server/*.py","sources/tools/**/*.py" `
-    -Pattern "from sources\.com_bridge\.(connection|domains|error_handling|sta_thread)" `
+    -Path "controldesk_mcp/server/*.py","controldesk_mcp/tools/**/*.py" `
+    -Pattern "from controldesk_mcp\.com_bridge\.(connection|domains|error_handling|sta_thread)" `
     -Recurse
 # Any match = build failure
 ```
@@ -254,11 +254,11 @@ Server capabilities declared:
 
 ### Startup Validation (lifespan hook)
 
-Before accepting any tool call, `sources/server/app.py` verifies:
+Before accepting any tool call, `controldesk_mcp/server/app.py` verifies:
 
 1. Python ≥ 3.11 (required for `tomllib`, `asyncio.TaskGroup`)
 2. Process bitness = 64-bit (COM automation objects are 64-bit only)
-3. All required settings present (`sources/config/settings.py`)
+3. All required settings present (`controldesk_mcp/config/settings.py`)
 
 Failure raises `RuntimeError` during lifespan startup — server exits before accepting connections.
 
@@ -303,7 +303,7 @@ Rules:
 - `ctx.info()` / `ctx.warning()` / `ctx.error()` → `notifications/message` channel (safe, JSON-RPC).
 
 ```python
-# sources/utils/logger.py pattern
+# controldesk_mcp/utils/logger.py pattern
 handler = logging.StreamHandler(sys.stderr)  # ← stderr, NOT stdout
 ```
 
@@ -449,7 +449,7 @@ The COM bridge is the **single gatekeeper**: one dedicated STA thread owns all C
 ### Module Map
 
 ```
-sources/com_bridge/
+controldesk_mcp/com_bridge/
 ├── __init__.py             ← Public API: dispatch(), shutdown()
 ├── sta_thread.py           ← STA thread + asyncio.Queue gateway
 ├── connection.py           ← COM lifecycle: connect, reconnect, health
@@ -499,7 +499,7 @@ async tool call
 ### Startup / Shutdown (lifespan)
 
 ```python
-# sources/server/app.py
+# controldesk_mcp/server/app.py
 @asynccontextmanager
 async def lifespan(app):
     await startup()    # starts STA thread, calls CoInitialize
@@ -662,19 +662,19 @@ async def variable_read_scalar(params: VariableReadScalarInput) -> str:
 
 | File | Purpose |
 |---|---|
-| `sources/main.py` | `mcp.run(transport="stdio")` — nothing else |
-| `sources/server/app.py` | FastMCP instance + lifespan that starts/stops COM bridge |
-| `sources/server/registry.py` | Single import point for all tools, resources, prompts |
-| `sources/tools/<domain>/` | Thin adapters: `@mcp.tool` decorator + one-line body |
-| `sources/com_bridge/__init__.py` | `dispatch()` — the only `com_bridge` symbol imported elsewhere |
-| `sources/com_bridge/sta_thread.py` | `threading.Thread` + `asyncio.Queue`; STA blocks on queue, executes COM synchronously, returns via `Future` |
-| `sources/com_bridge/connection.py` | `COMConnection` class — holds root COM object; reconnects on `RPC_E_DISCONNECTED` |
-| `sources/com_bridge/errors.py` | `CdError` subclass definitions with `retryable` and `recovery_hint` |
-| `sources/com_bridge/error_handling/hresult.py` | `pywintypes.com_error` → typed `CdError` subclass |
-| `sources/com_bridge/error_handling/guard.py` | COM Guard: STA executor, `asyncio.timeout`, retry |
-| `sources/com_bridge/error_handling/circuit_breaker.py` | Per-interface CLOSED/OPEN/HALF-OPEN circuit breaker |
-| `sources/com_bridge/detector.py` | ControlDesk version/process detection on the local machine |
-| `sources/config/settings.py` | `pydantic-settings`: `COM_PROG_ID`, `COM_TIMEOUT_MS`, `LOG_LEVEL`, `MCP_TRANSPORT` |
+| `controldesk_mcp/main.py` | `mcp.run(transport="stdio")` — nothing else |
+| `controldesk_mcp/server/app.py` | FastMCP instance + lifespan that starts/stops COM bridge |
+| `controldesk_mcp/server/registry.py` | Single import point for all tools, resources, prompts |
+| `controldesk_mcp/tools/<domain>/` | Thin adapters: `@mcp.tool` decorator + one-line body |
+| `controldesk_mcp/com_bridge/__init__.py` | `dispatch()` — the only `com_bridge` symbol imported elsewhere |
+| `controldesk_mcp/com_bridge/sta_thread.py` | `threading.Thread` + `asyncio.Queue`; STA blocks on queue, executes COM synchronously, returns via `Future` |
+| `controldesk_mcp/com_bridge/connection.py` | `COMConnection` class — holds root COM object; reconnects on `RPC_E_DISCONNECTED` |
+| `controldesk_mcp/com_bridge/errors.py` | `CdError` subclass definitions with `retryable` and `recovery_hint` |
+| `controldesk_mcp/com_bridge/error_handling/hresult.py` | `pywintypes.com_error` → typed `CdError` subclass |
+| `controldesk_mcp/com_bridge/error_handling/guard.py` | COM Guard: STA executor, `asyncio.timeout`, retry |
+| `controldesk_mcp/com_bridge/error_handling/circuit_breaker.py` | Per-interface CLOSED/OPEN/HALF-OPEN circuit breaker |
+| `controldesk_mcp/com_bridge/detector.py` | ControlDesk version/process detection on the local machine |
+| `controldesk_mcp/config/settings.py` | `pydantic-settings`: `COM_PROG_ID`, `COM_TIMEOUT_MS`, `LOG_LEVEL`, `MCP_TRANSPORT` |
 | `AGENTS.md` | AI agent context: STA rules, ProgID, mock setup, test markers |
 
 ---

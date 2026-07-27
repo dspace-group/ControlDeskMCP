@@ -1,4 +1,4 @@
-"""Unit tests for sources.services.measurement_service.
+"""Unit tests for controldesk_mcp.services.measurement_service.
 
 Tests mock com_bridge.dispatch; no real COM is invoked.
 """
@@ -9,9 +9,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import sources.com_bridge as bridge
-from sources.com_bridge.errors import BridgeConnectionError, BridgeOperationError
-from sources.models.measurement import (
+import controldesk_mcp.com_bridge as bridge
+from controldesk_mcp.com_bridge.errors import BridgeConnectionError, BridgeOperationError
+from controldesk_mcp.models.measurement import (
     DataLoggerConfigureInput,
     DataLoggerCreateInput,
     DataLoggerListInput,
@@ -48,7 +48,7 @@ from sources.models.measurement import (
 @pytest.fixture(autouse=True)
 def _reset_bridge():
     bridge._connection = None
-    import sources.com_bridge.sta_thread as _sta
+    import controldesk_mcp.com_bridge.sta_thread as _sta
 
     _sta._sta_thread = None
     yield
@@ -57,7 +57,7 @@ def _reset_bridge():
 
 
 def _make_connected_bridge() -> MagicMock:
-    from sources.com_bridge.connection import ConnectionState
+    from controldesk_mcp.com_bridge.connection import ConnectionState
 
     conn = MagicMock()
     conn.state = ConnectionState.CONNECTED
@@ -87,11 +87,11 @@ class TestSignalAdd:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import signal_add
+            from controldesk_mcp.services.measurement_service import signal_add
 
             result = await signal_add(
                 MeasurementSignalAddInput(connection_path="XCP(5ms)://control_out")
@@ -105,11 +105,11 @@ class TestSignalAdd:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("signal add failed"),
         ):
-            from sources.services.measurement_service import signal_add
+            from controldesk_mcp.services.measurement_service import signal_add
 
             result = await signal_add(
                 MeasurementSignalAddInput(connection_path="XCP(5ms)://control_out")
@@ -133,11 +133,11 @@ class TestSignalRemove:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import signal_remove
+            from controldesk_mcp.services.measurement_service import signal_remove
 
             result = await signal_remove(
                 MeasurementSignalRemoveInput(connection_path="XCP(5ms)://control_out")
@@ -150,11 +150,11 @@ class TestSignalRemove:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[MagicMock(), BridgeOperationError("remove failed")],
         ):
-            from sources.services.measurement_service import signal_remove
+            from controldesk_mcp.services.measurement_service import signal_remove
 
             result = await signal_remove(
                 MeasurementSignalRemoveInput(connection_path="XCP(5ms)://control_out")
@@ -177,11 +177,11 @@ class TestListSignals:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import list_signals
+            from controldesk_mcp.services.measurement_service import list_signals
 
             result = await list_signals(MeasurementListSignalsInput())
 
@@ -205,11 +205,11 @@ class TestConfigureBuffer:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import configure_buffer
+            from controldesk_mcp.services.measurement_service import configure_buffer
 
             result = await configure_buffer(
                 MeasurementConfigureBufferInput(buffer_size_seconds=10.0)
@@ -223,11 +223,11 @@ class TestConfigureBuffer:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[MagicMock(), BridgeOperationError("buffer config failed")],
         ):
-            from sources.services.measurement_service import configure_buffer
+            from controldesk_mcp.services.measurement_service import configure_buffer
 
             result = await configure_buffer(
                 MeasurementConfigureBufferInput(buffer_size_seconds=10.0)
@@ -257,11 +257,11 @@ class TestGetConfiguration:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import get_configuration
+            from controldesk_mcp.services.measurement_service import get_configuration
 
             result = await get_configuration(MeasurementGetConfigurationInput())
 
@@ -284,11 +284,11 @@ class TestStartMeasurement:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import start_measurement
+            from controldesk_mcp.services.measurement_service import start_measurement
 
             result = await start_measurement(MeasurementStartInput())
 
@@ -299,11 +299,11 @@ class TestStartMeasurement:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("no connection"),
         ):
-            from sources.services.measurement_service import start_measurement
+            from controldesk_mcp.services.measurement_service import start_measurement
 
             result = await start_measurement(MeasurementStartInput())
 
@@ -321,11 +321,11 @@ class TestStopMeasurement:
         expected = {"stopped": True, "timestamp_utc": "2026-05-04T10:00:00.000Z"}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import stop_measurement
+            from controldesk_mcp.services.measurement_service import stop_measurement
 
             result = await stop_measurement(MeasurementStopInput())
 
@@ -347,11 +347,11 @@ class TestGetMeasurementState:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import get_measurement_state
+            from controldesk_mcp.services.measurement_service import get_measurement_state
 
             result = await get_measurement_state(MeasurementGetStateInput())
 
@@ -377,11 +377,11 @@ class TestCreateTriggerRule:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import create_trigger_rule
+            from controldesk_mcp.services.measurement_service import create_trigger_rule
 
             result = await create_trigger_rule(
                 TriggerRuleCreateInput(
@@ -399,11 +399,11 @@ class TestCreateTriggerRule:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[MagicMock(), BridgeOperationError("rule create failed")],
         ):
-            from sources.services.measurement_service import create_trigger_rule
+            from controldesk_mcp.services.measurement_service import create_trigger_rule
 
             result = await create_trigger_rule(
                 TriggerRuleCreateInput(
@@ -431,11 +431,11 @@ class TestRemoveTriggerRule:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import remove_trigger_rule
+            from controldesk_mcp.services.measurement_service import remove_trigger_rule
 
             result = await remove_trigger_rule(TriggerRuleRemoveInput(rule_name="StartCondition"))
 
@@ -459,11 +459,11 @@ class TestConfigureTimeLimitCondition:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import (
+            from controldesk_mcp.services.measurement_service import (
                 configure_time_limit_condition,
             )
 
@@ -494,11 +494,11 @@ class TestConfigureTriggerBasedCondition:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import (
+            from controldesk_mcp.services.measurement_service import (
                 configure_trigger_based_condition,
             )
 
@@ -534,11 +534,11 @@ class TestListRecordings:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import list_recordings
+            from controldesk_mcp.services.measurement_service import list_recordings
 
             result = await list_recordings(MeasurementListRecordingsInput())
 
@@ -561,11 +561,11 @@ class TestExportRecording:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import export_recording
+            from controldesk_mcp.services.measurement_service import export_recording
 
             result = await export_recording(
                 MeasurementExportRecordingInput(
@@ -581,11 +581,11 @@ class TestExportRecording:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[MagicMock(), BridgeOperationError("export failed")],
         ):
-            from sources.services.measurement_service import export_recording
+            from controldesk_mcp.services.measurement_service import export_recording
 
             result = await export_recording(
                 MeasurementExportRecordingInput(
@@ -614,11 +614,11 @@ class TestImportRecording:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import import_recording
+            from controldesk_mcp.services.measurement_service import import_recording
 
             result = await import_recording(
                 MeasurementImportRecordingInput(import_path="C:\\archives\\old.mf4")
@@ -644,11 +644,11 @@ class TestAddBookmark:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import add_bookmark
+            from controldesk_mcp.services.measurement_service import add_bookmark
 
             result = await add_bookmark(MeasurementBookmarkAddInput(title="Test event"))
 
@@ -660,11 +660,11 @@ class TestAddBookmark:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[MagicMock(), BridgeOperationError("bookmark add failed")],
         ):
-            from sources.services.measurement_service import add_bookmark
+            from controldesk_mcp.services.measurement_service import add_bookmark
 
             result = await add_bookmark(MeasurementBookmarkAddInput(title="Test event"))
 
@@ -686,11 +686,11 @@ class TestListBookmarks:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import list_bookmarks
+            from controldesk_mcp.services.measurement_service import list_bookmarks
 
             result = await list_bookmarks(MeasurementBookmarkListInput(recording_index=0))
 
@@ -712,11 +712,11 @@ class TestCreateDataLogger:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import create_data_logger
+            from controldesk_mcp.services.measurement_service import create_data_logger
 
             result = await create_data_logger(DataLoggerCreateInput(logger_name="CAN_Logger"))
 
@@ -728,11 +728,11 @@ class TestCreateDataLogger:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[MagicMock(), BridgeOperationError("create logger failed")],
         ):
-            from sources.services.measurement_service import create_data_logger
+            from controldesk_mcp.services.measurement_service import create_data_logger
 
             result = await create_data_logger(DataLoggerCreateInput(logger_name="CAN_Logger"))
 
@@ -756,11 +756,11 @@ class TestConfigureDataLogger:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import configure_data_logger
+            from controldesk_mcp.services.measurement_service import configure_data_logger
 
             result = await configure_data_logger(
                 DataLoggerConfigureInput(
@@ -787,11 +787,11 @@ class TestStartDataLogger:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import start_data_logger
+            from controldesk_mcp.services.measurement_service import start_data_logger
 
             result = await start_data_logger(DataLoggerStartInput(logger_name="CAN_Logger"))
 
@@ -813,11 +813,11 @@ class TestStopDataLogger:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import stop_data_logger
+            from controldesk_mcp.services.measurement_service import stop_data_logger
 
             result = await stop_data_logger(DataLoggerStopInput(logger_name="CAN_Logger"))
 
@@ -845,11 +845,11 @@ class TestListDataLoggers:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import list_data_loggers
+            from controldesk_mcp.services.measurement_service import list_data_loggers
 
             result = await list_data_loggers(DataLoggerListInput())
 
@@ -871,11 +871,11 @@ class TestRemoveDataLogger:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import remove_data_logger
+            from controldesk_mcp.services.measurement_service import remove_data_logger
 
             result = await remove_data_logger(DataLoggerRemoveInput(logger_name="CAN_Logger"))
 
@@ -886,11 +886,11 @@ class TestRemoveDataLogger:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[MagicMock(), BridgeOperationError("remove logger failed")],
         ):
-            from sources.services.measurement_service import remove_data_logger
+            from controldesk_mcp.services.measurement_service import remove_data_logger
 
             result = await remove_data_logger(DataLoggerRemoveInput(logger_name="CAN_Logger"))
 
@@ -914,11 +914,11 @@ class TestAddRaster:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import add_raster
+            from controldesk_mcp.services.measurement_service import add_raster
 
             result = await add_raster(
                 MeasurementRasterAddInput(platform_name="XCP", raster_interval_ms=5.0)
@@ -948,11 +948,11 @@ class TestListRasters:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import list_rasters
+            from controldesk_mcp.services.measurement_service import list_rasters
 
             result = await list_rasters(MeasurementRasterListInput())
 
@@ -975,11 +975,11 @@ class TestRemoveRaster:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import remove_raster
+            from controldesk_mcp.services.measurement_service import remove_raster
 
             result = await remove_raster(
                 MeasurementRasterRemoveInput(platform_name="XCP", raster_name="XCP_5ms")
@@ -992,11 +992,11 @@ class TestRemoveRaster:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[MagicMock(), BridgeOperationError("remove raster failed")],
         ):
-            from sources.services.measurement_service import remove_raster
+            from controldesk_mcp.services.measurement_service import remove_raster
 
             result = await remove_raster(
                 MeasurementRasterRemoveInput(platform_name="XCP", raster_name="XCP_5ms")
@@ -1022,11 +1022,11 @@ class TestConfigureSettings:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import configure_settings
+            from controldesk_mcp.services.measurement_service import configure_settings
 
             result = await configure_settings(
                 MeasurementConfigureSettingsInput(data_pool_path="C:\\MeasurementData")
@@ -1051,11 +1051,11 @@ class TestRemoveBookmark:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.measurement_service import remove_bookmark
+            from controldesk_mcp.services.measurement_service import remove_bookmark
 
             result = await remove_bookmark(
                 MeasurementBookmarkRemoveInput(recording_index=0, bookmark_index=1)
@@ -1069,11 +1069,11 @@ class TestRemoveBookmark:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[MagicMock(), BridgeOperationError("remove bookmark failed")],
         ):
-            from sources.services.measurement_service import remove_bookmark
+            from controldesk_mcp.services.measurement_service import remove_bookmark
 
             result = await remove_bookmark(
                 MeasurementBookmarkRemoveInput(recording_index=0, bookmark_index=1)

@@ -7,15 +7,15 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from sources.models.tooldecorator.metainfo import ToolDomain
-from sources.server.server import _STATEFUL_DOMAINS, MCPServer
+from controldesk_mcp.models.tooldecorator.metainfo import ToolDomain
+from controldesk_mcp.server.server import _STATEFUL_DOMAINS, MCPServer
 
 # ── helpers ───────────────────────────────────────────────────────────────────
 
 
 def _make_server() -> MCPServer:
     """Create a minimal MCPServer with patched FastMCP internals."""
-    with patch("sources.server.server.MCPServer._patch_list_changed_capability"):
+    with patch("controldesk_mcp.server.server.MCPServer._patch_list_changed_capability"):
         srv = MCPServer.__new__(MCPServer)
         # Bootstrap the attributes MCPServer.__init__ sets.
         srv._domain_has_deferred_addon_tools = {}

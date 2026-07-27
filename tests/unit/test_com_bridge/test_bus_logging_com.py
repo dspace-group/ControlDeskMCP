@@ -1,4 +1,4 @@
-"""Unit tests for sources.com_bridge.domains.bus_logging_com."""
+"""Unit tests for controldesk_mcp.com_bridge.domains.bus_logging_com."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from sources.com_bridge.domains.bus_logging_com import (
+from controldesk_mcp.com_bridge.domains.bus_logging_com import (
     clear_all_loggers,
     configure_filter,
     configure_logger,
@@ -24,7 +24,7 @@ from sources.com_bridge.domains.bus_logging_com import (
     stop_filter,
     stop_logger,
 )
-from sources.com_bridge.errors import BridgePreconditionError
+from controldesk_mcp.com_bridge.errors import BridgePreconditionError
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 

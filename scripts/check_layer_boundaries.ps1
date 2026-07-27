@@ -2,8 +2,8 @@ param()
 
 $ErrorActionPreference = 'Stop'
 
-$pattern = 'from\s+sources\.com_bridge\.(connection|domains|error_mapper|sta_thread)'
-$layerDirs = @('sources/server', 'sources/tools')
+$pattern = 'from\s+controldesk_mcp\.com_bridge\.(connection|domains|error_mapper|sta_thread)'
+$layerDirs = @('controldesk_mcp/server', 'controldesk_mcp/tools')
 $files = Get-ChildItem -Path $layerDirs -Recurse -Filter '*.py' -ErrorAction SilentlyContinue
 $violations = $files | Select-String -Pattern $pattern
 
@@ -12,7 +12,7 @@ if ($violations) {
     $violations | ForEach-Object {
         Write-Host "  $($_.Filename):$($_.LineNumber)  $($_.Line.Trim())" -ForegroundColor Red
     }
-    Write-Host 'Rule: only sources.com_bridge.dispatch may be imported outside com_bridge/.' -ForegroundColor Red
+    Write-Host 'Rule: only controldesk_mcp.com_bridge.dispatch may be imported outside com_bridge/.' -ForegroundColor Red
     exit 1
 }
 

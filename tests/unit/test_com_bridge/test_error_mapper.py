@@ -1,9 +1,9 @@
-"""Unit tests for sources.com_bridge.error_handling.hresult."""
+"""Unit tests for controldesk_mcp.com_bridge.error_handling.hresult."""
 
 from __future__ import annotations
 
-from sources.com_bridge.error_handling.hresult import map_com_error
-from sources.com_bridge.errors import (
+from controldesk_mcp.com_bridge.error_handling.hresult import map_com_error
+from controldesk_mcp.com_bridge.errors import (
     BridgeConnectionError,
     BridgeOperationError,
     BridgeUiBlockedError,

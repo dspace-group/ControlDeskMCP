@@ -1,4 +1,4 @@
-"""Unit tests for sources.com_bridge.domains.platform_com."""
+"""Unit tests for controldesk_mcp.com_bridge.domains.platform_com."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, PropertyMock
 
 import pytest
 
-from sources.com_bridge.domains.platform_com import (
+from controldesk_mcp.com_bridge.domains.platform_com import (
     add_platform,
     add_registered_platform,
     add_variable_description,
@@ -32,7 +32,7 @@ from sources.com_bridge.domains.platform_com import (
     set_api_version,
     set_platform_enabled,
 )
-from sources.com_bridge.errors import BridgeError, BridgePreconditionError
+from controldesk_mcp.com_bridge.errors import BridgeError, BridgePreconditionError
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -50,7 +50,7 @@ def _make_platform(
     returns the corresponding integer value (as COM would), so the code under test
     can call int(plat.Type) and look it up in _PLATFORM_TYPE_NAME.
     """
-    from sources.com_bridge.domains.platform_com import _PLATFORM_TYPE_INT
+    from controldesk_mcp.com_bridge.domains.platform_com import _PLATFORM_TYPE_INT
 
     plat = MagicMock()
     type(plat).Name = PropertyMock(return_value=name)
@@ -1195,38 +1195,38 @@ class TestRenamePlatform:
 
 class TestStateStringHelpers:
     def test_connection_state_connected(self) -> None:
-        from sources.com_bridge.domains.platform_com import _connection_state_str
+        from controldesk_mcp.com_bridge.domains.platform_com import _connection_state_str
 
         assert _connection_state_str(0) == "Connected"
 
     def test_connection_state_disconnected(self) -> None:
-        from sources.com_bridge.domains.platform_com import _connection_state_str
+        from controldesk_mcp.com_bridge.domains.platform_com import _connection_state_str
 
         assert _connection_state_str(1) == "Disconnected"
 
     def test_connection_state_unknown_int_returns_raw(self) -> None:
-        from sources.com_bridge.domains.platform_com import _connection_state_str
+        from controldesk_mcp.com_bridge.domains.platform_com import _connection_state_str
 
         assert _connection_state_str(99) == "99"
 
     def test_connection_state_string_fallback(self) -> None:
         # Real COM returns integers, but tests may use strings — fallback must work.
-        from sources.com_bridge.domains.platform_com import _connection_state_str
+        from controldesk_mcp.com_bridge.domains.platform_com import _connection_state_str
 
         assert _connection_state_str("Disconnected") == "Disconnected"
 
     def test_measurement_state_stopped(self) -> None:
-        from sources.com_bridge.domains.platform_com import _measurement_state_str
+        from controldesk_mcp.com_bridge.domains.platform_com import _measurement_state_str
 
         assert _measurement_state_str(0) == "Stopped"
 
     def test_measurement_state_running(self) -> None:
-        from sources.com_bridge.domains.platform_com import _measurement_state_str
+        from controldesk_mcp.com_bridge.domains.platform_com import _measurement_state_str
 
         assert _measurement_state_str(1) == "Running"
 
     def test_measurement_state_string_fallback(self) -> None:
-        from sources.com_bridge.domains.platform_com import _measurement_state_str
+        from controldesk_mcp.com_bridge.domains.platform_com import _measurement_state_str
 
         assert _measurement_state_str("Stopped") == "Stopped"
 

@@ -93,7 +93,7 @@ function Invoke-InspectorExport {
 
     $arguments = @()
     $arguments += $Inspector.PrefixArgs
-    $arguments += @('--cli', "$PythonCommand -m sources", '--transport', 'stdio', '--method', $Method)
+    $arguments += @('--cli', "$PythonCommand -m controldesk_mcp", '--transport', 'stdio', '--method', $Method)
 
     Write-Host "Exporting $Method ..." -ForegroundColor Cyan
     $output = & $Inspector.FilePath @arguments 2>&1
@@ -177,7 +177,7 @@ $codeFence
 The script exports the MCP schema surfaces over stdio transport using:
 
 $codeFence powershell
-$PythonCommand -m sources
+$PythonCommand -m controldesk_mcp
 $codeFence
 
 ## Generated Files
@@ -194,7 +194,7 @@ $codeFence
 - Generated at: $generatedAt
 - Inspector source: $inspectorSource
 - Transport: stdio
-- Server command: $PythonCommand -m sources
+- Server command: $PythonCommand -m controldesk_mcp
 "@
 
     Set-Content -Path $ReadmePath -Value $content.TrimStart() -Encoding utf8

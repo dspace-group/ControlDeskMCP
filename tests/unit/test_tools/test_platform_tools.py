@@ -10,8 +10,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from sources.models.errors import ErrorEnvelope
-from sources.models.platform import (
+from controldesk_mcp.models.errors import ErrorEnvelope
+from controldesk_mcp.models.platform import (
     AutomationAPIVersion,
     InitialPageType,
     PlatformAddRegisteredResult,
@@ -57,7 +57,7 @@ _ERROR = ErrorEnvelope(error_code="E001", category="UNKNOWN", message="fail", re
 
 def _patch_svc(method: str, *, return_value):
     return patch(
-        f"sources.services.platform_service.{method}",
+        f"controldesk_mcp.services.platform_service.{method}",
         new_callable=AsyncMock,
         return_value=return_value,
     )
@@ -70,8 +70,8 @@ class TestPlatformConnect:
             connected=True, platform_name="XCP", connection_state="Connected", timestamp_utc=_TS
         )
         with _patch_svc("connect_platform", return_value=expected):
-            from sources.models.platform import PlatformConnectInput
-            from sources.tools.platform.management import platform_connect
+            from controldesk_mcp.models.platform import PlatformConnectInput
+            from controldesk_mcp.tools.platform.management import platform_connect
 
             result = await platform_connect(PlatformConnectInput(platform_name="XCP"))
 
@@ -81,8 +81,8 @@ class TestPlatformConnect:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("connect_platform", return_value=_ERROR):
-            from sources.models.platform import PlatformConnectInput
-            from sources.tools.platform.management import platform_connect
+            from controldesk_mcp.models.platform import PlatformConnectInput
+            from controldesk_mcp.tools.platform.management import platform_connect
 
             result = await platform_connect(PlatformConnectInput(platform_name="XCP"))
 
@@ -100,8 +100,8 @@ class TestPlatformDisconnect:
             timestamp_utc=_TS,
         )
         with _patch_svc("disconnect_platform", return_value=expected):
-            from sources.models.platform import PlatformDisconnectInput
-            from sources.tools.platform.management import platform_disconnect
+            from controldesk_mcp.models.platform import PlatformDisconnectInput
+            from controldesk_mcp.tools.platform.management import platform_disconnect
 
             result = await platform_disconnect(PlatformDisconnectInput(platform_name="XCP"))
 
@@ -114,7 +114,7 @@ class TestPlatformManage:
     async def test_list(self) -> None:
         svc_result = PlatformListResult(platforms=[])
         with _patch_svc("list_platforms", return_value=svc_result):
-            from sources.tools.platform.management import platform_query
+            from controldesk_mcp.tools.platform.management import platform_query
 
             result = await platform_query(PlatformQueryInput(action=PlatformQueryAction.list))
 
@@ -123,7 +123,7 @@ class TestPlatformManage:
     @pytest.mark.asyncio
     async def test_list_returns_error(self) -> None:
         with _patch_svc("list_platforms", return_value=_ERROR):
-            from sources.tools.platform.management import platform_query
+            from controldesk_mcp.tools.platform.management import platform_query
 
             result = await platform_query(PlatformQueryInput(action=PlatformQueryAction.list))
 
@@ -139,7 +139,7 @@ class TestPlatformManage:
             variable_description_count=1,
         )
         with _patch_svc("get_platform_info", return_value=expected):
-            from sources.tools.platform.management import platform_query
+            from controldesk_mcp.tools.platform.management import platform_query
 
             result = await platform_query(
                 PlatformQueryInput(action=PlatformQueryAction.get_info, platform_name="XCP")
@@ -150,7 +150,7 @@ class TestPlatformManage:
 
     @pytest.mark.asyncio
     async def test_get_info_missing_platform_name(self) -> None:
-        from sources.tools.platform.management import platform_query
+        from controldesk_mcp.tools.platform.management import platform_query
 
         result = await platform_query(PlatformQueryInput(action=PlatformQueryAction.get_info))
 
@@ -166,7 +166,7 @@ class TestPlatformManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("get_connection_state", return_value=expected):
-            from sources.tools.platform.management import platform_query
+            from controldesk_mcp.tools.platform.management import platform_query
 
             result = await platform_query(
                 PlatformQueryInput(
@@ -179,7 +179,7 @@ class TestPlatformManage:
 
     @pytest.mark.asyncio
     async def test_get_connection_state_missing_platform_name(self) -> None:
-        from sources.tools.platform.management import platform_query
+        from controldesk_mcp.tools.platform.management import platform_query
 
         result = await platform_query(
             PlatformQueryInput(action=PlatformQueryAction.get_connection_state)
@@ -190,11 +190,11 @@ class TestPlatformManage:
 
     @pytest.mark.asyncio
     async def test_add(self) -> None:
-        from sources.models.platform import PlatformAddResult
+        from controldesk_mcp.models.platform import PlatformAddResult
 
         expected = PlatformAddResult(added=True, platform_name="XCP_1", platform_type="XCPonCAN")
         with _patch_svc("add_platform", return_value=expected):
-            from sources.tools.platform.management import platform_manage
+            from controldesk_mcp.tools.platform.management import platform_manage
 
             result = await platform_manage(
                 PlatformManageInput(
@@ -207,7 +207,7 @@ class TestPlatformManage:
 
     @pytest.mark.asyncio
     async def test_add_missing_platform_type(self) -> None:
-        from sources.tools.platform.management import platform_manage
+        from controldesk_mcp.tools.platform.management import platform_manage
 
         result = await platform_manage(PlatformManageInput(action=PlatformManageAction.add))
 
@@ -218,7 +218,7 @@ class TestPlatformManage:
     async def test_activate_registered(self) -> None:
         expected = PlatformAddRegisteredResult(added=True, unique_name="SCALEXIO_192.168.140.110")
         with _patch_svc("add_registered_platform", return_value=expected):
-            from sources.tools.platform.management import platform_manage
+            from controldesk_mcp.tools.platform.management import platform_manage
 
             result = await platform_manage(
                 PlatformManageInput(
@@ -232,7 +232,7 @@ class TestPlatformManage:
 
     @pytest.mark.asyncio
     async def test_activate_registered_missing_unique_name(self) -> None:
-        from sources.tools.platform.management import platform_manage
+        from controldesk_mcp.tools.platform.management import platform_manage
 
         result = await platform_manage(
             PlatformManageInput(action=PlatformManageAction.activate_registered)
@@ -245,7 +245,7 @@ class TestPlatformManage:
     async def test_configure(self) -> None:
         expected = PlatformConfigureResult(configured=True, platform_name="XCP")
         with _patch_svc("configure_platform", return_value=expected):
-            from sources.tools.platform.management import platform_manage
+            from controldesk_mcp.tools.platform.management import platform_manage
 
             result = await platform_manage(
                 PlatformManageInput(
@@ -260,7 +260,7 @@ class TestPlatformManage:
 
     @pytest.mark.asyncio
     async def test_configure_missing_platform_name(self) -> None:
-        from sources.tools.platform.management import platform_manage
+        from controldesk_mcp.tools.platform.management import platform_manage
 
         result = await platform_manage(PlatformManageInput(action=PlatformManageAction.configure))
 
@@ -276,7 +276,7 @@ class TestPlatformManage:
             initial_page="WorkingPage",
         )
         with _patch_svc("configure_calibration_behavior", return_value=expected):
-            from sources.tools.platform.management import platform_manage
+            from controldesk_mcp.tools.platform.management import platform_manage
 
             result = await platform_manage(
                 PlatformManageInput(
@@ -292,7 +292,7 @@ class TestPlatformManage:
 
     @pytest.mark.asyncio
     async def test_configure_calibration_behavior_missing_params(self) -> None:
-        from sources.tools.platform.management import platform_manage
+        from controldesk_mcp.tools.platform.management import platform_manage
 
         result = await platform_manage(
             PlatformManageInput(
@@ -307,7 +307,7 @@ class TestPlatformManage:
     async def test_configure_transport(self) -> None:
         expected = PlatformConfigureTransportResult(configured=True, platform_name="XCP")
         with _patch_svc("configure_transport", return_value=expected):
-            from sources.tools.platform.management import platform_manage
+            from controldesk_mcp.tools.platform.management import platform_manage
 
             result = await platform_manage(
                 PlatformManageInput(
@@ -322,7 +322,7 @@ class TestPlatformManage:
 
     @pytest.mark.asyncio
     async def test_configure_transport_missing_platform_name(self) -> None:
-        from sources.tools.platform.management import platform_manage
+        from controldesk_mcp.tools.platform.management import platform_manage
 
         result = await platform_manage(
             PlatformManageInput(action=PlatformManageAction.configure_transport)
@@ -337,7 +337,7 @@ class TestPlatformManage:
             version_string="APIVersion2", version_integer=2, configured=True
         )
         with _patch_svc("set_api_version", return_value=expected):
-            from sources.tools.platform.management import platform_manage
+            from controldesk_mcp.tools.platform.management import platform_manage
 
             result = await platform_manage(
                 PlatformManageInput(
@@ -351,7 +351,7 @@ class TestPlatformManage:
 
     @pytest.mark.asyncio
     async def test_set_api_version_missing_version(self) -> None:
-        from sources.tools.platform.management import platform_manage
+        from controldesk_mcp.tools.platform.management import platform_manage
 
         result = await platform_manage(
             PlatformManageInput(action=PlatformManageAction.set_api_version)
@@ -366,7 +366,7 @@ class TestPlatformManage:
             selected=True, platform_name="XCP", interface_name="Virtual"
         )
         with _patch_svc("select_interface_manual", return_value=expected):
-            from sources.tools.platform.management import platform_manage
+            from controldesk_mcp.tools.platform.management import platform_manage
 
             result = await platform_manage(
                 PlatformManageInput(
@@ -383,7 +383,7 @@ class TestPlatformManage:
 
     @pytest.mark.asyncio
     async def test_select_interface_manual_missing_params(self) -> None:
-        from sources.tools.platform.management import platform_manage
+        from controldesk_mcp.tools.platform.management import platform_manage
 
         result = await platform_manage(
             PlatformManageInput(
@@ -403,7 +403,7 @@ class TestPlatformManage:
             file_path="C:\\ECU\\myecu.a2l",
         )
         with _patch_svc("add_variable_description", return_value=expected):
-            from sources.tools.platform.management import platform_manage
+            from controldesk_mcp.tools.platform.management import platform_manage
 
             result = await platform_manage(
                 PlatformManageInput(
@@ -418,7 +418,7 @@ class TestPlatformManage:
 
     @pytest.mark.asyncio
     async def test_add_variable_description_missing_params(self) -> None:
-        from sources.tools.platform.management import platform_manage
+        from controldesk_mcp.tools.platform.management import platform_manage
 
         result = await platform_manage(
             PlatformManageInput(
@@ -433,7 +433,7 @@ class TestPlatformManage:
     async def test_list_interfaces(self) -> None:
         expected = PlatformListInterfacesResult(interfaces=[], total_count=0)
         with _patch_svc("list_interfaces", return_value=expected):
-            from sources.tools.platform.management import platform_query
+            from controldesk_mcp.tools.platform.management import platform_query
 
             result = await platform_query(
                 PlatformQueryInput(action=PlatformQueryAction.list_interfaces, platform_name="XCP")
@@ -443,7 +443,7 @@ class TestPlatformManage:
 
     @pytest.mark.asyncio
     async def test_list_interfaces_missing_platform_name(self) -> None:
-        from sources.tools.platform.management import platform_query
+        from controldesk_mcp.tools.platform.management import platform_query
 
         result = await platform_query(
             PlatformQueryInput(action=PlatformQueryAction.list_interfaces)
@@ -461,7 +461,7 @@ class TestPlatformManage:
             usage_note="Use platform_add for direct-add types.",
         )
         with _patch_svc("list_platform_types", return_value=expected):
-            from sources.tools.platform.management import platform_query
+            from controldesk_mcp.tools.platform.management import platform_query
 
             result = await platform_query(PlatformQueryInput(action=PlatformQueryAction.list_types))
 
@@ -472,7 +472,7 @@ class TestPlatformManage:
     async def test_list_hardware_types(self) -> None:
         expected = PlatformListHardwareTypesResult(hardware_types=[], total_count=0)
         with _patch_svc("list_hardware_types", return_value=expected):
-            from sources.tools.platform.management import platform_query
+            from controldesk_mcp.tools.platform.management import platform_query
 
             result = await platform_query(
                 PlatformQueryInput(action=PlatformQueryAction.list_hardware_types)
@@ -492,7 +492,7 @@ class TestPlatformHardwareManage:
             ip_address="192.168.140.110",
         )
         with _patch_svc("register_hardware_platform", return_value=expected):
-            from sources.tools.platform.management import platform_hardware_manage
+            from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
                 PlatformHardwareManageInput(
@@ -507,7 +507,7 @@ class TestPlatformHardwareManage:
 
     @pytest.mark.asyncio
     async def test_register_hardware_missing_params(self) -> None:
-        from sources.tools.platform.management import platform_hardware_manage
+        from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
         result = await platform_hardware_manage(
             PlatformHardwareManageInput(
@@ -525,7 +525,7 @@ class TestPlatformHardwareManage:
             cleared=True, force_driver_reset=False, message="All cleared"
         )
         with _patch_svc("clear_registered_platforms", return_value=expected):
-            from sources.tools.platform.management import platform_hardware_manage
+            from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
                 PlatformHardwareManageInput(
@@ -540,7 +540,7 @@ class TestPlatformHardwareManage:
     async def test_clear_registered_aborted(self) -> None:
         expected = PlatformClearRegisteredAborted()
         with _patch_svc("clear_registered_platforms", return_value=expected):
-            from sources.tools.platform.management import platform_hardware_manage
+            from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
                 PlatformHardwareManageInput(
@@ -553,7 +553,7 @@ class TestPlatformHardwareManage:
 
     @pytest.mark.asyncio
     async def test_clear_registered_missing_confirm(self) -> None:
-        from sources.tools.platform.management import platform_hardware_manage
+        from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
         result = await platform_hardware_manage(
             PlatformHardwareManageInput(action=PlatformHardwareManageAction.clear_registered)
@@ -566,7 +566,7 @@ class TestPlatformHardwareManage:
     async def test_list_registered_hardware(self) -> None:
         svc_result = PlatformListRegisteredHardwareResult(registered_platforms=[], count=0)
         with _patch_svc("list_registered_hardware", return_value=svc_result):
-            from sources.tools.platform.management import platform_hardware_manage
+            from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
                 PlatformHardwareManageInput(
@@ -579,7 +579,7 @@ class TestPlatformHardwareManage:
     @pytest.mark.asyncio
     async def test_list_registered_hardware_returns_error(self) -> None:
         with _patch_svc("list_registered_hardware", return_value=_ERROR):
-            from sources.tools.platform.management import platform_hardware_manage
+            from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
                 PlatformHardwareManageInput(
@@ -593,7 +593,7 @@ class TestPlatformHardwareManage:
     async def test_get_registered_info(self) -> None:
         expected = PlatformGetRegisteredInfoResult(index=0, unique_name="SCALEXIO_192.168.140.110")
         with _patch_svc("get_registered_info", return_value=expected):
-            from sources.tools.platform.management import platform_hardware_manage
+            from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
                 PlatformHardwareManageInput(
@@ -606,7 +606,7 @@ class TestPlatformHardwareManage:
 
     @pytest.mark.asyncio
     async def test_get_registered_info_missing_index(self) -> None:
-        from sources.tools.platform.management import platform_hardware_manage
+        from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
         result = await platform_hardware_manage(
             PlatformHardwareManageInput(action=PlatformHardwareManageAction.get_registered_info)
@@ -621,7 +621,7 @@ class TestPlatformHardwareManage:
             refreshed=True, operation="RefreshPlatformConfiguration"
         )
         with _patch_svc("refresh_platform_configuration", return_value=expected):
-            from sources.tools.platform.management import platform_hardware_manage
+            from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
                 PlatformHardwareManageInput(
@@ -638,7 +638,7 @@ class TestPlatformHardwareManage:
             refreshed=True, operation="RefreshInterfaceConnections", force_driver_reset=True
         )
         with _patch_svc("refresh_interface_connections", return_value=expected):
-            from sources.tools.platform.management import platform_hardware_manage
+            from controldesk_mcp.tools.platform.management import platform_hardware_manage
 
             result = await platform_hardware_manage(
                 PlatformHardwareManageInput(
@@ -655,7 +655,7 @@ class TestPlatformAdminManage:
     async def test_remove(self) -> None:
         expected = PlatformRemoveResult(removed=True, platform_name="XCP")
         with _patch_svc("remove_platform", return_value=expected):
-            from sources.tools.platform.management import platform_admin_manage
+            from controldesk_mcp.tools.platform.management import platform_admin_manage
 
             result = await platform_admin_manage(
                 PlatformAdminManageInput(
@@ -668,7 +668,7 @@ class TestPlatformAdminManage:
 
     @pytest.mark.asyncio
     async def test_remove_missing_platform_name(self) -> None:
-        from sources.tools.platform.management import platform_admin_manage
+        from controldesk_mcp.tools.platform.management import platform_admin_manage
 
         result = await platform_admin_manage(
             PlatformAdminManageInput(action=PlatformAdminManageAction.remove)
@@ -683,7 +683,7 @@ class TestPlatformAdminManage:
             renamed=True, platform_name="XCP", new_name="XCP_Renamed", timestamp_utc=_TS
         )
         with _patch_svc("rename_platform", return_value=expected):
-            from sources.tools.platform.management import platform_admin_manage
+            from controldesk_mcp.tools.platform.management import platform_admin_manage
 
             result = await platform_admin_manage(
                 PlatformAdminManageInput(
@@ -698,7 +698,7 @@ class TestPlatformAdminManage:
 
     @pytest.mark.asyncio
     async def test_rename_missing_params(self) -> None:
-        from sources.tools.platform.management import platform_admin_manage
+        from controldesk_mcp.tools.platform.management import platform_admin_manage
 
         result = await platform_admin_manage(
             PlatformAdminManageInput(action=PlatformAdminManageAction.rename, platform_name="XCP")
@@ -711,7 +711,7 @@ class TestPlatformAdminManage:
     async def test_set_enabled(self) -> None:
         expected = PlatformSetEnabledResult(configured=True, platform_name="XCP", enabled=False)
         with _patch_svc("set_platform_enabled", return_value=expected):
-            from sources.tools.platform.management import platform_admin_manage
+            from controldesk_mcp.tools.platform.management import platform_admin_manage
 
             result = await platform_admin_manage(
                 PlatformAdminManageInput(
@@ -726,7 +726,7 @@ class TestPlatformAdminManage:
 
     @pytest.mark.asyncio
     async def test_set_enabled_missing_params(self) -> None:
-        from sources.tools.platform.management import platform_admin_manage
+        from controldesk_mcp.tools.platform.management import platform_admin_manage
 
         result = await platform_admin_manage(
             PlatformAdminManageInput(
@@ -741,7 +741,7 @@ class TestPlatformAdminManage:
 class TestPlatformDiscover:
     @pytest.mark.asyncio
     async def test_returns_discover_result(self) -> None:
-        from sources.tools.platform.management import platform_discover
+        from controldesk_mcp.tools.platform.management import platform_discover
 
         result = await platform_discover(AsyncMock())
 
@@ -751,7 +751,7 @@ class TestPlatformDiscover:
 
     @pytest.mark.asyncio
     async def test_hardware_manage_has_all_actions(self) -> None:
-        from sources.tools.platform.management import platform_discover
+        from controldesk_mcp.tools.platform.management import platform_discover
 
         result = await platform_discover(AsyncMock())
 

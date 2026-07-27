@@ -1,4 +1,4 @@
-"""Unit tests for sources.services.recorder_service.
+"""Unit tests for controldesk_mcp.services.recorder_service.
 
 Tests mock com_bridge.dispatch; no real COM is invoked.
 """
@@ -9,9 +9,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import sources.com_bridge as bridge
-from sources.com_bridge.errors import BridgeOperationError
-from sources.models.recorder import (
+import controldesk_mcp.com_bridge as bridge
+from controldesk_mcp.com_bridge.errors import BridgeOperationError
+from controldesk_mcp.models.recorder import (
     RecorderMainAddSignalInput,
     RecorderMainConfigureInput,
     RecorderMainExportInput,
@@ -30,7 +30,7 @@ from sources.models.recorder import (
 @pytest.fixture(autouse=True)
 def _reset_bridge():
     bridge._connection = None
-    import sources.com_bridge.sta_thread as _sta
+    import controldesk_mcp.com_bridge.sta_thread as _sta
 
     _sta._sta_thread = None
     yield
@@ -39,7 +39,7 @@ def _reset_bridge():
 
 
 def _make_connected_bridge() -> MagicMock:
-    from sources.com_bridge.connection import ConnectionState
+    from controldesk_mcp.com_bridge.connection import ConnectionState
 
     conn = MagicMock()
     conn.state = ConnectionState.CONNECTED
@@ -69,11 +69,11 @@ class TestConfigureMainRecorder:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.recorder_service import configure_main_recorder
+            from controldesk_mcp.services.recorder_service import configure_main_recorder
 
             result = await configure_main_recorder(
                 RecorderMainConfigureInput(base_filename="Recording.mf4")
@@ -87,11 +87,11 @@ class TestConfigureMainRecorder:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("configure failed"),
         ):
-            from sources.services.recorder_service import configure_main_recorder
+            from controldesk_mcp.services.recorder_service import configure_main_recorder
 
             result = await configure_main_recorder(
                 RecorderMainConfigureInput(base_filename="Recording.mf4")
@@ -115,11 +115,11 @@ class TestAddSignal:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.recorder_service import add_signal
+            from controldesk_mcp.services.recorder_service import add_signal
 
             result = await add_signal(
                 RecorderMainAddSignalInput(connection_path="XCP(5ms)://control_out")
@@ -133,11 +133,11 @@ class TestAddSignal:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("add signal failed"),
         ):
-            from sources.services.recorder_service import add_signal
+            from controldesk_mcp.services.recorder_service import add_signal
 
             result = await add_signal(
                 RecorderMainAddSignalInput(connection_path="XCP(5ms)://control_out")
@@ -161,11 +161,11 @@ class TestRemoveSignal:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.recorder_service import remove_signal
+            from controldesk_mcp.services.recorder_service import remove_signal
 
             result = await remove_signal(
                 RecorderMainRemoveSignalInput(connection_path="XCP(5ms)://control_out")
@@ -178,11 +178,11 @@ class TestRemoveSignal:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("remove signal failed"),
         ):
-            from sources.services.recorder_service import remove_signal
+            from controldesk_mcp.services.recorder_service import remove_signal
 
             result = await remove_signal(
                 RecorderMainRemoveSignalInput(connection_path="XCP(5ms)://control_out")
@@ -214,11 +214,11 @@ class TestListSignals:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.recorder_service import list_signals
+            from controldesk_mcp.services.recorder_service import list_signals
 
             result = await list_signals(RecorderMainListSignalsInput())
 
@@ -230,11 +230,11 @@ class TestListSignals:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("list signals failed"),
         ):
-            from sources.services.recorder_service import list_signals
+            from controldesk_mcp.services.recorder_service import list_signals
 
             result = await list_signals(RecorderMainListSignalsInput())
 
@@ -258,11 +258,11 @@ class TestStartRecorder:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.recorder_service import start_recorder
+            from controldesk_mcp.services.recorder_service import start_recorder
 
             result = await start_recorder(RecorderMainStartInput())
 
@@ -274,11 +274,11 @@ class TestStartRecorder:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("start failed"),
         ):
-            from sources.services.recorder_service import start_recorder
+            from controldesk_mcp.services.recorder_service import start_recorder
 
             result = await start_recorder(RecorderMainStartInput())
 
@@ -300,11 +300,11 @@ class TestStopRecorder:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.recorder_service import stop_recorder
+            from controldesk_mcp.services.recorder_service import stop_recorder
 
             result = await stop_recorder(RecorderMainStopInput())
 
@@ -315,11 +315,11 @@ class TestStopRecorder:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("stop failed"),
         ):
-            from sources.services.recorder_service import stop_recorder
+            from controldesk_mcp.services.recorder_service import stop_recorder
 
             result = await stop_recorder(RecorderMainStopInput())
 
@@ -342,11 +342,11 @@ class TestGetState:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.recorder_service import get_state
+            from controldesk_mcp.services.recorder_service import get_state
 
             result = await get_state(RecorderMainGetStateInput())
 
@@ -358,11 +358,11 @@ class TestGetState:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("get state failed"),
         ):
-            from sources.services.recorder_service import get_state
+            from controldesk_mcp.services.recorder_service import get_state
 
             result = await get_state(RecorderMainGetStateInput())
 
@@ -384,11 +384,11 @@ class TestInvokeTrigger:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.recorder_service import invoke_trigger
+            from controldesk_mcp.services.recorder_service import invoke_trigger
 
             result = await invoke_trigger(RecorderMainInvokeTriggerInput())
 
@@ -400,11 +400,11 @@ class TestInvokeTrigger:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("invoke trigger failed"),
         ):
-            from sources.services.recorder_service import invoke_trigger
+            from controldesk_mcp.services.recorder_service import invoke_trigger
 
             result = await invoke_trigger(RecorderMainInvokeTriggerInput())
 
@@ -426,11 +426,11 @@ class TestExportRecorder:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.recorder_service import export_recorder
+            from controldesk_mcp.services.recorder_service import export_recorder
 
             result = await export_recorder(
                 RecorderMainExportInput(full_path="C:\\\\Recordings\\\\cfg.mf4r")
@@ -443,11 +443,11 @@ class TestExportRecorder:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("export failed"),
         ):
-            from sources.services.recorder_service import export_recorder
+            from controldesk_mcp.services.recorder_service import export_recorder
 
             result = await export_recorder(RecorderMainExportInput(full_path="C:\\\\cfg.mf4r"))
 
@@ -469,11 +469,11 @@ class TestImportSignalsFromFile:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.recorder_service import import_signals_from_file
+            from controldesk_mcp.services.recorder_service import import_signals_from_file
 
             result = await import_signals_from_file(
                 RecorderMainImportSignalsInput(full_path="C:\\\\Recordings\\\\cfg.mf4r")
@@ -486,11 +486,11 @@ class TestImportSignalsFromFile:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("import failed"),
         ):
-            from sources.services.recorder_service import import_signals_from_file
+            from controldesk_mcp.services.recorder_service import import_signals_from_file
 
             result = await import_signals_from_file(
                 RecorderMainImportSignalsInput(full_path="C:\\\\cfg.mf4r")
@@ -515,11 +515,11 @@ class TestDryRunStartRecorder:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, state],
         ):
-            from sources.services.recorder_service import dry_run_start_recorder
+            from controldesk_mcp.services.recorder_service import dry_run_start_recorder
 
             result = await dry_run_start_recorder(RecorderMainStartInput(dry_run=True))
 
@@ -538,11 +538,11 @@ class TestDryRunStartRecorder:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, state],
         ):
-            from sources.services.recorder_service import dry_run_start_recorder
+            from controldesk_mcp.services.recorder_service import dry_run_start_recorder
 
             result = await dry_run_start_recorder(RecorderMainStartInput(dry_run=True))
 
@@ -562,11 +562,11 @@ class TestDryRunStopRecorder:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, state],
         ):
-            from sources.services.recorder_service import dry_run_stop_recorder
+            from controldesk_mcp.services.recorder_service import dry_run_stop_recorder
 
             result = await dry_run_stop_recorder(RecorderMainStopInput(dry_run=True))
 
@@ -584,11 +584,11 @@ class TestDryRunStopRecorder:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, state],
         ):
-            from sources.services.recorder_service import dry_run_stop_recorder
+            from controldesk_mcp.services.recorder_service import dry_run_stop_recorder
 
             result = await dry_run_stop_recorder(RecorderMainStopInput(dry_run=True))
 

@@ -17,13 +17,13 @@ import json
 
 import pytest
 
-from sources.models.application import (
+from controldesk_mcp.models.application import (
     AppStartOrAttachInput,
     AppWindowManageAction,
     AppWindowManageInput,
     MainWindowState,
 )
-from sources.tools.application.lifecycle import (
+from controldesk_mcp.tools.application.lifecycle import (
     app_window_manage,
     start_controldesk,
 )

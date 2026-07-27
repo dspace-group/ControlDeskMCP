@@ -25,10 +25,10 @@ product = ["openai>=1.0"]
 agentic = ["github-copilot-sdk>=0.3.0"]
 
 [project.scripts]
-controldesk-mcp = "controldesk_mcp.server:main"
+controldesk-mcp = "controldesk_mcp.main:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["sources", "controldesk_mcp"]
+packages = ["controldesk_mcp"]
 
 [tool.ruff]
 line-length = 120

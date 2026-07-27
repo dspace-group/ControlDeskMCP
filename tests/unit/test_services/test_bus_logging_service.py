@@ -1,4 +1,4 @@
-"""Unit tests for sources.services.bus_logging_service.
+"""Unit tests for controldesk_mcp.services.bus_logging_service.
 
 Tests mock com_bridge.dispatch; no real COM is invoked.
 """
@@ -9,9 +9,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import sources.com_bridge as bridge
-from sources.com_bridge.errors import BridgeConnectionError, BridgeOperationError
-from sources.models.bus_logging import (
+import controldesk_mcp.com_bridge as bridge
+from controldesk_mcp.com_bridge.errors import BridgeConnectionError, BridgeOperationError
+from controldesk_mcp.models.bus_logging import (
     BusLoggerClearAllInput,
     BusLoggerCreateInput,
     BusLoggerListInput,
@@ -24,7 +24,7 @@ from sources.models.bus_logging import (
 @pytest.fixture(autouse=True)
 def _reset_bridge():
     bridge._connection = None
-    import sources.com_bridge.sta_thread as _sta
+    import controldesk_mcp.com_bridge.sta_thread as _sta
 
     _sta._sta_thread = None
     yield
@@ -33,7 +33,7 @@ def _reset_bridge():
 
 
 def _make_connected_bridge() -> MagicMock:
-    from sources.com_bridge.connection import ConnectionState
+    from controldesk_mcp.com_bridge.connection import ConnectionState
 
     conn = MagicMock()
     conn.state = ConnectionState.CONNECTED
@@ -61,11 +61,11 @@ class TestCreateLogger:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.bus_logging_service import create_logger
+            from controldesk_mcp.services.bus_logging_service import create_logger
 
             result = await create_logger(
                 BusLoggerCreateInput(
@@ -80,11 +80,11 @@ class TestCreateLogger:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("no connection"),
         ):
-            from sources.services.bus_logging_service import create_logger
+            from controldesk_mcp.services.bus_logging_service import create_logger
 
             result = await create_logger(
                 BusLoggerCreateInput(
@@ -112,11 +112,11 @@ class TestListLoggers:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.bus_logging_service import list_loggers
+            from controldesk_mcp.services.bus_logging_service import list_loggers
 
             result = await list_loggers(BusLoggerListInput(system_index=0, bus_type=BusType.CAN))
 
@@ -127,11 +127,11 @@ class TestListLoggers:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("op failed", error_code="BRIDGE_OPERATION"),
         ):
-            from sources.services.bus_logging_service import list_loggers
+            from controldesk_mcp.services.bus_logging_service import list_loggers
 
             result = await list_loggers(BusLoggerListInput(system_index=0, bus_type=BusType.CAN))
 
@@ -146,7 +146,7 @@ class TestClearAllLoggers:
     async def test_aborts_without_confirm(self) -> None:
         _make_connected_bridge()
 
-        from sources.services.bus_logging_service import clear_all_loggers
+        from controldesk_mcp.services.bus_logging_service import clear_all_loggers
 
         result = await clear_all_loggers(
             BusLoggerClearAllInput(confirm=False, system_index=0, bus_type=BusType.CAN)
@@ -168,11 +168,11 @@ class TestClearAllLoggers:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.bus_logging_service import clear_all_loggers
+            from controldesk_mcp.services.bus_logging_service import clear_all_loggers
 
             result = await clear_all_loggers(
                 BusLoggerClearAllInput(confirm=True, system_index=0, bus_type=BusType.CAN)
@@ -190,11 +190,11 @@ class TestDryRunCreateLogger:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("Logger 'CANRecorder' not found."),
         ):
-            from sources.services.bus_logging_service import dry_run_create_logger
+            from controldesk_mcp.services.bus_logging_service import dry_run_create_logger
 
             result = await dry_run_create_logger(
                 BusLoggerCreateInput(
@@ -220,11 +220,11 @@ class TestDryRunCreateLogger:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, existing_state],
         ):
-            from sources.services.bus_logging_service import dry_run_create_logger
+            from controldesk_mcp.services.bus_logging_service import dry_run_create_logger
 
             result = await dry_run_create_logger(
                 BusLoggerCreateInput(

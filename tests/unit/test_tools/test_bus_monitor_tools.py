@@ -1,4 +1,4 @@
-"""Unit tests for sources.tools.bus_monitor.monitoring (5 tools)."""
+"""Unit tests for controldesk_mcp.tools.bus_monitor.monitoring (5 tools)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from sources.models.bus_monitor import (
+from controldesk_mcp.models.bus_monitor import (
     BufferMode,
     BusMonitorClearAllAborted,
     BusMonitorClearAllResult,
@@ -32,7 +32,7 @@ from sources.models.bus_monitor import (
     BusType,
     TimeAxis,
 )
-from sources.models.errors import ErrorEnvelope
+from controldesk_mcp.models.errors import ErrorEnvelope
 
 _TS = "2024-01-01T00:00:00Z"
 _ERROR = ErrorEnvelope(error_code="E001", category="UNKNOWN", message="fail", retryable=False)
@@ -40,7 +40,7 @@ _ERROR = ErrorEnvelope(error_code="E001", category="UNKNOWN", message="fail", re
 
 def _patch_svc(method: str, *, return_value):
     return patch(
-        f"sources.services.bus_monitor_service.{method}",
+        f"controldesk_mcp.services.bus_monitor_service.{method}",
         new_callable=AsyncMock,
         return_value=return_value,
     )
@@ -59,7 +59,7 @@ class TestBusMonitorCreate:
             timestamp_utc=_TS,
         )
         with _patch_svc("create_monitor", return_value=expected):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_create
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_create
 
             result = await bus_monitor_create(
                 BusMonitorCreateInput(
@@ -79,7 +79,7 @@ class TestBusMonitorCreate:
     @pytest.mark.asyncio
     async def test_returns_error_on_service_error(self) -> None:
         with _patch_svc("create_monitor", return_value=_ERROR):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_create
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_create
 
             result = await bus_monitor_create(
                 BusMonitorCreateInput(
@@ -94,7 +94,7 @@ class TestBusMonitorCreate:
 
     @pytest.mark.asyncio
     async def test_dry_run_delegates_to_preview_without_creating(self) -> None:
-        from sources.models.base import DryRunPreviewResult
+        from controldesk_mcp.models.base import DryRunPreviewResult
 
         preview = DryRunPreviewResult(
             tool="bus_monitor_create",
@@ -108,7 +108,7 @@ class TestBusMonitorCreate:
             _patch_svc("dry_run_create_monitor", return_value=preview) as mock_dry_run,
             _patch_svc("create_monitor", return_value=_ERROR) as mock_create,
         ):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_create
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_create
 
             result = await bus_monitor_create(
                 BusMonitorCreateInput(
@@ -140,7 +140,7 @@ class TestBusMonitorConfigure:
             timestamp_utc=_TS,
         )
         with _patch_svc("configure_monitor", return_value=expected):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_configure
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_configure
 
             result = await bus_monitor_configure(
                 BusMonitorConfigureInput(
@@ -164,7 +164,7 @@ class TestBusMonitorConfigure:
     @pytest.mark.asyncio
     async def test_returns_error_on_service_error(self) -> None:
         with _patch_svc("configure_monitor", return_value=_ERROR):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_configure
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_configure
 
             result = await bus_monitor_configure(
                 BusMonitorConfigureInput(
@@ -186,7 +186,7 @@ class TestBusMonitorManage:
     async def test_start_returns_started_on_success(self) -> None:
         expected = BusMonitorStartResult(monitor_name="CANMonitor", timestamp_utc=_TS)
         with _patch_svc("start_monitor", return_value=expected):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_manage
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_manage
 
             result = await bus_monitor_manage(
                 BusMonitorManageInput(
@@ -203,7 +203,7 @@ class TestBusMonitorManage:
 
     @pytest.mark.asyncio
     async def test_start_missing_monitor_name_returns_error(self) -> None:
-        from sources.tools.bus_monitor.monitoring import bus_monitor_manage
+        from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_manage
 
         result = await bus_monitor_manage(
             BusMonitorManageInput(
@@ -220,7 +220,7 @@ class TestBusMonitorManage:
     async def test_stop_returns_stopped_on_success(self) -> None:
         expected = BusMonitorStopResult(monitor_name="CANMonitor", timestamp_utc=_TS)
         with _patch_svc("stop_monitor", return_value=expected):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_manage
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_manage
 
             result = await bus_monitor_manage(
                 BusMonitorManageInput(
@@ -237,7 +237,7 @@ class TestBusMonitorManage:
 
     @pytest.mark.asyncio
     async def test_stop_missing_monitor_name_returns_error(self) -> None:
-        from sources.tools.bus_monitor.monitoring import bus_monitor_manage
+        from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_manage
 
         result = await bus_monitor_manage(
             BusMonitorManageInput(
@@ -254,7 +254,7 @@ class TestBusMonitorManage:
     async def test_remove_returns_removed_on_success(self) -> None:
         expected = BusMonitorRemoveResult(monitor_name="CANMonitor", timestamp_utc=_TS)
         with _patch_svc("remove_monitor", return_value=expected):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_manage
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_manage
 
             result = await bus_monitor_manage(
                 BusMonitorManageInput(
@@ -271,7 +271,7 @@ class TestBusMonitorManage:
 
     @pytest.mark.asyncio
     async def test_remove_missing_monitor_name_returns_error(self) -> None:
-        from sources.tools.bus_monitor.monitoring import bus_monitor_manage
+        from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_manage
 
         result = await bus_monitor_manage(
             BusMonitorManageInput(
@@ -290,7 +290,7 @@ class TestBusMonitorManage:
             cleared=True, monitors_removed=3, system_index=1, bus_type="CAN", timestamp_utc=_TS
         )
         with _patch_svc("clear_all_monitors", return_value=expected):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_manage
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_manage
 
             result = await bus_monitor_manage(
                 BusMonitorManageInput(
@@ -309,7 +309,7 @@ class TestBusMonitorManage:
     async def test_clear_all_aborted_when_not_confirmed(self) -> None:
         expected = BusMonitorClearAllAborted()
         with _patch_svc("clear_all_monitors", return_value=expected):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_manage
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_manage
 
             result = await bus_monitor_manage(
                 BusMonitorManageInput(
@@ -329,7 +329,7 @@ class TestBusMonitorManage:
             old_name="CANMonitor", new_name="RxMonitor", timestamp_utc=_TS
         )
         with _patch_svc("rename_monitor", return_value=expected):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_manage
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_manage
 
             result = await bus_monitor_manage(
                 BusMonitorManageInput(
@@ -348,7 +348,7 @@ class TestBusMonitorManage:
 
     @pytest.mark.asyncio
     async def test_rename_missing_monitor_name_returns_error(self) -> None:
-        from sources.tools.bus_monitor.monitoring import bus_monitor_manage
+        from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_manage
 
         result = await bus_monitor_manage(
             BusMonitorManageInput(
@@ -364,7 +364,7 @@ class TestBusMonitorManage:
 
     @pytest.mark.asyncio
     async def test_rename_missing_new_name_returns_error(self) -> None:
-        from sources.tools.bus_monitor.monitoring import bus_monitor_manage
+        from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_manage
 
         result = await bus_monitor_manage(
             BusMonitorManageInput(
@@ -389,7 +389,7 @@ class TestBusMonitorQuery:
             monitor_name="CANMonitor", state="Running", is_running=True, timestamp_utc=_TS
         )
         with _patch_svc("get_monitor_state", return_value=expected):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_query
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_query
 
             result = await bus_monitor_query(
                 BusMonitorQueryInput(
@@ -413,7 +413,7 @@ class TestBusMonitorQuery:
             timestamp_utc=_TS,
         )
         with _patch_svc("list_monitors", return_value=expected):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_query
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_query
 
             result = await bus_monitor_query(
                 BusMonitorQueryInput(
@@ -437,7 +437,7 @@ class TestBusMonitorSave:
             timestamp_utc=_TS,
         )
         with _patch_svc("save_monitor_data", return_value=expected):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_save
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_save
 
             result = await bus_monitor_save(
                 BusMonitorSaveInput(
@@ -461,7 +461,7 @@ class TestBusMonitorSave:
             timestamp_utc=_TS,
         )
         with _patch_svc("save_monitor_data_with_time_axis", return_value=expected):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_save
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_save
 
             result = await bus_monitor_save(
                 BusMonitorSaveInput(
@@ -480,7 +480,7 @@ class TestBusMonitorSave:
     @pytest.mark.asyncio
     async def test_save_returns_error_on_service_error(self) -> None:
         with _patch_svc("save_monitor_data", return_value=_ERROR):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_save
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_save
 
             result = await bus_monitor_save(
                 BusMonitorSaveInput(
@@ -508,7 +508,7 @@ class TestBusMonitorLoadData:
             timestamp_utc=_TS,
         )
         with _patch_svc("load_monitor_data", return_value=expected):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_load_data
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_load_data
 
             result = await bus_monitor_load_data(
                 BusMonitorLoadDataInput(
@@ -527,7 +527,7 @@ class TestBusMonitorLoadData:
     @pytest.mark.asyncio
     async def test_returns_error_on_service_error(self) -> None:
         with _patch_svc("load_monitor_data", return_value=_ERROR):
-            from sources.tools.bus_monitor.monitoring import bus_monitor_load_data
+            from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_load_data
 
             result = await bus_monitor_load_data(
                 BusMonitorLoadDataInput(

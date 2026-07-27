@@ -10,8 +10,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from sources.models.errors import ErrorEnvelope
-from sources.models.instrument import (
+from controldesk_mcp.models.errors import ErrorEnvelope
+from controldesk_mcp.models.instrument import (
     ArrangeAction,
     InstrumentAddResult,
     InstrumentArrangeResult,
@@ -45,7 +45,7 @@ _INSTR = InstrumentInfo(
 
 def _patch_svc(method: str, *, return_value):
     return patch(
-        f"sources.services.instrument_service.{method}",
+        f"controldesk_mcp.services.instrument_service.{method}",
         new_callable=AsyncMock,
         return_value=return_value,
     )
@@ -61,7 +61,7 @@ class TestInstrumentList:
             layout_name="ControlLayout", total_instruments=1, instruments=[_INSTR]
         )
         with _patch_svc("instrument_list", return_value=expected):
-            from sources.tools.instrument.management import instrument_list
+            from controldesk_mcp.tools.instrument.management import instrument_list
 
             result = await instrument_list(InstrumentListInput())
 
@@ -71,7 +71,7 @@ class TestInstrumentList:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("instrument_list", return_value=_ERROR):
-            from sources.tools.instrument.management import instrument_list
+            from controldesk_mcp.tools.instrument.management import instrument_list
 
             result = await instrument_list(InstrumentListInput())
 
@@ -93,7 +93,7 @@ class TestInstrumentList:
             ],
         )
         with _patch_svc("instrument_list_types", return_value=types):
-            from sources.tools.instrument.management import instrument_list
+            from controldesk_mcp.tools.instrument.management import instrument_list
 
             result = await instrument_list(InstrumentListInput(list_types=True))
 
@@ -118,7 +118,7 @@ class TestInstrumentManageAdd:
             timestamp_utc=_TS,
         )
         with _patch_svc("instrument_add", return_value=expected):
-            from sources.tools.instrument.management import instrument_manage
+            from controldesk_mcp.tools.instrument.management import instrument_manage
 
             result = await instrument_manage(
                 InstrumentManageInput(
@@ -133,7 +133,7 @@ class TestInstrumentManageAdd:
 
     @pytest.mark.asyncio
     async def test_add_missing_type_returns_error(self) -> None:
-        from sources.tools.instrument.management import instrument_manage
+        from controldesk_mcp.tools.instrument.management import instrument_manage
 
         result = await instrument_manage(
             InstrumentManageInput(action=InstrumentManageAction.add, instrument_name="SpeedKnob")
@@ -144,7 +144,7 @@ class TestInstrumentManageAdd:
 
     @pytest.mark.asyncio
     async def test_add_missing_name_returns_error(self) -> None:
-        from sources.tools.instrument.management import instrument_manage
+        from controldesk_mcp.tools.instrument.management import instrument_manage
 
         result = await instrument_manage(
             InstrumentManageInput(action=InstrumentManageAction.add, instrument_type="Knob")
@@ -164,7 +164,7 @@ class TestInstrumentManageRemove:
             removed=True, instrument_name="SpeedKnob", timestamp_utc=_TS
         )
         with _patch_svc("instrument_remove", return_value=expected):
-            from sources.tools.instrument.management import instrument_manage
+            from controldesk_mcp.tools.instrument.management import instrument_manage
 
             result = await instrument_manage(
                 InstrumentManageInput(
@@ -177,7 +177,7 @@ class TestInstrumentManageRemove:
 
     @pytest.mark.asyncio
     async def test_remove_missing_name_returns_error(self) -> None:
-        from sources.tools.instrument.management import instrument_manage
+        from controldesk_mcp.tools.instrument.management import instrument_manage
 
         result = await instrument_manage(
             InstrumentManageInput(action=InstrumentManageAction.remove)
@@ -201,7 +201,7 @@ class TestInstrumentManageArrange:
             timestamp_utc=_TS,
         )
         with _patch_svc("instrument_arrange", return_value=expected):
-            from sources.tools.instrument.management import instrument_manage
+            from controldesk_mcp.tools.instrument.management import instrument_manage
 
             result = await instrument_manage(
                 InstrumentManageInput(
@@ -216,7 +216,7 @@ class TestInstrumentManageArrange:
 
     @pytest.mark.asyncio
     async def test_arrange_missing_names_returns_error(self) -> None:
-        from sources.tools.instrument.management import instrument_manage
+        from controldesk_mcp.tools.instrument.management import instrument_manage
 
         result = await instrument_manage(
             InstrumentManageInput(
@@ -244,7 +244,7 @@ class TestInstrumentSignalManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("instrument_connect_signal", return_value=expected):
-            from sources.tools.instrument.management import instrument_signal_manage
+            from controldesk_mcp.tools.instrument.management import instrument_signal_manage
 
             result = await instrument_signal_manage(
                 InstrumentSignalManageInput(
@@ -259,7 +259,7 @@ class TestInstrumentSignalManage:
 
     @pytest.mark.asyncio
     async def test_connect_missing_variable_path_returns_error(self) -> None:
-        from sources.tools.instrument.management import instrument_signal_manage
+        from controldesk_mcp.tools.instrument.management import instrument_signal_manage
 
         result = await instrument_signal_manage(
             InstrumentSignalManageInput(
@@ -280,7 +280,7 @@ class TestInstrumentSignalManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("instrument_disconnect_signal", return_value=expected):
-            from sources.tools.instrument.management import instrument_signal_manage
+            from controldesk_mcp.tools.instrument.management import instrument_signal_manage
 
             result = await instrument_signal_manage(
                 InstrumentSignalManageInput(
@@ -303,18 +303,18 @@ class TestInstrumentDiscover:
 
         ctx = MagicMock()
         with (
-            patch("sources.tools.instrument.management.get_settings") as mock_settings,
+            patch("controldesk_mcp.tools.instrument.management.get_settings") as mock_settings,
             patch(
-                "sources.tools.instrument.management.mcp.evict_stale_domains",
+                "controldesk_mcp.tools.instrument.management.mcp.evict_stale_domains",
                 new_callable=AsyncMock,
             ),
             patch(
-                "sources.tools.instrument.management.mcp.activate_domain_tools",
+                "controldesk_mcp.tools.instrument.management.mcp.activate_domain_tools",
                 new_callable=AsyncMock,
             ),
         ):
             mock_settings.return_value.tool_ttl_enabled = False
-            from sources.tools.instrument.management import instrument_discover
+            from controldesk_mcp.tools.instrument.management import instrument_discover
 
             result = await instrument_discover(ctx)
 

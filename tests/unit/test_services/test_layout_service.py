@@ -1,4 +1,4 @@
-"""Unit tests for sources.services.layout_service.
+"""Unit tests for controldesk_mcp.services.layout_service.
 
 Tests mock com_bridge.dispatch; no real COM is invoked.
 """
@@ -9,8 +9,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import sources.com_bridge as bridge
-from sources.com_bridge.errors import BridgeConnectionError, BridgePreconditionError
+import controldesk_mcp.com_bridge as bridge
+from controldesk_mcp.com_bridge.errors import BridgeConnectionError, BridgePreconditionError
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
@@ -18,7 +18,7 @@ from sources.com_bridge.errors import BridgeConnectionError, BridgePreconditionE
 @pytest.fixture(autouse=True)
 def _reset_bridge():
     bridge._connection = None
-    import sources.com_bridge.sta_thread as _sta
+    import controldesk_mcp.com_bridge.sta_thread as _sta
 
     _sta._sta_thread = None
     yield
@@ -27,7 +27,7 @@ def _reset_bridge():
 
 
 def _make_connected_bridge() -> MagicMock:
-    from sources.com_bridge.connection import ConnectionState
+    from controldesk_mcp.com_bridge.connection import ConnectionState
 
     conn = MagicMock()
     conn.state = ConnectionState.CONNECTED
@@ -55,11 +55,11 @@ class TestLayoutList:
         ]
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, layouts],
         ):
-            from sources.services.layout_service import layout_list
+            from controldesk_mcp.services.layout_service import layout_list
 
             result = await layout_list()
 
@@ -71,11 +71,11 @@ class TestLayoutList:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("disconnected"),
         ):
-            from sources.services.layout_service import layout_list
+            from controldesk_mcp.services.layout_service import layout_list
 
             result = await layout_list()
 
@@ -93,11 +93,11 @@ class TestLayoutCreate:
         com_result = {"name": "NewLayout", "file_path": "C:/test/NewLayout.cdl"}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.layout_service import layout_create
+            from controldesk_mcp.services.layout_service import layout_create
 
             result = await layout_create("NewLayout")
 
@@ -109,11 +109,11 @@ class TestLayoutCreate:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgePreconditionError("no experiment", error_code="E001"),
         ):
-            from sources.services.layout_service import layout_create
+            from controldesk_mcp.services.layout_service import layout_create
 
             result = await layout_create("NewLayout")
 
@@ -135,11 +135,11 @@ class TestLayoutOpen:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.layout_service import layout_open
+            from controldesk_mcp.services.layout_service import layout_open
 
             result = await layout_open("ControlLayout")
 
@@ -158,11 +158,11 @@ class TestLayoutClose:
         com_result = {"name": "ControlLayout", "saved_before_close": True}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.layout_service import layout_close
+            from controldesk_mcp.services.layout_service import layout_close
 
             result = await layout_close("ControlLayout", save_before_close=True)
 
@@ -181,11 +181,11 @@ class TestLayoutConfigure:
         com_result = {"name": "ControlLayout", "editing_mode": "Runtime"}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.layout_service import layout_configure
+            from controldesk_mcp.services.layout_service import layout_configure
 
             result = await layout_configure("ControlLayout", "Runtime")
 
@@ -204,11 +204,11 @@ class TestLayoutExport:
         com_result = {"layout_name": "ControlLayout", "export_path": "C:/out/export.lax"}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.layout_service import layout_export
+            from controldesk_mcp.services.layout_service import layout_export
 
             result = await layout_export("C:/out/export.lax")
 

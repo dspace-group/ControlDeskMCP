@@ -28,7 +28,7 @@ Our launcher :  scripts/inspect.ps1
 graph LR
     Dev["👨‍💻 Developer\n(browser)"]
     Inspector["MCP Inspector\nnpx @modelcontextprotocol/inspector\n:5173"]
-    Server["ControlDesk MCP Server\npython -m sources\n(stdio)"]
+    Server["ControlDesk MCP Server\npython -m controldesk_mcp\n(stdio)"]
     CD["dSPACE ControlDesk\n(COM — Windows only)"]
 
     Dev -- "HTTP :5173" --> Inspector
@@ -67,7 +67,7 @@ The script will:
 
 1. Verify `npx` is on PATH (fails with a helpful message if not).
 2. Run `uv sync --extra dev` to ensure Python deps are up-to-date.
-3. Start `npx -y @modelcontextprotocol/inspector python -m sources`.
+3. Start `npx -y @modelcontextprotocol/inspector python -m controldesk_mcp`.
 4. Open your browser to **http://localhost:5173**.
 
 Press **Ctrl+C** to stop both the Inspector and the server.
@@ -91,8 +91,8 @@ graph TD
 
 ### Tools Tab
 
-All `@mcp.tool()` functions registered in `sources/tools/**` appear here.
-Registered via `sources/server/registry.py`.
+All `@mcp.tool()` functions registered in `controldesk_mcp/tools/**` appear here.
+Registered via `controldesk_mcp/server/registry.py`.
 
 For each tool you can:
 
@@ -107,7 +107,7 @@ For each tool you can:
 Resources are **read-only data** the Inspector and LLMs can fetch by URI.
 All resources are always available — no ControlDesk connection is required.
 
-Registered via `sources/resources/server_resources.py` and `sources/resources/domain_resources.py`.
+Registered via `controldesk_mcp/resources/server_resources.py` and `controldesk_mcp/resources/domain_resources.py`.
 
 | URI                                      | Name              | Description                                              |
 | ---------------------------------------- | ----------------- | -------------------------------------------------------- |
@@ -131,9 +131,9 @@ Registered via `sources/resources/server_resources.py` and `sources/resources/do
 
 **Adding a new resource:**
 
-- **Server-level**: add to `sources/resources/server_resources.py`.
-- **Domain tool catalog**: add the prefix to `_DOMAIN_PREFIXES` in `sources/resources/domain_resources.py`.
-- **New resource type**: create `sources/resources/<name>_resources.py` and import in `registry.py`.
+- **Server-level**: add to `controldesk_mcp/resources/server_resources.py`.
+- **Domain tool catalog**: add the prefix to `_DOMAIN_PREFIXES` in `controldesk_mcp/resources/domain_resources.py`.
+- **New resource type**: create `controldesk_mcp/resources/<name>_resources.py` and import in `registry.py`.
 - Always add unit tests in `tests/unit/test_resources/test_<name>_resources.py`.
 
 ---
@@ -144,7 +144,7 @@ Prompts are **parameterized message templates** that guide the LLM through
 a specific ControlDesk workflow. The Inspector lets you fill in prompt arguments
 and preview the generated messages before sending them to an LLM.
 
-Prompts are organised one file per domain under `sources/prompts/`.
+Prompts are organised one file per domain under `controldesk_mcp/prompts/`.
 
 | Prompt Name                 | File                     | Parameters                                                   | Purpose                                               |
 | --------------------------- | ------------------------ | ------------------------------------------------------------ | ----------------------------------------------------- |
@@ -176,8 +176,8 @@ the Resources tab to verify that resource value independently.
 
 **Adding a new prompt:**
 
-1. Add a `@mcp.prompt(name=..., ...)` function to `sources/prompts/<domain>_prompts.py` (create if new domain).
-2. Import the module in `sources/server/registry.py` under `# ── Prompts`.
+1. Add a `@mcp.prompt(name=..., ...)` function to `controldesk_mcp/prompts/<domain>_prompts.py` (create if new domain).
+2. Import the module in `controldesk_mcp/server/registry.py` under `# ── Prompts`.
 3. Add unit tests in `tests/unit/test_prompts/test_<domain>_prompts.py`.
 4. Update the prompt table in `AGENTS.md` and in this guide.
 
@@ -237,9 +237,9 @@ sequenceDiagram
 | Browser shows blank page                | Inspector still starting                            | Wait 3–5 s and refresh                                |
 | Tool returns `BridgeError`              | ControlDesk not running or not connected            | Start ControlDesk, call `app_start_or_attach` first   |
 | Tool not visible in Inspector           | Tool not imported in `registry.py`                  | Add the import; restart Inspector                     |
-| Schema shows `{}` for a tool            | Pydantic model missing or wrong type                | Check `sources/models/<domain>.py`                    |
-| **Resources tab is empty**              | Resource modules not imported in `registry.py`      | Ensure `import sources.resources.<module>` is present |
-| **Prompts tab is empty**                | Prompt modules not imported in `registry.py`        | Ensure `import sources.prompts.<module>` is present   |
+| Schema shows `{}` for a tool            | Pydantic model missing or wrong type                | Check `controldesk_mcp/models/<domain>.py`                    |
+| **Resources tab is empty**              | Resource modules not imported in `registry.py`      | Ensure `import controldesk_mcp.resources.<module>` is present |
+| **Prompts tab is empty**                | Prompt modules not imported in `registry.py`        | Ensure `import controldesk_mcp.prompts.<module>` is present   |
 | `connection-status` shows `NOT_STARTED` | Server started but `app_start_or_attach` not called | Call the tool in the Tools tab first                  |
 
 ---
@@ -269,7 +269,7 @@ VS Code opens a dedicated terminal, runs `scripts/inspect.ps1`, which:
 
 1. Verifies `npx` is available (fails clearly if Node.js is missing)
 2. Ensures Python deps are up-to-date (`uv sync --extra dev`)
-3. Starts `npx -y @modelcontextprotocol/inspector python -m sources`
+3. Starts `npx -y @modelcontextprotocol/inspector python -m controldesk_mcp`
 4. The Inspector browser UI opens at **http://localhost:5173**
 5. The MCP server is spawned as a child process — one `Ctrl+C` stops both
 
@@ -279,11 +279,11 @@ sequenceDiagram
     participant VS as VS Code Task Runner
     participant PS as inspect.ps1
     participant NPX as MCP Inspector (npx)
-    participant Srv as MCP Server (python -m sources)
+    participant Srv as MCP Server (python -m controldesk_mcp)
 
     Dev->>VS: Ctrl+Shift+B
     VS->>PS: pwsh -File scripts/inspect.ps1
-    PS->>NPX: npx -y @modelcontextprotocol/inspector python -m sources
+    PS->>NPX: npx -y @modelcontextprotocol/inspector python -m controldesk_mcp
     NPX->>Srv: spawn child process (stdio)
     Srv-->>NPX: MCP initialize handshake
     NPX-->>Dev: Browser opens http://localhost:5173
@@ -305,7 +305,7 @@ requires a full window reload.
 
 ```
 Ctrl+Shift+P  →  type "MCP"  →  select "MCP: List Servers"
-               →  pick "ControlDesk MCP"
+               →  pick "controlDesk"
                →  choose "Restart"
 ```
 
@@ -322,13 +322,13 @@ The `workbench.mcp.serverOptions` command also opens a quickpick showing Start /
 
 1. Open [.vscode/mcp.json](../.vscode/mcp.json) in the editor.
 2. VS Code injects inline **Start** / **Stop** / **Restart** action links above each server entry.
-3. Click **Restart** for "ControlDesk MCP".
+3. Click **Restart** for "controlDesk".
 
 ### Method 3 — Extensions View
 
 1. Open the Extensions view (`Ctrl+Shift+X`).
 2. Scroll to the **MCP SERVERS — INSTALLED** section.
-3. Right-click **ControlDesk MCP** → **Restart**.
+3. Right-click **controlDesk** → **Restart**.
 
 ### When to Restart
 
@@ -354,12 +354,12 @@ The `workbench.mcp.serverOptions` command also opens a quickpick showing Start /
 | [AGENTS.md](../AGENTS.md)                                                           | Non-obvious rules for AI coding agents                         |
 | [scripts/debug.ps1](../scripts/debug.ps1)                                           | Verbose debug launcher (no Inspector)                          |
 | [.vscode/tasks.json](../.vscode/tasks.json)                                         | VS Code task definitions (build/test/debug)                    |
-| [sources/resources/server_resources.py](../sources/resources/server_resources.py)   | Server-level resources                                         |
-| [sources/resources/domain_resources.py](../sources/resources/domain_resources.py)   | Domain tool catalog + URI template resource                    |
-| [sources/prompts/session_prompts.py](../sources/prompts/session_prompts.py)         | Session setup & diagnosis prompts                              |
-| [sources/prompts/measurement_prompts.py](../sources/prompts/measurement_prompts.py) | Measurement workflow prompts                                   |
-| [sources/prompts/variable_prompts.py](../sources/prompts/variable_prompts.py)       | Variable read/write prompts                                    |
-| [sources/prompts/calibration_prompts.py](../sources/prompts/calibration_prompts.py) | Calibration workflow prompts                                   |
-| [sources/prompts/bus_prompts.py](../sources/prompts/bus_prompts.py)                 | Bus logging, monitor, and replay prompts                       |
-| [sources/prompts/project_prompts.py](../sources/prompts/project_prompts.py)         | Project and experiment workflow prompts                        |
-| [sources/server/registry.py](../sources/server/registry.py)                         | Single registration point for tools, resources, prompts        |
+| [controldesk_mcp/resources/server_resources.py](../controldesk_mcp/resources/server_resources.py)   | Server-level resources                                         |
+| [controldesk_mcp/resources/domain_resources.py](../controldesk_mcp/resources/domain_resources.py)   | Domain tool catalog + URI template resource                    |
+| [controldesk_mcp/prompts/session_prompts.py](../controldesk_mcp/prompts/session_prompts.py)         | Session setup & diagnosis prompts                              |
+| [controldesk_mcp/prompts/measurement_prompts.py](../controldesk_mcp/prompts/measurement_prompts.py) | Measurement workflow prompts                                   |
+| [controldesk_mcp/prompts/variable_prompts.py](../controldesk_mcp/prompts/variable_prompts.py)       | Variable read/write prompts                                    |
+| [controldesk_mcp/prompts/calibration_prompts.py](../controldesk_mcp/prompts/calibration_prompts.py) | Calibration workflow prompts                                   |
+| [controldesk_mcp/prompts/bus_prompts.py](../controldesk_mcp/prompts/bus_prompts.py)                 | Bus logging, monitor, and replay prompts                       |
+| [controldesk_mcp/prompts/project_prompts.py](../controldesk_mcp/prompts/project_prompts.py)         | Project and experiment workflow prompts                        |
+| [controldesk_mcp/server/registry.py](../controldesk_mcp/server/registry.py)                         | Single registration point for tools, resources, prompts        |
