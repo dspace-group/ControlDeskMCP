@@ -35,18 +35,15 @@ class ErrorEnvelope(DictModelMixin, BaseModel):
     )
     detail: str = Field(
         default="",
-        description="Technical detail such as the raw HRESULT value or "
-        "IErrorInfo description string.",
+        description="Technical detail such as the raw HRESULT value or IErrorInfo description string.",
     )
     hresult: int | None = Field(
         default=None,
-        description="Raw unsigned HRESULT integer (e.g. 0x80010108). "
-        "None when the error is not COM-originated.",
+        description="Raw unsigned HRESULT integer (e.g. 0x80010108). None when the error is not COM-originated.",
     )
     com_interface: str | None = Field(
         default=None,
-        description="COM interface name where the error occurred, "
-        "e.g. 'IXaMeasurementConfiguration'.",
+        description="COM interface name where the error occurred, e.g. 'IXaMeasurementConfiguration'.",
     )
     com_method: str | None = Field(
         default=None,
@@ -54,8 +51,7 @@ class ErrorEnvelope(DictModelMixin, BaseModel):
     )
     retryable: bool = Field(
         default=False,
-        description="True when the LLM may retry the same tool call after a "
-        "short delay without human intervention.",
+        description="True when the LLM may retry the same tool call after a short delay without human intervention.",
     )
     recovery_hint: str = Field(
         default="",
@@ -64,8 +60,7 @@ class ErrorEnvelope(DictModelMixin, BaseModel):
     )
     correlation_id: str = Field(
         default="",
-        description="UUID linking this MCP error to a dSPACE ILoLog entry "
-        "for correlated audit trails.",
+        description="UUID linking this MCP error to a dSPACE ILoLog entry for correlated audit trails.",
     )
 
     def to_markdown(self) -> str:

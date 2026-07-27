@@ -322,10 +322,7 @@ class PlatformSetEnabledInput(BaseModel):
     """Input for platform_set_enabled."""
 
     platform_name: str = Field(
-        description=(
-            "Name of the platform to enable or disable. "
-            "Use platform_list to enumerate valid platform names."
-        ),
+        description=("Name of the platform to enable or disable. Use platform_list to enumerate valid platform names."),
         examples=["XCP", "SCALEXIO_1"],
     )
     enabled: bool = Field(
@@ -432,8 +429,7 @@ class PlatformConfigureTransportInput(BaseModel):
     )
     ethernet_protocol: Optional[EthernetProtocol] = Field(
         default=None,
-        description="Ethernet transport protocol: 'TCP' or 'UDP'. "
-        "Applies to XCPonEthernet only.",
+        description="Ethernet transport protocol: 'TCP' or 'UDP'. Applies to XCPonEthernet only.",
         examples=["TCP", "UDP"],
     )
     automatic_adapter: Optional[bool] = Field(
@@ -479,8 +475,7 @@ class PlatformSelectInterfaceManualInput(BaseModel):
         examples=["XCP", "CAN_1"],
     )
     vendor_name: str = Field(
-        description="Vendor name (e.g., 'dSPACE', 'Peak', 'Vector'). "
-        "Must match a value from platform_list_interfaces.",
+        description="Vendor name (e.g., 'dSPACE', 'Peak', 'Vector'). Must match a value from platform_list_interfaces.",
         examples=["dSPACE", "Peak"],
     )
     interface_name: str = Field(
@@ -625,8 +620,7 @@ class PlatformRenameInput(BaseModel):
     """Input for platform_rename."""
 
     platform_name: str = Field(
-        description="Current name of the platform to rename. "
-        "Use platform_list to enumerate valid names.",
+        description="Current name of the platform to rename. Use platform_list to enumerate valid names.",
         examples=["XCP", "SCALEXIO_1"],
     )
     new_name: str = Field(
@@ -703,9 +697,7 @@ class PlatformClearRegisteredResult(DictModelMixin, BaseModel):
 
 class PlatformClearRegisteredAborted(DictModelMixin, BaseModel):
     cleared: Literal[False] = False
-    message: str = (
-        "Operation aborted. Set 'confirm' to true to proceed with clearing all registered platforms."
-    )
+    message: str = "Operation aborted. Set 'confirm' to true to proceed with clearing all registered platforms."
 
 
 class PlatformRefreshConfigurationResult(DictModelMixin, BaseModel):

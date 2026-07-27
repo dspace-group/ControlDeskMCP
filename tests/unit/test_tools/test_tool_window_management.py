@@ -47,9 +47,7 @@ class TestToolWindowList:
     async def test_returns_paginated_result(self) -> None:
         windows = [
             ToolWindowInfo(name="Project", caption="Project", is_visible=True, dock_state="Docked"),
-            ToolWindowInfo(
-                name="Variables", caption="Variables", is_visible=True, dock_state="AutoHidden"
-            ),
+            ToolWindowInfo(name="Variables", caption="Variables", is_visible=True, dock_state="AutoHidden"),
         ]
         expected = ToolWindowListResult(total_windows=2, windows=windows, timestamp_utc=_TS)
         with _patch_svc("list_windows", return_value=expected):
@@ -233,9 +231,7 @@ class TestToolWindowManage:
 class TestToolWindowQuery:
     @pytest.mark.asyncio
     async def test_check_exists_true(self) -> None:
-        expected = ToolWindowCheckExistsResult(
-            window_name="BusNavigator", exists=True, timestamp_utc=_TS
-        )
+        expected = ToolWindowCheckExistsResult(window_name="BusNavigator", exists=True, timestamp_utc=_TS)
         with _patch_svc("check_window_exists", return_value=expected):
             from controldesk_mcp.tools.tool_window.management import tool_window_query
 
@@ -252,9 +248,7 @@ class TestToolWindowQuery:
 
     @pytest.mark.asyncio
     async def test_check_exists_false(self) -> None:
-        expected = ToolWindowCheckExistsResult(
-            window_name="EESPort Configurations", exists=False, timestamp_utc=_TS
-        )
+        expected = ToolWindowCheckExistsResult(window_name="EESPort Configurations", exists=False, timestamp_utc=_TS)
         with _patch_svc("check_window_exists", return_value=expected):
             from controldesk_mcp.tools.tool_window.management import tool_window_query
 
@@ -347,18 +341,10 @@ class TestToolWindowDiscover:
 
 class TestToolWindowInputModels:
     def test_manage_input_instantiates(self) -> None:
-        assert (
-            ToolWindowManageInput(action=ToolWindowManageAction.close, window_name="Variables")
-            is not None
-        )
+        assert ToolWindowManageInput(action=ToolWindowManageAction.close, window_name="Variables") is not None
 
     def test_query_input_instantiates(self) -> None:
-        assert (
-            ToolWindowQueryInput(
-                action=ToolWindowQueryAction.check_exists, window_name="BusNavigator"
-            )
-            is not None
-        )
+        assert ToolWindowQueryInput(action=ToolWindowQueryAction.check_exists, window_name="BusNavigator") is not None
 
     def test_list_input_defaults(self) -> None:
         params = ToolWindowListInput()

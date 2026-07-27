@@ -59,8 +59,7 @@ class AppStartOrAttachInput(BaseModel):
     make_visible: bool = Field(
         default=True,
         description=(
-            "If True the main window becomes visible after attach. "
-            "Set to False for headless/background automation."
+            "If True the main window becomes visible after attach. Set to False for headless/background automation."
         ),
         examples=[True, False],
     )
@@ -119,8 +118,7 @@ class AppQuitInput(BaseModel):
     save_all_projects: bool = Field(
         default=True,
         description=(
-            "If True all modified projects are saved before quitting. "
-            "If False unsaved changes are discarded."
+            "If True all modified projects are saved before quitting. If False unsaved changes are discarded."
         ),
         examples=[True, False],
     )
@@ -216,9 +214,7 @@ class AppWindowManageInput(BaseModel):
     )
     window_state: MainWindowState | None = Field(
         default=None,
-        description=(
-            "Required for: set_state. " "One of: 'Normal', 'Maximized', 'Minimized', 'Hidden'."
-        ),
+        description=("Required for: set_state. One of: 'Normal', 'Maximized', 'Minimized', 'Hidden'."),
         examples=["Maximized", "Normal"],
     )
     left: int | None = Field(
@@ -263,8 +259,7 @@ class AppStartOrAttachResult(DictModelMixin, BaseModel):
     launched_at_utc: str | None = Field(
         default=None,
         description=(
-            "UTC timestamp of when ControlDesk finished launching. "
-            "None when attaching to an already-running instance."
+            "UTC timestamp of when ControlDesk finished launching. None when attaching to an already-running instance."
         ),
     )
     timestamp_utc: str

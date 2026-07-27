@@ -292,9 +292,7 @@ async def bus_monitor_query(
     )
     if isinstance(result, ErrorEnvelope):
         return result
-    return BusMonitorListResult(
-        **paginate(result.model_dump(), params.offset, params.limit, "monitors")
-    )
+    return BusMonitorListResult(**paginate(result.model_dump(), params.offset, params.limit, "monitors"))
 
 
 # ── Tool 5 — bus_monitor_save ────────────────────────────────────────────────────

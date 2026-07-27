@@ -75,9 +75,7 @@ def _patch_svc(method: str, *, return_value):
 class TestMeasurementStart:
     @pytest.mark.asyncio
     async def test_calls_service(self) -> None:
-        expected = MeasurementStartResult(
-            started=True, platforms_measuring=["XCP"], timestamp_utc=_TS
-        )
+        expected = MeasurementStartResult(started=True, platforms_measuring=["XCP"], timestamp_utc=_TS)
         with _patch_svc("start_measurement", return_value=expected):
             from controldesk_mcp.tools.measurement.management import measurement_start
 
@@ -119,15 +117,11 @@ class TestMeasurementStop:
 class TestMeasurementQuery:
     @pytest.mark.asyncio
     async def test_get_state(self) -> None:
-        expected = MeasurementGetStateResult(
-            state="Measuring", is_measuring=True, timestamp_utc=_TS
-        )
+        expected = MeasurementGetStateResult(state="Measuring", is_measuring=True, timestamp_utc=_TS)
         with _patch_svc("get_measurement_state", return_value=expected):
             from controldesk_mcp.tools.measurement.management import measurement_query
 
-            result = await measurement_query(
-                MeasurementQueryInput(action=MeasurementQueryAction.get_state)
-            )
+            result = await measurement_query(MeasurementQueryInput(action=MeasurementQueryAction.get_state))
 
         assert isinstance(result, MeasurementGetStateResult)
         assert result["is_measuring"] is True
@@ -138,9 +132,7 @@ class TestMeasurementQuery:
         with _patch_svc("get_configuration", return_value=expected):
             from controldesk_mcp.tools.measurement.management import measurement_query
 
-            result = await measurement_query(
-                MeasurementQueryInput(action=MeasurementQueryAction.get_configuration)
-            )
+            result = await measurement_query(MeasurementQueryInput(action=MeasurementQueryAction.get_configuration))
 
         assert isinstance(result, MeasurementGetConfigurationResult)
         assert result["signal_count"] == 2
@@ -151,9 +143,7 @@ class TestMeasurementQuery:
         with _patch_svc("list_signals", return_value=expected):
             from controldesk_mcp.tools.measurement.management import measurement_query
 
-            result = await measurement_query(
-                MeasurementQueryInput(action=MeasurementQueryAction.list_signals)
-            )
+            result = await measurement_query(MeasurementQueryInput(action=MeasurementQueryAction.list_signals))
 
         assert isinstance(result, MeasurementListSignalsResult)
 
@@ -247,18 +237,14 @@ class TestMeasurementManage:
     async def test_signal_add_missing_param(self) -> None:
         from controldesk_mcp.tools.measurement.management import measurement_manage
 
-        result = await measurement_manage(
-            MeasurementManageInput(action=MeasurementManageAction.signal_add)
-        )
+        result = await measurement_manage(MeasurementManageInput(action=MeasurementManageAction.signal_add))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
 
     @pytest.mark.asyncio
     async def test_signal_remove(self) -> None:
-        expected = MeasurementSignalRemoveResult(
-            removed=True, connection_path="XCP(5ms)://ctrl", timestamp_utc=_TS
-        )
+        expected = MeasurementSignalRemoveResult(removed=True, connection_path="XCP(5ms)://ctrl", timestamp_utc=_TS)
         with _patch_svc("signal_remove", return_value=expected):
             from controldesk_mcp.tools.measurement.management import measurement_manage
 
@@ -276,9 +262,7 @@ class TestMeasurementManage:
     async def test_signal_remove_missing_param(self) -> None:
         from controldesk_mcp.tools.measurement.management import measurement_manage
 
-        result = await measurement_manage(
-            MeasurementManageInput(action=MeasurementManageAction.signal_remove)
-        )
+        result = await measurement_manage(MeasurementManageInput(action=MeasurementManageAction.signal_remove))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -590,9 +574,7 @@ class TestTriggerManage:
     async def test_condition_trigger_based_missing_params(self) -> None:
         from controldesk_mcp.tools.measurement.management import trigger_manage
 
-        result = await trigger_manage(
-            TriggerManageInput(action=TriggerManageAction.condition_trigger_based)
-        )
+        result = await trigger_manage(TriggerManageInput(action=TriggerManageAction.condition_trigger_based))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -608,9 +590,7 @@ class TestRecordingManage:
         with _patch_svc("list_recordings", return_value=expected):
             from controldesk_mcp.tools.measurement.management import recording_manage
 
-            result = await recording_manage(
-                RecordingManageInput(action=RecordingManageAction.list_recordings)
-            )
+            result = await recording_manage(RecordingManageInput(action=RecordingManageAction.list_recordings))
 
         assert isinstance(result, MeasurementListRecordingsResult)
 
@@ -705,9 +685,7 @@ class TestRecordingManage:
     async def test_import_recording_missing_path(self) -> None:
         from controldesk_mcp.tools.measurement.management import recording_manage
 
-        result = await recording_manage(
-            RecordingManageInput(action=RecordingManageAction.import_recording)
-        )
+        result = await recording_manage(RecordingManageInput(action=RecordingManageAction.import_recording))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -752,18 +730,14 @@ class TestRecordingManage:
     async def test_bookmark_add_missing_title(self) -> None:
         from controldesk_mcp.tools.measurement.management import recording_manage
 
-        result = await recording_manage(
-            RecordingManageInput(action=RecordingManageAction.bookmark_add)
-        )
+        result = await recording_manage(RecordingManageInput(action=RecordingManageAction.bookmark_add))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
 
     @pytest.mark.asyncio
     async def test_bookmark_list(self) -> None:
-        expected = MeasurementBookmarkListResult(
-            recording_index=0, total_bookmarks=2, bookmarks=[], has_more=False
-        )
+        expected = MeasurementBookmarkListResult(recording_index=0, total_bookmarks=2, bookmarks=[], has_more=False)
         with _patch_svc("list_bookmarks", return_value=expected):
             from controldesk_mcp.tools.measurement.management import recording_manage
 
@@ -780,18 +754,14 @@ class TestRecordingManage:
     async def test_bookmark_list_missing_index(self) -> None:
         from controldesk_mcp.tools.measurement.management import recording_manage
 
-        result = await recording_manage(
-            RecordingManageInput(action=RecordingManageAction.bookmark_list)
-        )
+        result = await recording_manage(RecordingManageInput(action=RecordingManageAction.bookmark_list))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
 
     @pytest.mark.asyncio
     async def test_bookmark_remove(self) -> None:
-        expected = MeasurementBookmarkRemoveResult(
-            removed=True, recording_index=0, bookmark_index=1, timestamp_utc=_TS
-        )
+        expected = MeasurementBookmarkRemoveResult(removed=True, recording_index=0, bookmark_index=1, timestamp_utc=_TS)
         with _patch_svc("remove_bookmark", return_value=expected):
             from controldesk_mcp.tools.measurement.management import recording_manage
 
@@ -810,9 +780,7 @@ class TestRecordingManage:
     async def test_bookmark_remove_missing_index(self) -> None:
         from controldesk_mcp.tools.measurement.management import recording_manage
 
-        result = await recording_manage(
-            RecordingManageInput(action=RecordingManageAction.bookmark_remove)
-        )
+        result = await recording_manage(RecordingManageInput(action=RecordingManageAction.bookmark_remove))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -856,9 +824,7 @@ class TestDataLoggerManage:
     async def test_create_missing_logger_name(self) -> None:
         from controldesk_mcp.tools.measurement.management import data_logger_manage
 
-        result = await data_logger_manage(
-            DataLoggerManageInput(action=DataLoggerManageAction.create)
-        )
+        result = await data_logger_manage(DataLoggerManageInput(action=DataLoggerManageAction.create))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -934,9 +900,7 @@ class TestDataLoggerManage:
     async def test_start_missing_logger_name(self) -> None:
         from controldesk_mcp.tools.measurement.management import data_logger_manage
 
-        result = await data_logger_manage(
-            DataLoggerManageInput(action=DataLoggerManageAction.start)
-        )
+        result = await data_logger_manage(DataLoggerManageInput(action=DataLoggerManageAction.start))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -972,9 +936,7 @@ class TestDataLoggerManage:
         with _patch_svc("list_data_loggers", return_value=expected):
             from controldesk_mcp.tools.measurement.management import data_logger_manage
 
-            result = await data_logger_manage(
-                DataLoggerManageInput(action=DataLoggerManageAction.list)
-            )
+            result = await data_logger_manage(DataLoggerManageInput(action=DataLoggerManageAction.list))
 
         assert isinstance(result, DataLoggerListResult)
 
@@ -998,9 +960,7 @@ class TestDataLoggerManage:
     async def test_remove_missing_logger_name(self) -> None:
         from controldesk_mcp.tools.measurement.management import data_logger_manage
 
-        result = await data_logger_manage(
-            DataLoggerManageInput(action=DataLoggerManageAction.remove)
-        )
+        result = await data_logger_manage(DataLoggerManageInput(action=DataLoggerManageAction.remove))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -1038,10 +998,7 @@ class TestMeasurementInputModels:
     def test_manage_input_instantiates(self) -> None:
         assert MeasurementManageInput(action=MeasurementManageAction.configure_buffer) is not None
         assert MeasurementQueryInput(action=MeasurementQueryAction.get_state) is not None
-        assert (
-            MeasurementRasterManageInput(action=MeasurementRasterManageAction.raster_list)
-            is not None
-        )
+        assert MeasurementRasterManageInput(action=MeasurementRasterManageAction.raster_list) is not None
         assert TriggerManageInput(action=TriggerManageAction.rule_remove) is not None
         assert RecordingManageInput(action=RecordingManageAction.list_recordings) is not None
         assert DataLoggerManageInput(action=DataLoggerManageAction.list) is not None

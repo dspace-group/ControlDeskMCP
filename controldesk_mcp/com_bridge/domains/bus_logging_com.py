@@ -75,8 +75,7 @@ def _get_physical_bus_access(
         pba = bus_system.PhysicalBusAccesses.Item(physical_bus_access_index)
     except Exception as exc:
         raise BridgePreconditionError(
-            f"Bus platform {bus_platform_index} / {bus_type} / "
-            f"physical access {physical_bus_access_index} not found.",
+            f"Bus platform {bus_platform_index} / {bus_type} / physical access {physical_bus_access_index} not found.",
             error_code="BRIDGE_BAD_INPUT",
             recovery_hint="Verify bus_platform_index, bus_type, and physical_bus_access_index.",
         ) from exc
@@ -96,9 +95,7 @@ def _get_logger_by_name(loggers: Any, logger_name: str) -> Any:
     raise BridgePreconditionError(
         f"Logger '{logger_name}' not found.",
         error_code="BRIDGE_BAD_INPUT",
-        recovery_hint=(
-            f"Create the logger first with " f"bus_logger_create(logger_name='{logger_name}')."
-        ),
+        recovery_hint=(f"Create the logger first with bus_logger_create(logger_name='{logger_name}')."),
     )
 
 
@@ -113,9 +110,7 @@ def create_logger(
     bus_platform_index: int = 0,
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     try:
         pba.Loggers.Add(logger_name)
     except Exception as exc:
@@ -149,9 +144,7 @@ def configure_logger(
     bus_platform_index: int = 0,
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     lgr = _get_logger_by_name(pba.Loggers, logger_name)
     try:
         cfg = lgr.Configuration
@@ -195,9 +188,7 @@ def start_logger(
     bus_platform_index: int = 0,
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     lgr = _get_logger_by_name(pba.Loggers, logger_name)
     try:
         lgr.Activated = True
@@ -222,9 +213,7 @@ def stop_logger(
     bus_platform_index: int = 0,
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     lgr = _get_logger_by_name(pba.Loggers, logger_name)
     try:
         lgr.Stop()
@@ -249,9 +238,7 @@ def get_logger_state(
     bus_platform_index: int = 0,
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     lgr = _get_logger_by_name(pba.Loggers, logger_name)
     try:
         state_raw = lgr.State
@@ -280,9 +267,7 @@ def list_loggers(
     bus_platform_index: int = 0,
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     try:
         loggers_com = pba.Loggers
         items: list[dict[str, Any]] = []
@@ -317,9 +302,7 @@ def remove_logger(
     bus_platform_index: int = 0,
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     lgr = _get_logger_by_name(pba.Loggers, logger_name)
     try:
         lgr.Remove()
@@ -340,9 +323,7 @@ def clear_all_loggers(
     bus_platform_index: int = 0,
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     try:
         count = pba.Loggers.Count
         pba.Loggers.Clear()
@@ -367,9 +348,7 @@ def set_logger_activated(
     bus_platform_index: int = 0,
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     lgr = _get_logger_by_name(pba.Loggers, logger_name)
     try:
         prev = bool(lgr.Activated)
@@ -403,9 +382,7 @@ def _get_filter_by_name(filters: Any, filter_name: str) -> Any:
     raise BridgePreconditionError(
         f"Filter '{filter_name}' not found.",
         error_code="BRIDGE_BAD_INPUT",
-        recovery_hint=(
-            f"Create the filter first with " f"bus_filter_create(filter_name='{filter_name}')."
-        ),
+        recovery_hint=(f"Create the filter first with bus_filter_create(filter_name='{filter_name}')."),
     )
 
 
@@ -417,9 +394,7 @@ def create_filter(
     bus_platform_index: int = 0,
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     try:
         pba.Filters.Add(filter_name)
     except Exception as exc:
@@ -453,9 +428,7 @@ def configure_filter(
     (FilterMode, MessageID, MessageMask) is not accessible via the public COM API.
     This tool returns the current sub-collection counts for diagnostic purposes.
     """
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     flt = _get_filter_by_name(pba.Filters, filter_name)
     try:
         loggers_count = flt.Loggers.Count
@@ -487,9 +460,7 @@ def start_filter(
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
     """Start all loggers and replays that belong to this filter group."""
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     flt = _get_filter_by_name(pba.Filters, filter_name)
     started_loggers: list[str] = []
     started_replays: list[str] = []
@@ -523,9 +494,7 @@ def stop_filter(
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
     """Stop all loggers and replays that belong to this filter group."""
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     flt = _get_filter_by_name(pba.Filters, filter_name)
     stopped_loggers: list[str] = []
     stopped_replays: list[str] = []
@@ -557,9 +526,7 @@ def list_filters(
     bus_platform_index: int = 0,
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     try:
         filters_com = pba.Filters
         items: list[dict[str, Any]] = []
@@ -591,9 +558,7 @@ def remove_filter(
     bus_platform_index: int = 0,
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     flt = _get_filter_by_name(pba.Filters, filter_name)
     try:
         flt.Remove()
@@ -620,9 +585,7 @@ def rename_logger(
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
     """Rename an existing logger."""
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     lgr = _get_logger_by_name(pba.Loggers, logger_name)
     try:
         lgr.Name = new_name

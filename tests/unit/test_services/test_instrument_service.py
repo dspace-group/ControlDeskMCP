@@ -153,9 +153,7 @@ class TestInstrumentAdd:
         with patch(
             "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
-            side_effect=BridgePreconditionError(
-                "no active layout", error_code="BRIDGE_NO_ACTIVE_LAYOUT"
-            ),
+            side_effect=BridgePreconditionError("no active layout", error_code="BRIDGE_NO_ACTIVE_LAYOUT"),
         ):
             from controldesk_mcp.services.instrument_service import instrument_add
 
@@ -208,9 +206,7 @@ class TestInstrumentConnectSignal:
         ):
             from controldesk_mcp.services.instrument_service import instrument_connect_signal
 
-            result = await instrument_connect_signal(
-                "SpeedKnob", "XCP(5ms)://engine_speed", None, 0
-            )
+            result = await instrument_connect_signal("SpeedKnob", "XCP(5ms)://engine_speed", None, 0)
 
         assert result.connected is True
         assert result.connection_mode == "main_variable"

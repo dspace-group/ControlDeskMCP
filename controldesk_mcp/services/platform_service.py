@@ -84,26 +84,20 @@ async def list_platforms() -> PlatformListResult | ErrorEnvelope:
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_list unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def get_platform_info(params: PlatformGetInfoInput) -> PlatformGetInfoResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app_lambda())
-        info = await com_bridge.dispatch(
-            com_bridge.domains.platform_com.get_platform_info, app, params.platform_name
-        )
+        info = await com_bridge.dispatch(com_bridge.domains.platform_com.get_platform_info, app, params.platform_name)
         return PlatformGetInfoResult(**info)
     except BridgeError as exc:
         _log.warning("platform_get_info failed: %s", exc)
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_get_info unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def add_platform(params: PlatformAddInput) -> PlatformAddResult | ErrorEnvelope:
@@ -118,9 +112,7 @@ async def add_platform(params: PlatformAddInput) -> PlatformAddResult | ErrorEnv
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_add unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def add_registered_platform(
@@ -137,26 +129,20 @@ async def add_registered_platform(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_add_registered unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def remove_platform(params: PlatformRemoveInput) -> PlatformRemoveResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app_lambda())
-        result = await com_bridge.dispatch(
-            com_bridge.domains.platform_com.remove_platform, app, params.platform_name
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.platform_com.remove_platform, app, params.platform_name)
         return PlatformRemoveResult(**result)
     except BridgeError as exc:
         _log.warning("platform_remove failed: %s", exc)
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_remove unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def register_hardware_platform(
@@ -177,9 +163,7 @@ async def register_hardware_platform(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_register_hardware unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def clear_registered_platforms(
@@ -204,9 +188,7 @@ async def clear_registered_platforms(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_clear_registered unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def refresh_platform_configuration(  # noqa: ARG001
@@ -214,18 +196,14 @@ async def refresh_platform_configuration(  # noqa: ARG001
 ) -> PlatformRefreshConfigurationResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app_lambda())
-        result = await com_bridge.dispatch(
-            com_bridge.domains.platform_com.refresh_platform_configuration, app
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.platform_com.refresh_platform_configuration, app)
         return PlatformRefreshConfigurationResult(**result)
     except BridgeError as exc:
         _log.warning("platform_refresh_configuration failed: %s", exc)
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_refresh_configuration unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def refresh_interface_connections(
@@ -244,9 +222,7 @@ async def refresh_interface_connections(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_refresh_interface_connections unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def set_platform_enabled(
@@ -266,9 +242,7 @@ async def set_platform_enabled(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_set_enabled unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def add_variable_description(
@@ -288,9 +262,7 @@ async def add_variable_description(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_add_variable_description unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def configure_calibration_behavior(
@@ -311,9 +283,7 @@ async def configure_calibration_behavior(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_configure_calibration_behavior unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def set_api_version(
@@ -321,18 +291,14 @@ async def set_api_version(
 ) -> PlatformSetApiVersionResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app_lambda())
-        result = await com_bridge.dispatch(
-            com_bridge.domains.platform_com.set_api_version, app, params.version.value
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.platform_com.set_api_version, app, params.version.value)
         return PlatformSetApiVersionResult(**result)
     except BridgeError as exc:
         _log.warning("platform_set_api_version failed: %s", exc)
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_set_api_version unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def configure_transport(
@@ -355,9 +321,7 @@ async def configure_transport(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_configure_transport unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def list_interfaces(
@@ -365,18 +329,14 @@ async def list_interfaces(
 ) -> PlatformListInterfacesResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app_lambda())
-        result = await com_bridge.dispatch(
-            com_bridge.domains.platform_com.list_interfaces, app, params.platform_name
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.platform_com.list_interfaces, app, params.platform_name)
         return PlatformListInterfacesResult(**result)
     except BridgeError as exc:
         _log.warning("platform_list_interfaces failed: %s", exc)
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_list_interfaces unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def select_interface_manual(
@@ -398,17 +358,13 @@ async def select_interface_manual(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_select_interface_manual unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def connect_platform(params: PlatformConnectInput) -> PlatformConnectResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app_lambda())
-        result = await com_bridge.dispatch(
-            com_bridge.domains.platform_com.connect_platform, app, params.platform_name
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.platform_com.connect_platform, app, params.platform_name)
         result.setdefault("timestamp_utc", _now_utc())
         return PlatformConnectResult(**result)
     except BridgeError as exc:
@@ -416,9 +372,7 @@ async def connect_platform(params: PlatformConnectInput) -> PlatformConnectResul
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_connect unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def disconnect_platform(
@@ -436,9 +390,7 @@ async def disconnect_platform(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_disconnect unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def get_connection_state(
@@ -456,9 +408,7 @@ async def get_connection_state(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_get_connection_state unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def list_platform_types() -> PlatformListTypesResult | ErrorEnvelope:
@@ -467,9 +417,7 @@ async def list_platform_types() -> PlatformListTypesResult | ErrorEnvelope:
         return PlatformListTypesResult(**result)
     except Exception as exc:
         _log.exception("platform_list_types unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def configure_platform(
@@ -494,9 +442,7 @@ async def configure_platform(
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_configure unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def rename_platform(params: PlatformRenameInput) -> PlatformRenameResult | ErrorEnvelope:
@@ -515,9 +461,7 @@ async def rename_platform(params: PlatformRenameInput) -> PlatformRenameResult |
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_rename unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def list_hardware_types() -> PlatformListHardwareTypesResult:
@@ -538,52 +482,40 @@ async def list_hardware_types() -> PlatformListHardwareTypesResult:
                     {
                         "type": "SCALEXIO",
                         "description": "dSPACE SCALEXIO real-time processor",
-                        "registration_method": (
-                            "IP-based (platform_register_hardware + platform_activate_registered)"
-                        ),
+                        "registration_method": ("IP-based (platform_register_hardware + platform_activate_registered)"),
                         "typical_use": "Real-time hardware-in-the-loop testing",
                     },
                     {
                         "type": "DS1202",
                         "description": "dSPACE MicroLabBox data acquisition unit",
-                        "registration_method": (
-                            "IP-based (platform_register_hardware + platform_activate_registered)"
-                        ),
+                        "registration_method": ("IP-based (platform_register_hardware + platform_activate_registered)"),
                         "typical_use": "Hardware data logging and measurement",
                     },
                     {
                         "type": "DS1203",
                         "description": "dSPACE MicroLabBox II multi-processor system",
-                        "registration_method": (
-                            "IP-based (platform_register_hardware + platform_activate_registered)"
-                        ),
+                        "registration_method": ("IP-based (platform_register_hardware + platform_activate_registered)"),
                         "typical_use": "Multi-processor real-time systems",
                     },
                     {
                         "type": "DS1403",
                         "description": "dSPACE MicroAutoBox III (DS1403) multi-function platform",
-                        "registration_method": (
-                            "IP-based (platform_register_hardware + platform_activate_registered)"
-                        ),
+                        "registration_method": ("IP-based (platform_register_hardware + platform_activate_registered)"),
                         "typical_use": "Automated testing and calibration",
                     },
                     {
                         "type": "MABX",
                         "description": "dSPACE MicroAutoBox II (original) automation platform",
-                        "registration_method": (
-                            "IP-based (platform_register_hardware + platform_activate_registered)"
-                        ),
+                        "registration_method": ("IP-based (platform_register_hardware + platform_activate_registered)"),
                         "typical_use": "Network-connected automation and testing",
                     },
                     {
                         "type": "VEOS",
                         "description": (
-                            "Virtual ECU OS (remote VEOS). "
-                            "For local VEOS (same host), use platform_add directly."
+                            "Virtual ECU OS (remote VEOS). For local VEOS (same host), use platform_add directly."
                         ),
                         "registration_method": (
-                            "IP-based for remote VEOS "
-                            "(platform_register_hardware + platform_activate_registered)"
+                            "IP-based for remote VEOS (platform_register_hardware + platform_activate_registered)"
                         ),
                         "typical_use": "Remote virtual ECU simulation and testing",
                     },
@@ -644,9 +576,7 @@ async def list_registered_hardware() -> PlatformListRegisteredHardwareResult | E
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_list_registered_hardware unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))
 
 
 async def get_registered_info(index: int) -> PlatformGetRegisteredInfoResult | ErrorEnvelope:
@@ -667,6 +597,4 @@ async def get_registered_info(index: int) -> PlatformGetRegisteredInfoResult | E
         return build_envelope(exc)
     except Exception as exc:
         _log.exception("platform_get_registered_info unexpected error")
-        return build_envelope(
-            BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN")
-        )
+        return build_envelope(BridgeOperationError(f"Unexpected error: {exc}", error_code="BRIDGE_UNKNOWN"))

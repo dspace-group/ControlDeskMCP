@@ -128,14 +128,12 @@ class TestDomainsImport:
         """domains.application_com must be importable — catches the missing __init__ import."""
         from controldesk_mcp.com_bridge import domains
 
-        assert hasattr(
-            domains, "application_com"
-        ), "domains.application_com is not exported from com_bridge/domains/__init__.py"
+        assert hasattr(domains, "application_com"), (
+            "domains.application_com is not exported from com_bridge/domains/__init__.py"
+        )
 
     def test_application_com_has_expected_callables(self) -> None:
         from controldesk_mcp.com_bridge.domains import application_com
 
         for name in ("get_version", "show_window", "quit_application", "set_window_state"):
-            assert callable(
-                getattr(application_com, name, None)
-            ), f"application_com.{name} is missing or not callable"
+            assert callable(getattr(application_com, name, None)), f"application_com.{name} is missing or not callable"

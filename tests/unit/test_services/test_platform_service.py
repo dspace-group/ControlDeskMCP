@@ -198,10 +198,7 @@ class TestListHardwareTypes:
         from controldesk_mcp.services.platform_service import list_hardware_types
 
         result = await list_hardware_types()
-        all_types = (
-            result["hardware_platforms"]["ip_addressable"]
-            + result["hardware_platforms"]["direct_add"]
-        )
+        all_types = result["hardware_platforms"]["ip_addressable"] + result["hardware_platforms"]["direct_add"]
 
         for hw_type in all_types:
             assert "type" in hw_type
@@ -327,9 +324,7 @@ class TestGetRegisteredInfo:
         with patch(
             "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
-            side_effect=BridgeOperationError(
-                "Index not found", error_code="BRIDGE_INVALID_ARGUMENT"
-            ),
+            side_effect=BridgeOperationError("Index not found", error_code="BRIDGE_INVALID_ARGUMENT"),
         ):
             from controldesk_mcp.services.platform_service import get_registered_info
 

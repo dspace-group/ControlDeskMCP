@@ -151,9 +151,7 @@ class TestListPlatforms:
         """Mixed XCP + bus device platforms all appear in the result."""
         xcp = _make_platform(name="XCP", plat_type="XCPonCAN", vd_count=1)
         can_mon = _make_platform(name="CAN_2", plat_type="CANMonitoring")
-        type(can_mon.VariableDescriptions).Count = PropertyMock(
-            side_effect=Exception("Not supported")
-        )
+        type(can_mon.VariableDescriptions).Count = PropertyMock(side_effect=Exception("Not supported"))
         app = _make_app(platforms=[xcp, can_mon])
         result = list_platforms(app)
         assert len(result) == 2
@@ -585,9 +583,7 @@ class TestConfigureCalibrationBehavior:
     def test_sets_behavior_and_page(self) -> None:
         plat = _make_platform(name="XCP")
         app = _make_app(platforms=[plat])
-        result = configure_calibration_behavior(
-            app, "XCP", "UploadConnectedVariables", "WorkingPage"
-        )
+        result = configure_calibration_behavior(app, "XCP", "UploadConnectedVariables", "WorkingPage")
         assert result["configured"] is True
         assert result["calibration_behavior"] == "UploadConnectedVariables"
         assert result["initial_page"] == "WorkingPage"
@@ -595,9 +591,7 @@ class TestConfigureCalibrationBehavior:
     def test_raises_bridge_error_on_com_failure(self) -> None:
         plat = _make_platform(name="XCP")
         plat.GeneralSettings = MagicMock()
-        type(plat.GeneralSettings).StartOnlineCalibrationBehavior = PropertyMock(
-            side_effect=Exception("COM error")
-        )
+        type(plat.GeneralSettings).StartOnlineCalibrationBehavior = PropertyMock(side_effect=Exception("COM error"))
         app = _make_app(platforms=[plat])
         with pytest.raises(BridgeError):
             configure_calibration_behavior(app, "XCP", "Upload", "ReferencePage")
@@ -628,9 +622,7 @@ class TestSetApiVersion:
 
     def test_raises_bridge_error_on_com_failure(self) -> None:
         app = MagicMock()
-        type(app.PlatformManagement).PlatformAutomationAPIVersion = PropertyMock(
-            side_effect=Exception("COM error")
-        )
+        type(app.PlatformManagement).PlatformAutomationAPIVersion = PropertyMock(side_effect=Exception("COM error"))
         with pytest.raises(BridgeError):
             set_api_version(app, "APIVersion2")
 
@@ -875,9 +867,7 @@ class TestListPlatformTypes:
 
     def test_xcp_on_can_in_measurement_category(self) -> None:
         result = list_platform_types()
-        measurement_cat = next(
-            c for c in result["categories"] if c["category"] == "Measurement & Calibration"
-        )
+        measurement_cat = next(c for c in result["categories"] if c["category"] == "Measurement & Calibration")
         names = [t["name"] for t in measurement_cat["types"]]
         assert "XCPonCAN" in names
 

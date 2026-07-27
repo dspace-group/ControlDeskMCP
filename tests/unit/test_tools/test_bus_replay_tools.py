@@ -100,9 +100,7 @@ class TestBusReplayCreate:
             from controldesk_mcp.tools.bus_replay.management import bus_replay_create
 
             result = await bus_replay_create(
-                BusReplayCreateInput(
-                    replay_name="CANReplay", system_index=0, bus_type=BusType.CAN, dry_run=True
-                )
+                BusReplayCreateInput(replay_name="CANReplay", system_index=0, bus_type=BusType.CAN, dry_run=True)
             )
 
         assert isinstance(result, DryRunPreviewResult)
@@ -461,9 +459,7 @@ class TestBusReplayAdminManage:
 
     @pytest.mark.asyncio
     async def test_rename_returns_renamed_on_success(self) -> None:
-        expected = BusReplayRenameResult(
-            renamed=True, old_name="CANReplay", new_name="TxReplay", timestamp_utc=_TS
-        )
+        expected = BusReplayRenameResult(renamed=True, old_name="CANReplay", new_name="TxReplay", timestamp_utc=_TS)
         with _patch_svc("rename_replay", return_value=expected):
             from controldesk_mcp.tools.bus_replay.management import bus_replay_admin_manage
 

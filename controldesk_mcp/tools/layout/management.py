@@ -160,9 +160,7 @@ async def layout_manage(
             error_code="MISSING_PARAM",
             category="INPUT_VALIDATION",
             message=f"name is required for action='{action.value}'.",
-            recovery_hint=(
-                "Set name to the layout name (use layout_list to discover available names)."
-            ),
+            recovery_hint=("Set name to the layout name (use layout_list to discover available names)."),
         )
 
     if action == LayoutManageAction.create:
@@ -297,10 +295,7 @@ async def layout_discover(ctx: Context) -> LayoutDiscoverResult:
         tools=[
             ToolActionEntry(
                 tool_name="layout_io_manage",
-                purpose=(
-                    "Export/import layouts (.lax) and signal connection files (.cdx) "
-                    "for the active experiment."
-                ),
+                purpose=("Export/import layouts (.lax) and signal connection files (.cdx) for the active experiment."),
                 actions=["export", "import", "import_connection_file", "export_connection_file"],
                 required_params_per_action={
                     "export": ["export_path"],

@@ -122,9 +122,7 @@ class TestCalibrationQuery:
         with _patch_svc("get_calibration_state", return_value=expected):
             from controldesk_mcp.tools.calibration.management import calibration_query
 
-            result = await calibration_query(
-                CalibrationQueryInput(action=CalibrationQueryAction.get_state)
-            )
+            result = await calibration_query(CalibrationQueryInput(action=CalibrationQueryAction.get_state))
 
         assert isinstance(result, CalibrationGetStateResult)
         assert result["calibration_state"] == "Started"
@@ -134,9 +132,7 @@ class TestCalibrationQuery:
         with _patch_svc("get_calibration_state", return_value=_ERROR):
             from controldesk_mcp.tools.calibration.management import calibration_query
 
-            result = await calibration_query(
-                CalibrationQueryInput(action=CalibrationQueryAction.get_state)
-            )
+            result = await calibration_query(CalibrationQueryInput(action=CalibrationQueryAction.get_state))
 
         assert isinstance(result, ErrorEnvelope)
 
@@ -176,9 +172,7 @@ class TestCalibrationManage:
         with _patch_svc("refresh_parameters", return_value=expected):
             from controldesk_mcp.tools.calibration.management import calibration_manage
 
-            result = await calibration_manage(
-                CalibrationManageInput(action=CalibrationManageAction.refresh_parameters)
-            )
+            result = await calibration_manage(CalibrationManageInput(action=CalibrationManageAction.refresh_parameters))
 
         assert isinstance(result, CalibrationRefreshParametersResult)
         assert result["refreshed"] is True
@@ -202,9 +196,7 @@ class TestProposedCalibrationManage:
 
     @pytest.mark.asyncio
     async def test_stop(self) -> None:
-        expected = ProposedCalibrationStopResult(
-            stopped=True, changes_applied=False, proposed_calibration_active=False
-        )
+        expected = ProposedCalibrationStopResult(stopped=True, changes_applied=False, proposed_calibration_active=False)
         with _patch_svc("stop_proposed_calibration", return_value=expected):
             from controldesk_mcp.tools.calibration.management import proposed_calibration_manage
 
@@ -232,9 +224,7 @@ class TestProposedCalibrationManage:
 
     @pytest.mark.asyncio
     async def test_cancel(self) -> None:
-        expected = ProposedCalibrationCancelResult(
-            cancelled=True, proposed_calibration_active=False
-        )
+        expected = ProposedCalibrationCancelResult(cancelled=True, proposed_calibration_active=False)
         with _patch_svc("cancel_proposed_calibration", return_value=expected):
             from controldesk_mcp.tools.calibration.management import proposed_calibration_manage
 
@@ -349,15 +339,7 @@ class TestCalibrationInputModels:
         assert CalibrationStopInput() is not None
 
     def test_manage_input_instantiates(self) -> None:
-        assert (
-            CalibrationManageInput(action=CalibrationManageAction.activate_reference_page)
-            is not None
-        )
+        assert CalibrationManageInput(action=CalibrationManageAction.activate_reference_page) is not None
         assert CalibrationQueryInput(action=CalibrationQueryAction.get_state) is not None
-        assert (
-            ProposedCalibrationManageInput(action=ProposedCalibrationManageAction.start) is not None
-        )
-        assert (
-            CalibrationPageManageInput(action=CalibrationPageManageAction.copy_working_to_reference)
-            is not None
-        )
+        assert ProposedCalibrationManageInput(action=ProposedCalibrationManageAction.start) is not None
+        assert CalibrationPageManageInput(action=CalibrationPageManageAction.copy_working_to_reference) is not None

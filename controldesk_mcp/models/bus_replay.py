@@ -102,8 +102,7 @@ class BusReplayConfigureInput(BaseModel):
     )
     log_file_full_path: str = Field(
         description=(
-            "Absolute file system path to the source log file "
-            "(e.g. 'C:\\\\Logs\\\\recorded.asc'). File must exist."
+            "Absolute file system path to the source log file (e.g. 'C:\\\\Logs\\\\recorded.asc'). File must exist."
         ),
         examples=["C:\\Logs\\recorded.asc"],
     )
@@ -115,24 +114,18 @@ class BusReplayConfigureInput(BaseModel):
     replay_mode: ReplayMode = Field(
         default=ReplayMode.Infinite,
         description=(
-            "Playback mode: 'Infinite' (loop forever), "
-            "'NumberOfPasses' (N repetitions), or 'Duration' (time-limited)."
+            "Playback mode: 'Infinite' (loop forever), 'NumberOfPasses' (N repetitions), or 'Duration' (time-limited)."
         ),
         examples=["Infinite", "NumberOfPasses", "Duration"],
     )
     number_of_passes: int = Field(
         default=1,
-        description=(
-            "Number of times to replay (if replay_mode is 'NumberOfPasses'). " "Ignored otherwise."
-        ),
+        description=("Number of times to replay (if replay_mode is 'NumberOfPasses'). Ignored otherwise."),
         examples=[1, 3, 100],
     )
     duration_seconds: float = Field(
         default=0.0,
-        description=(
-            "Duration in seconds (if replay_mode is 'Duration'). "
-            "Ignored otherwise. 0.0 = unlimited."
-        ),
+        description=("Duration in seconds (if replay_mode is 'Duration'). Ignored otherwise. 0.0 = unlimited."),
         examples=[0.0, 30.0, 60.0],
     )
     start_monitor_on_replay: bool = Field(
@@ -317,9 +310,7 @@ class BusReplayClearAllInput(BaseModel):
     )
     confirm: bool = Field(
         default=False,
-        description=(
-            "Must be True to proceed. " "Acts as a safety guard against accidental invocation."
-        ),
+        description=("Must be True to proceed. Acts as a safety guard against accidental invocation."),
         examples=[True, False],
     )
 
@@ -328,7 +319,7 @@ class BusReplaySetActivatedInput(BaseModel):
     """Input for bus_replay_set_activated."""
 
     replay_name: str = Field(
-        description=("Name of the replay to activate or deactivate " "(e.g. 'CANReplay')."),
+        description=("Name of the replay to activate or deactivate (e.g. 'CANReplay')."),
         examples=["CANReplay"],
     )
     system_index: int = Field(
@@ -431,9 +422,7 @@ class BusReplayQueryInput(BaseModel):
         examples=["CANReplay"],
     )
     bus_platform_index: int = Field(default=0, description="Bus platform index.", examples=[0])
-    physical_bus_access_index: int = Field(
-        default=0, description="Physical bus access index.", examples=[0]
-    )
+    physical_bus_access_index: int = Field(default=0, description="Physical bus access index.", examples=[0])
     limit: int = Field(default=200, ge=1, le=1000, description="Maximum records for 'list'.")
     offset: int = Field(default=0, ge=0, description="Zero-based offset for 'list' pagination.")
 
@@ -499,10 +488,7 @@ class BusReplayAdminManageInput(BaseModel):
     )
     replay_name: Optional[str] = Field(
         default=None,
-        description=(
-            "Name of the replay. Required for: remove, set_activated, rename. "
-            "Not required for: clear_all."
-        ),
+        description=("Name of the replay. Required for: remove, set_activated, rename. Not required for: clear_all."),
         examples=["CANReplay"],
     )
     bus_platform_index: int = Field(

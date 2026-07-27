@@ -98,14 +98,13 @@ def discover_variables(
 ) -> list[dict]:
     """Generate a variable discovery workflow prompt."""
     search_step = (
-        f"   Call `variable_find` with pattern='{search_pattern}' to locate matching " f"variables."
+        f"   Call `variable_find` with pattern='{search_pattern}' to locate matching variables."
         if search_pattern
         else "   Call `variable_list_all` to get the complete list of available variables. "
         "Optionally use `variable_find` with a pattern to narrow the search."
     )
     group_step = (
-        f"3. Call `variable_list_group_variables` for group '{group_path}' to list all "
-        f"   variables within that group."
+        f"3. Call `variable_list_group_variables` for group '{group_path}' to list all    variables within that group."
         if group_path
         else "3. Call `variable_list_group_variables` on a group path to enumerate its "
         "   members (useful for structured/hierarchical variable trees)."

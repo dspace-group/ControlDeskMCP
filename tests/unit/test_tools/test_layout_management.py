@@ -74,15 +74,11 @@ class TestLayoutList:
 class TestLayoutManageCreate:
     @pytest.mark.asyncio
     async def test_create_returns_result(self) -> None:
-        expected = LayoutCreateResult(
-            created=True, name="NewLayout", file_path="", timestamp_utc=_TS
-        )
+        expected = LayoutCreateResult(created=True, name="NewLayout", file_path="", timestamp_utc=_TS)
         with _patch_svc("layout_create", return_value=expected):
             from controldesk_mcp.tools.layout.management import layout_manage
 
-            result = await layout_manage(
-                LayoutManageInput(action=LayoutManageAction.create, name="NewLayout")
-            )
+            result = await layout_manage(LayoutManageInput(action=LayoutManageAction.create, name="NewLayout"))
 
         assert isinstance(result, LayoutCreateResult)
         assert result["created"] is True
@@ -105,9 +101,7 @@ class TestLayoutManageConfigure:
     async def test_configure_missing_editing_mode_returns_error(self) -> None:
         from controldesk_mcp.tools.layout.management import layout_manage
 
-        result = await layout_manage(
-            LayoutManageInput(action=LayoutManageAction.configure, name="Layout1")
-        )
+        result = await layout_manage(LayoutManageInput(action=LayoutManageAction.configure, name="Layout1"))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -123,9 +117,7 @@ class TestLayoutManageActivate:
         with _patch_svc("layout_activate", return_value=expected):
             from controldesk_mcp.tools.layout.management import layout_manage
 
-            result = await layout_manage(
-                LayoutManageInput(action=LayoutManageAction.activate, name="ControlLayout")
-            )
+            result = await layout_manage(LayoutManageInput(action=LayoutManageAction.activate, name="ControlLayout"))
 
         assert isinstance(result, LayoutActivateResult)
         assert result["activated"] is True
@@ -159,9 +151,7 @@ class TestLayoutIoManage:
             from controldesk_mcp.tools.layout.management import layout_io_manage
 
             result = await layout_io_manage(
-                LayoutIoManageInput(
-                    action=LayoutIoManageAction.export, export_path="C:/out/export.lax"
-                )
+                LayoutIoManageInput(action=LayoutIoManageAction.export, export_path="C:/out/export.lax")
             )
 
         assert isinstance(result, LayoutExportResult)
@@ -179,12 +169,8 @@ class TestLayoutDiscover:
         ctx = MagicMock()
         with (
             patch("controldesk_mcp.tools.layout.management.get_settings") as mock_settings,
-            patch(
-                "controldesk_mcp.tools.layout.management.mcp.evict_stale_domains", new_callable=AsyncMock
-            ),
-            patch(
-                "controldesk_mcp.tools.layout.management.mcp.activate_domain_tools", new_callable=AsyncMock
-            ),
+            patch("controldesk_mcp.tools.layout.management.mcp.evict_stale_domains", new_callable=AsyncMock),
+            patch("controldesk_mcp.tools.layout.management.mcp.activate_domain_tools", new_callable=AsyncMock),
         ):
             mock_settings.return_value.tool_ttl_enabled = False
             from controldesk_mcp.tools.layout.management import layout_discover

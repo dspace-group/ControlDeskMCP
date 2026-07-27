@@ -420,9 +420,7 @@ class TestWriteCurveVariable:
     def test_writes_function_and_axis_values(self) -> None:
         var = _make_curve_variable("FuelCurve")
         app = _make_app_with_variables([var])
-        result = write_curve_variable(
-            app, "FuelCurve", [1.4, 1.5, 1.6], axis_values=[0.0, 1.5, 3.0]
-        )
+        result = write_curve_variable(app, "FuelCurve", [1.4, 1.5, 1.6], axis_values=[0.0, 1.5, 3.0])
         assert result["written"] is True
         assert result["axis_values_written"] == 3
 
@@ -508,9 +506,7 @@ class TestWriteMapVariable:
         var = _make_map_variable("FuelMap")
         app = _make_app_with_variables([var])
         matrix = [[1.0, 1.1, 1.2], [1.3, 1.4, 1.5]]
-        result = write_map_variable(
-            app, "FuelMap", matrix, x_axis_values=[0.0, 50.0, 100.0], y_axis_values=[0, 3000]
-        )
+        result = write_map_variable(app, "FuelMap", matrix, x_axis_values=[0.0, 50.0, 100.0], y_axis_values=[0, 3000])
         assert result["x_axis_written"] is True
         assert result["y_axis_written"] is True
 
@@ -775,9 +771,7 @@ class TestActivateVariableDescription:
 
     def test_raises_precondition_for_missing_description(self) -> None:
         app = _make_app_with_variables([])
-        app.ActiveExperiment.Platforms.Item(1).VariableDescriptions.Item.side_effect = Exception(
-            "Not found"
-        )
+        app.ActiveExperiment.Platforms.Item(1).VariableDescriptions.Item.side_effect = Exception("Not found")
         with pytest.raises(BridgePreconditionError):
             activate_variable_description(app, "XCP", "nonexistent")
 
@@ -793,18 +787,12 @@ class TestRemoveVariableDescription:
         assert result["platform_name"] == "XCP"
         assert result["description_name"] == "myecu"
         # Verify Remove() was called on the individual item, not the collection
-        app.ActiveExperiment.Platforms.Item("XCP").VariableDescriptions.Item.assert_called_with(
-            "myecu"
-        )
-        app.ActiveExperiment.Platforms.Item(
-            "XCP"
-        ).VariableDescriptions.Item.return_value.Remove.assert_called_once()
+        app.ActiveExperiment.Platforms.Item("XCP").VariableDescriptions.Item.assert_called_with("myecu")
+        app.ActiveExperiment.Platforms.Item("XCP").VariableDescriptions.Item.return_value.Remove.assert_called_once()
 
     def test_raises_when_description_not_found(self) -> None:
         app = _make_app_with_variables([])
-        app.ActiveExperiment.Platforms.Item("XCP").VariableDescriptions.Contains.return_value = (
-            False
-        )
+        app.ActiveExperiment.Platforms.Item("XCP").VariableDescriptions.Contains.return_value = False
         with pytest.raises(BridgePreconditionError):
             remove_variable_description(app, "XCP", "nonexistent")
 

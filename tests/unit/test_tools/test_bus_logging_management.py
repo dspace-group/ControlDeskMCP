@@ -72,9 +72,7 @@ class TestBusLoggerCreate:
             from controldesk_mcp.tools.bus_logging.management import bus_logger_create
 
             result = await bus_logger_create(
-                BusLoggerCreateInput(
-                    logger_name="CANRecorder", system_index=1, bus_type=BusType.CAN
-                )
+                BusLoggerCreateInput(logger_name="CANRecorder", system_index=1, bus_type=BusType.CAN)
             )
 
         assert isinstance(result, BusLoggerCreateResult)
@@ -113,9 +111,7 @@ class TestBusLoggerCreate:
             from controldesk_mcp.tools.bus_logging.management import bus_logger_create
 
             result = await bus_logger_create(
-                BusLoggerCreateInput(
-                    logger_name="L1", system_index=0, bus_type=BusType.CAN, dry_run=True
-                )
+                BusLoggerCreateInput(logger_name="L1", system_index=0, bus_type=BusType.CAN, dry_run=True)
             )
 
         assert isinstance(result, DryRunPreviewResult)
@@ -211,9 +207,7 @@ class TestBusLoggerManage:
         from controldesk_mcp.tools.bus_logging.management import bus_logger_manage
 
         result = await bus_logger_manage(
-            BusLoggerManageInput(
-                action=BusLoggerManageAction.start, system_index=1, bus_type=BusType.CAN
-            )
+            BusLoggerManageInput(action=BusLoggerManageAction.start, system_index=1, bus_type=BusType.CAN)
         )
 
         assert isinstance(result, ErrorEnvelope)
@@ -249,9 +243,7 @@ class TestBusLoggerManage:
         from controldesk_mcp.tools.bus_logging.management import bus_logger_manage
 
         result = await bus_logger_manage(
-            BusLoggerManageInput(
-                action=BusLoggerManageAction.stop, system_index=1, bus_type=BusType.CAN
-            )
+            BusLoggerManageInput(action=BusLoggerManageAction.stop, system_index=1, bus_type=BusType.CAN)
         )
 
         assert isinstance(result, ErrorEnvelope)
@@ -302,9 +294,7 @@ class TestBusLoggerAdminManage:
         from controldesk_mcp.tools.bus_logging.management import bus_logger_admin_manage
 
         result = await bus_logger_admin_manage(
-            BusLoggerAdminManageInput(
-                action=BusLoggerAdminManageAction.remove, system_index=1, bus_type=BusType.CAN
-            )
+            BusLoggerAdminManageInput(action=BusLoggerAdminManageAction.remove, system_index=1, bus_type=BusType.CAN)
         )
 
         assert isinstance(result, ErrorEnvelope)
@@ -413,9 +403,7 @@ class TestBusLoggerAdminManage:
 
     @pytest.mark.asyncio
     async def test_rename_returns_renamed_on_success(self) -> None:
-        expected = BusLoggerRenameResult(
-            renamed=True, old_name="CAN Logger", new_name="TxLogger", timestamp_utc=_TS
-        )
+        expected = BusLoggerRenameResult(renamed=True, old_name="CAN Logger", new_name="TxLogger", timestamp_utc=_TS)
         with _patch_svc("rename_logger", return_value=expected):
             from controldesk_mcp.tools.bus_logging.management import bus_logger_admin_manage
 
@@ -510,9 +498,7 @@ class TestBusLoggerQuery:
             from controldesk_mcp.tools.bus_logging.management import bus_logger_query
 
             result = await bus_logger_query(
-                BusLoggerQueryInput(
-                    action=BusLoggerQueryAction.list, system_index=1, bus_type=BusType.CAN
-                )
+                BusLoggerQueryInput(action=BusLoggerQueryAction.list, system_index=1, bus_type=BusType.CAN)
             )
 
         assert isinstance(result, BusLoggerListResult)

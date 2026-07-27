@@ -61,17 +61,14 @@ Before configuring any client, confirm:
 # 2. dSPACE ControlDesk is installed (check registry key exists)
 Get-ItemProperty "HKLM:\SOFTWARE\dSPACE\ControlDesk" -ErrorAction SilentlyContinue
 
-# 3. Python version is >= 3.11
-python --version
-
-# 4. uv is available
-uv --version
+# 3. Released executable starts and reports its version
+C:\path\to\ControlDeskMCP\ControlDeskMCP.exe --version
 ```
 
-If you run the server from this repository, prefer the launcher script path:
-`C:\path\to\ControlDeskMCP\ControlDeskMCP.cmd`
-
-Run `scripts\build\install-wheel.ps1` if you need the exact path printed for you.
+The released-server path is normally:
+`C:\path\to\ControlDeskMCP\ControlDeskMCP.exe`. For a source checkout, use
+`C:\path\to\ControlDeskMCP\ControlDeskMCP.cmd` and ensure Python 3.11+ and
+`uv` are installed.
 
 ---
 
@@ -610,10 +607,10 @@ List the calibration objects available on the main platform.
 Check the VS Code Output panel (`View → Output → MCP (ControlDesk MCP)`) for the
 Python traceback. Common causes:
 
-- `ModuleNotFoundError: No module named 'controldesk_mcp'` — the package is not installed;
-  reinstall with `scripts\build\install-wheel.ps1`.
-- `ImportError: No module named 'win32com'` — the `pywin32` dependency is missing;
-  run `pip install pywin32` in the same environment.
+- `ModuleNotFoundError: No module named 'controldesk_mcp'` or
+  `ImportError: No module named 'win32com'` — the source launcher was selected
+  without its local environment. Use `ControlDeskMCP.exe` for a release install,
+  or run `uv sync` in the repository before using `ControlDeskMCP.cmd`.
 
 ### Claude Desktop: tools visible but calls fail silently
 
@@ -666,19 +663,17 @@ Set these in the `env` block of any client config:
 
 ## Cleanup & Uninstall
 
-### Uninstall the server
+### Remove the server
 
-To cleanly remove the ControlDesk MCP server from a machine:
+To remove a released ControlDesk MCP server, delete `ControlDeskMCP.exe` and
+`ControlDeskMCP.exe.sha256`, then remove the corresponding MCP client entry.
 
 ```powershell
-# Recommended: use the uninstall script (handles verification)
-./scripts/build/uninstall-wheel.ps1
-
-# Also remove client configs if needed (with backups)
-./scripts/build/uninstall-wheel.ps1 -RemoveConfigs
+Remove-Item C:\path\to\ControlDeskMCP\ControlDeskMCP.exe
+Remove-Item C:\path\to\ControlDeskMCP\ControlDeskMCP.exe.sha256
 ```
 
-Or manually:
+For a source checkout, remove its local environment:
 
 ```powershell
 # Remove the local uv-managed environment
@@ -703,9 +698,6 @@ Remove-Item "$env:APPDATA\Claude\claude_desktop_config.json"
 # Cursor (global)
 Remove-Item "$env:USERPROFILE\.cursor\mcp.json"
 ```
-
-> **Note:** Use `scripts/build/uninstall-wheel.ps1 -RemoveConfigs` instead — it creates
-> backups (with timestamp) in case you need to restore.
 
 ### Verify complete removal
 

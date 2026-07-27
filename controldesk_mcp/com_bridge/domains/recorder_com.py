@@ -151,9 +151,7 @@ def add_signal(app: Any, connection_path: str) -> dict[str, Any]:
         recorder = _get_recorder(app)
         meas_signals = app.MeasurementDataManagement.MeasurementConfiguration.Signals
         if not meas_signals.Contains(connection_path):
-            raise BridgeOperationError(
-                f"Signal '{connection_path}' not found in measurement configuration"
-            )
+            raise BridgeOperationError(f"Signal '{connection_path}' not found in measurement configuration")
         sig = meas_signals.Item(connection_path)
         recorder.Signals.Insert(sig)
         return {
@@ -164,9 +162,7 @@ def add_signal(app: Any, connection_path: str) -> dict[str, Any]:
     except BridgeOperationError:
         raise
     except Exception as exc:
-        raise BridgeOperationError(
-            f"Failed to add signal '{connection_path}' to main recorder: {exc}"
-        ) from exc
+        raise BridgeOperationError(f"Failed to add signal '{connection_path}' to main recorder: {exc}") from exc
 
 
 # ── Tool 3: remove_signal ─────────────────────────────────────────────────────
@@ -187,9 +183,7 @@ def remove_signal(app: Any, connection_path: str) -> dict[str, Any]:
             "timestamp_utc": _timestamp_utc(),
         }
     except Exception as exc:
-        raise BridgeOperationError(
-            f"Failed to remove signal '{connection_path}' from main recorder: {exc}"
-        ) from exc
+        raise BridgeOperationError(f"Failed to remove signal '{connection_path}' from main recorder: {exc}") from exc
 
 
 # ── Tool 4: list_signals (transient) ─────────────────────────────────────────

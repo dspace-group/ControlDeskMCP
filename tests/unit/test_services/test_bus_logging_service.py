@@ -68,9 +68,7 @@ class TestCreateLogger:
             from controldesk_mcp.services.bus_logging_service import create_logger
 
             result = await create_logger(
-                BusLoggerCreateInput(
-                    logger_name="CANRecorder", system_index=0, bus_type=BusType.CAN
-                )
+                BusLoggerCreateInput(logger_name="CANRecorder", system_index=0, bus_type=BusType.CAN)
             )
 
         assert result["logger_name"] == "CANRecorder"
@@ -87,9 +85,7 @@ class TestCreateLogger:
             from controldesk_mcp.services.bus_logging_service import create_logger
 
             result = await create_logger(
-                BusLoggerCreateInput(
-                    logger_name="CANRecorder", system_index=0, bus_type=BusType.CAN
-                )
+                BusLoggerCreateInput(logger_name="CANRecorder", system_index=0, bus_type=BusType.CAN)
             )
 
         assert "error_code" in result
@@ -148,9 +144,7 @@ class TestClearAllLoggers:
 
         from controldesk_mcp.services.bus_logging_service import clear_all_loggers
 
-        result = await clear_all_loggers(
-            BusLoggerClearAllInput(confirm=False, system_index=0, bus_type=BusType.CAN)
-        )
+        result = await clear_all_loggers(BusLoggerClearAllInput(confirm=False, system_index=0, bus_type=BusType.CAN))
 
         assert result["cleared"] is False
 
@@ -174,9 +168,7 @@ class TestClearAllLoggers:
         ):
             from controldesk_mcp.services.bus_logging_service import clear_all_loggers
 
-            result = await clear_all_loggers(
-                BusLoggerClearAllInput(confirm=True, system_index=0, bus_type=BusType.CAN)
-            )
+            result = await clear_all_loggers(BusLoggerClearAllInput(confirm=True, system_index=0, bus_type=BusType.CAN))
 
         assert result["cleared"] is True
 
@@ -197,9 +189,7 @@ class TestDryRunCreateLogger:
             from controldesk_mcp.services.bus_logging_service import dry_run_create_logger
 
             result = await dry_run_create_logger(
-                BusLoggerCreateInput(
-                    logger_name="CANRecorder", system_index=0, bus_type=BusType.CAN, dry_run=True
-                )
+                BusLoggerCreateInput(logger_name="CANRecorder", system_index=0, bus_type=BusType.CAN, dry_run=True)
             )
 
         assert result["dry_run"] is True
@@ -227,9 +217,7 @@ class TestDryRunCreateLogger:
             from controldesk_mcp.services.bus_logging_service import dry_run_create_logger
 
             result = await dry_run_create_logger(
-                BusLoggerCreateInput(
-                    logger_name="CANRecorder", system_index=0, bus_type=BusType.CAN, dry_run=True
-                )
+                BusLoggerCreateInput(logger_name="CANRecorder", system_index=0, bus_type=BusType.CAN, dry_run=True)
             )
 
         assert result["would_execute"] is False

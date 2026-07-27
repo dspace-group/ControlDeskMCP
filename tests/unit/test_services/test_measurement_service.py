@@ -93,9 +93,7 @@ class TestSignalAdd:
         ):
             from controldesk_mcp.services.measurement_service import signal_add
 
-            result = await signal_add(
-                MeasurementSignalAddInput(connection_path="XCP(5ms)://control_out")
-            )
+            result = await signal_add(MeasurementSignalAddInput(connection_path="XCP(5ms)://control_out"))
 
         assert result["added"] is True
         assert result["connection_path"] == "XCP(5ms)://control_out"
@@ -111,9 +109,7 @@ class TestSignalAdd:
         ):
             from controldesk_mcp.services.measurement_service import signal_add
 
-            result = await signal_add(
-                MeasurementSignalAddInput(connection_path="XCP(5ms)://control_out")
-            )
+            result = await signal_add(MeasurementSignalAddInput(connection_path="XCP(5ms)://control_out"))
 
         assert result.get("category") is not None
 
@@ -139,9 +135,7 @@ class TestSignalRemove:
         ):
             from controldesk_mcp.services.measurement_service import signal_remove
 
-            result = await signal_remove(
-                MeasurementSignalRemoveInput(connection_path="XCP(5ms)://control_out")
-            )
+            result = await signal_remove(MeasurementSignalRemoveInput(connection_path="XCP(5ms)://control_out"))
 
         assert result["removed"] is True
 
@@ -156,9 +150,7 @@ class TestSignalRemove:
         ):
             from controldesk_mcp.services.measurement_service import signal_remove
 
-            result = await signal_remove(
-                MeasurementSignalRemoveInput(connection_path="XCP(5ms)://control_out")
-            )
+            result = await signal_remove(MeasurementSignalRemoveInput(connection_path="XCP(5ms)://control_out"))
 
         assert result.get("category") is not None
 
@@ -211,9 +203,7 @@ class TestConfigureBuffer:
         ):
             from controldesk_mcp.services.measurement_service import configure_buffer
 
-            result = await configure_buffer(
-                MeasurementConfigureBufferInput(buffer_size_seconds=10.0)
-            )
+            result = await configure_buffer(MeasurementConfigureBufferInput(buffer_size_seconds=10.0))
 
         assert result["configured"] is True
         assert result["buffer_size_seconds"] == 10.0
@@ -229,9 +219,7 @@ class TestConfigureBuffer:
         ):
             from controldesk_mcp.services.measurement_service import configure_buffer
 
-            result = await configure_buffer(
-                MeasurementConfigureBufferInput(buffer_size_seconds=10.0)
-            )
+            result = await configure_buffer(MeasurementConfigureBufferInput(buffer_size_seconds=10.0))
 
         assert result.get("category") is not None
 
@@ -503,9 +491,7 @@ class TestConfigureTriggerBasedCondition:
             )
 
             result = await configure_trigger_based_condition(
-                TriggerConditionTriggerBasedInput(
-                    condition_type="start", rule_name="StartCondition"
-                )
+                TriggerConditionTriggerBasedInput(condition_type="start", rule_name="StartCondition")
             )
 
         assert result["configured"] is True
@@ -620,9 +606,7 @@ class TestImportRecording:
         ):
             from controldesk_mcp.services.measurement_service import import_recording
 
-            result = await import_recording(
-                MeasurementImportRecordingInput(import_path="C:\\archives\\old.mf4")
-            )
+            result = await import_recording(MeasurementImportRecordingInput(import_path="C:\\archives\\old.mf4"))
 
         assert result["imported"] is True
 
@@ -920,9 +904,7 @@ class TestAddRaster:
         ):
             from controldesk_mcp.services.measurement_service import add_raster
 
-            result = await add_raster(
-                MeasurementRasterAddInput(platform_name="XCP", raster_interval_ms=5.0)
-            )
+            result = await add_raster(MeasurementRasterAddInput(platform_name="XCP", raster_interval_ms=5.0))
 
         assert result["added"] is True
         assert result["raster_interval_ms"] == 5.0
@@ -981,9 +963,7 @@ class TestRemoveRaster:
         ):
             from controldesk_mcp.services.measurement_service import remove_raster
 
-            result = await remove_raster(
-                MeasurementRasterRemoveInput(platform_name="XCP", raster_name="XCP_5ms")
-            )
+            result = await remove_raster(MeasurementRasterRemoveInput(platform_name="XCP", raster_name="XCP_5ms"))
 
         assert result["removed"] is True
 
@@ -998,9 +978,7 @@ class TestRemoveRaster:
         ):
             from controldesk_mcp.services.measurement_service import remove_raster
 
-            result = await remove_raster(
-                MeasurementRasterRemoveInput(platform_name="XCP", raster_name="XCP_5ms")
-            )
+            result = await remove_raster(MeasurementRasterRemoveInput(platform_name="XCP", raster_name="XCP_5ms"))
 
         assert result.get("category") is not None
 
@@ -1028,9 +1006,7 @@ class TestConfigureSettings:
         ):
             from controldesk_mcp.services.measurement_service import configure_settings
 
-            result = await configure_settings(
-                MeasurementConfigureSettingsInput(data_pool_path="C:\\MeasurementData")
-            )
+            result = await configure_settings(MeasurementConfigureSettingsInput(data_pool_path="C:\\MeasurementData"))
 
         assert result["configured"] is True
 
@@ -1057,9 +1033,7 @@ class TestRemoveBookmark:
         ):
             from controldesk_mcp.services.measurement_service import remove_bookmark
 
-            result = await remove_bookmark(
-                MeasurementBookmarkRemoveInput(recording_index=0, bookmark_index=1)
-            )
+            result = await remove_bookmark(MeasurementBookmarkRemoveInput(recording_index=0, bookmark_index=1))
 
         assert result["removed"] is True
         assert result["bookmark_index"] == 1
@@ -1075,8 +1049,6 @@ class TestRemoveBookmark:
         ):
             from controldesk_mcp.services.measurement_service import remove_bookmark
 
-            result = await remove_bookmark(
-                MeasurementBookmarkRemoveInput(recording_index=0, bookmark_index=1)
-            )
+            result = await remove_bookmark(MeasurementBookmarkRemoveInput(recording_index=0, bookmark_index=1))
 
         assert result.get("category") is not None

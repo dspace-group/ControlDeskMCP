@@ -303,9 +303,7 @@ class TestDryRunQuitApplication:
         ):
             from controldesk_mcp.services.application_service import dry_run_quit_application
 
-            result = await dry_run_quit_application(
-                AppQuitInput(save_all_projects=False, dry_run=True)
-            )
+            result = await dry_run_quit_application(AppQuitInput(save_all_projects=False, dry_run=True))
 
         assert result["would_execute"] is True
         assert result["current_state"]["is_modified"] is True
@@ -337,9 +335,7 @@ class TestDryRunQuitApplication:
         with patch(
             "controldesk_mcp.services.project_service.project_get_info",
             new_callable=AsyncMock,
-            return_value=ErrorEnvelope(
-                error_code="E001", category="UNKNOWN", message="no project", retryable=False
-            ),
+            return_value=ErrorEnvelope(error_code="E001", category="UNKNOWN", message="no project", retryable=False),
         ):
             from controldesk_mcp.services.application_service import dry_run_quit_application
 

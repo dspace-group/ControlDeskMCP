@@ -325,9 +325,7 @@ class TestBusMonitorManage:
 
     @pytest.mark.asyncio
     async def test_rename_returns_renamed_on_success(self) -> None:
-        expected = BusMonitorRenameResult(
-            old_name="CANMonitor", new_name="RxMonitor", timestamp_utc=_TS
-        )
+        expected = BusMonitorRenameResult(old_name="CANMonitor", new_name="RxMonitor", timestamp_utc=_TS)
         with _patch_svc("rename_monitor", return_value=expected):
             from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_manage
 
@@ -416,9 +414,7 @@ class TestBusMonitorQuery:
             from controldesk_mcp.tools.bus_monitor.monitoring import bus_monitor_query
 
             result = await bus_monitor_query(
-                BusMonitorQueryInput(
-                    action=BusMonitorQueryAction.list, system_index=1, bus_type=BusType.CAN
-                )
+                BusMonitorQueryInput(action=BusMonitorQueryAction.list, system_index=1, bus_type=BusType.CAN)
             )
 
         assert isinstance(result, BusMonitorListResult)

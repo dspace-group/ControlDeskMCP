@@ -211,9 +211,7 @@ async def app_window_manage(
                 message="visible is required when action='set_visible'.",
                 recovery_hint="Set visible=True to show the window or visible=False to hide it.",
             )
-        data = await application_service.set_window_visible(
-            AppSetWindowVisibleInput(visible=params.visible)
-        )
+        data = await application_service.set_window_visible(AppSetWindowVisibleInput(visible=params.visible))
         data_dict = _to_dict(data)
         if "error_code" in data_dict:
             return ErrorEnvelope(**{k: v for k, v in data_dict.items() if k != "markdown"})
@@ -234,9 +232,7 @@ async def app_window_manage(
                 message="window_state is required when action='set_state'.",
                 recovery_hint="Set window_state to one of: Normal, Maximized, Minimized, Hidden.",
             )
-        data = await application_service.set_window_state(
-            AppSetWindowStateInput(window_state=params.window_state)
-        )
+        data = await application_service.set_window_state(AppSetWindowStateInput(window_state=params.window_state))
         data_dict = _to_dict(data)
         if "error_code" in data_dict:
             return ErrorEnvelope(**{k: v for k, v in data_dict.items() if k != "markdown"})

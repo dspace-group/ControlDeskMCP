@@ -107,9 +107,7 @@ class TestVariableRead:
         with _patch_svc("read_scalar_variable", return_value=expected):
             from controldesk_mcp.tools.variable_management.management import variable_read
 
-            result = await variable_read(
-                VariableReadInput(read_type=VariableReadType.scalar, variable_name="f_Kp_1")
-            )
+            result = await variable_read(VariableReadInput(read_type=VariableReadType.scalar, variable_name="f_Kp_1"))
 
         assert isinstance(result, VariableReadScalarResult)
         assert result["value"] == 0.5
@@ -136,9 +134,7 @@ class TestVariableRead:
         with _patch_svc("read_curve_variable", return_value=expected):
             from controldesk_mcp.tools.variable_management.management import variable_read
 
-            result = await variable_read(
-                VariableReadInput(read_type=VariableReadType.curve, variable_name="FuelCurve")
-            )
+            result = await variable_read(VariableReadInput(read_type=VariableReadType.curve, variable_name="FuelCurve"))
 
         assert isinstance(result, VariableReadCurveResult)
         assert result["variable_type"] == "Curve"
@@ -166,9 +162,7 @@ class TestVariableRead:
         with _patch_svc("read_map_variable", return_value=expected):
             from controldesk_mcp.tools.variable_management.management import variable_read
 
-            result = await variable_read(
-                VariableReadInput(read_type=VariableReadType.map, variable_name="FuelMap")
-            )
+            result = await variable_read(VariableReadInput(read_type=VariableReadType.map, variable_name="FuelMap"))
 
         assert isinstance(result, VariableReadMapResult)
         assert result["variable_type"] == "Map"
@@ -246,9 +240,7 @@ class TestVariableRead:
         with _patch_svc("read_scalar_variable", return_value=_ERROR):
             from controldesk_mcp.tools.variable_management.management import variable_read
 
-            result = await variable_read(
-                VariableReadInput(read_type=VariableReadType.scalar, variable_name="f_Kp_1")
-            )
+            result = await variable_read(VariableReadInput(read_type=VariableReadType.scalar, variable_name="f_Kp_1"))
 
         assert isinstance(result, ErrorEnvelope)
 
@@ -287,9 +279,7 @@ class TestVariableWrite:
     async def test_scalar_missing_params(self) -> None:
         from controldesk_mcp.tools.variable_management.management import variable_write
 
-        result = await variable_write(
-            VariableWriteInput(action=VariableWriteAction.scalar, variable_name="f_Kp_1")
-        )
+        result = await variable_write(VariableWriteInput(action=VariableWriteAction.scalar, variable_name="f_Kp_1"))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -322,9 +312,7 @@ class TestVariableWrite:
     async def test_array_element_missing_params(self) -> None:
         from controldesk_mcp.tools.variable_management.management import variable_write
 
-        result = await variable_write(
-            VariableWriteInput(action=VariableWriteAction.array_element, value=1.0)
-        )
+        result = await variable_write(VariableWriteInput(action=VariableWriteAction.array_element, value=1.0))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -355,9 +343,7 @@ class TestVariableWrite:
     async def test_string_missing_params(self) -> None:
         from controldesk_mcp.tools.variable_management.management import variable_write
 
-        result = await variable_write(
-            VariableWriteInput(action=VariableWriteAction.string, value="test")
-        )
+        result = await variable_write(VariableWriteInput(action=VariableWriteAction.string, value="test"))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -390,9 +376,7 @@ class TestVariableWrite:
     async def test_curve_missing_params(self) -> None:
         from controldesk_mcp.tools.variable_management.management import variable_write
 
-        result = await variable_write(
-            VariableWriteInput(action=VariableWriteAction.curve, variable_name="FuelCurve")
-        )
+        result = await variable_write(VariableWriteInput(action=VariableWriteAction.curve, variable_name="FuelCurve"))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -425,9 +409,7 @@ class TestVariableWrite:
     async def test_map_missing_params(self) -> None:
         from controldesk_mcp.tools.variable_management.management import variable_write
 
-        result = await variable_write(
-            VariableWriteInput(action=VariableWriteAction.map, variable_name="FuelMap")
-        )
+        result = await variable_write(VariableWriteInput(action=VariableWriteAction.map, variable_name="FuelMap"))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -493,9 +475,7 @@ class TestVariableList:
     async def test_list_array_elements_missing_variable_name(self) -> None:
         from controldesk_mcp.tools.variable_management.management import variable_list
 
-        result = await variable_list(
-            VariableListInput(action=VariableListAction.list_array_elements)
-        )
+        result = await variable_list(VariableListInput(action=VariableListAction.list_array_elements))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -540,9 +520,7 @@ class TestDataSetManage:
         with _patch_svc("activate_working_page", return_value=expected):
             from controldesk_mcp.tools.variable_management.management import data_set_manage
 
-            result = await data_set_manage(
-                DataSetManageInput(action=DataSetManageAction.activate_working_page)
-            )
+            result = await data_set_manage(DataSetManageInput(action=DataSetManageAction.activate_working_page))
 
         assert isinstance(result, DataSetActivateWorkingPageResult)
         assert result["activated"] is True
@@ -554,9 +532,7 @@ class TestDataSetManage:
         with _patch_svc("activate_reference_page", return_value=expected):
             from controldesk_mcp.tools.variable_management.management import data_set_manage
 
-            result = await data_set_manage(
-                DataSetManageInput(action=DataSetManageAction.activate_reference_page)
-            )
+            result = await data_set_manage(DataSetManageInput(action=DataSetManageAction.activate_reference_page))
 
         assert isinstance(result, DataSetActivateReferencePageResult)
         assert result["activated"] is True
@@ -566,9 +542,7 @@ class TestDataSetManage:
         with _patch_svc("activate_working_page", return_value=_ERROR):
             from controldesk_mcp.tools.variable_management.management import data_set_manage
 
-            result = await data_set_manage(
-                DataSetManageInput(action=DataSetManageAction.activate_working_page)
-            )
+            result = await data_set_manage(DataSetManageInput(action=DataSetManageAction.activate_working_page))
 
         assert isinstance(result, ErrorEnvelope)
 
@@ -753,9 +727,7 @@ class TestVariableDiscover:
 
         result = await variable_discover(AsyncMock())
 
-        vd_tool = next(
-            t for t in result["tools"] if t["tool_name"] == "variable_description_manage"
-        )
+        vd_tool = next(t for t in result["tools"] if t["tool_name"] == "variable_description_manage")
         assert "list" in vd_tool["actions"]
         assert "activate" in vd_tool["actions"]
         assert "remove" in vd_tool["actions"]

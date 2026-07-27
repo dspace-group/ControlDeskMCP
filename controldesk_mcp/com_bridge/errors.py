@@ -77,9 +77,7 @@ class BridgeNotInstalledError(BridgeError):
         *,
         error_code: str = "BRIDGE_NOT_INSTALLED",
         retryable: bool = False,
-        recovery_hint: str = (
-            "Install ControlDesk or set the CONTROLDESK_VERSION environment variable."
-        ),
+        recovery_hint: str = ("Install ControlDesk or set the CONTROLDESK_VERSION environment variable."),
         hresult: int | None = None,
     ) -> None:
         super().__init__(
@@ -100,9 +98,7 @@ class BridgeVersionError(BridgeError):
         *,
         error_code: str = "COM_VERSION_MISMATCH",
         retryable: bool = False,
-        recovery_hint: str = (
-            "Verify the ControlDesk version or clear CONTROLDESK_VERSION to auto-detect."
-        ),
+        recovery_hint: str = ("Verify the ControlDesk version or clear CONTROLDESK_VERSION to auto-detect."),
         hresult: int | None = None,
     ) -> None:
         super().__init__(
@@ -189,9 +185,7 @@ class BridgeCircuitOpenError(BridgeError):
         *,
         error_code: str = "CIRCUIT_OPEN",
         retryable: bool = True,
-        recovery_hint: str = (
-            "Wait 30 s and retry, or call start_controldesk to reset the connection."
-        ),
+        recovery_hint: str = ("Wait 30 s and retry, or call start_controldesk to reset the connection."),
         hresult: int | None = None,
     ) -> None:
         super().__init__(

@@ -132,9 +132,7 @@ def _get_monitors(
     physical_bus_access_index: int,
 ) -> Any:
     """Return the Monitors collection from a PhysicalBusAccess."""
-    pba = _get_physical_bus_access(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    pba = _get_physical_bus_access(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     try:
         return pba.Monitors
     except Exception as exc:
@@ -150,9 +148,7 @@ def _get_monitor_by_name(
     physical_bus_access_index: int = 0,
 ) -> Any:
     """Retrieve a specific monitor by name from the Monitors collection."""
-    monitors = _get_monitors(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    monitors = _get_monitors(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     try:
         count = int(monitors.Count)
     except Exception as exc:
@@ -185,9 +181,7 @@ def create_monitor(
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
     """Create a new monitor on the specified physical bus access."""
-    monitors = _get_monitors(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    monitors = _get_monitors(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     try:
         monitor = monitors.Add(monitor_name)
         return {
@@ -325,9 +319,7 @@ def list_monitors(
     physical_bus_access_index: int = 0,
 ) -> list[dict[str, Any]]:
     """Enumerate all monitors on a physical bus access."""
-    monitors = _get_monitors(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    monitors = _get_monitors(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     try:
         count = int(monitors.Count)
     except Exception as exc:
@@ -393,9 +385,7 @@ def clear_all_monitors(
     physical_bus_access_index: int = 0,
 ) -> dict[str, Any]:
     """Remove all monitors from a physical bus access."""
-    monitors = _get_monitors(
-        app, system_index, bus_platform_index, bus_type, physical_bus_access_index
-    )
+    monitors = _get_monitors(app, system_index, bus_platform_index, bus_type, physical_bus_access_index)
     try:
         count = int(monitors.Count)
         monitors.Clear()
@@ -469,9 +459,7 @@ def save_monitor_data_with_time_axis(
     except BridgePreconditionError:
         raise
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IBnMonitor", method="SaveDataWithTimeAxisSelection"
-        ) from exc
+        raise map_com_error(exc, interface="IBnMonitor", method="SaveDataWithTimeAxisSelection") from exc
 
 
 # ── load_monitor_data ─────────────────────────────────────────────────────────

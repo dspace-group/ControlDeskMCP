@@ -61,9 +61,7 @@ class TestCreateMonitor:
             from controldesk_mcp.services.bus_monitor_service import create_monitor
 
             result = await create_monitor(
-                BusMonitorCreateInput(
-                    monitor_name="CANMonitor", system_index=0, bus_type=BusType.CAN
-                )
+                BusMonitorCreateInput(monitor_name="CANMonitor", system_index=0, bus_type=BusType.CAN)
             )
 
         assert result["monitor_name"] == "CANMonitor"
@@ -81,9 +79,7 @@ class TestCreateMonitor:
             from controldesk_mcp.services.bus_monitor_service import create_monitor
 
             result = await create_monitor(
-                BusMonitorCreateInput(
-                    monitor_name="CANMonitor", system_index=0, bus_type=BusType.CAN
-                )
+                BusMonitorCreateInput(monitor_name="CANMonitor", system_index=0, bus_type=BusType.CAN)
             )
 
         assert "error_code" in result
@@ -106,9 +102,7 @@ class TestStartMonitor:
             from controldesk_mcp.services.bus_monitor_service import start_monitor
 
             result = await start_monitor(
-                BusMonitorStartInput(
-                    monitor_name="CANMonitor", system_index=0, bus_type=BusType.CAN
-                )
+                BusMonitorStartInput(monitor_name="CANMonitor", system_index=0, bus_type=BusType.CAN)
             )
 
         assert result["monitor_name"] == "CANMonitor"
@@ -146,9 +140,7 @@ class TestClearAllMonitors:
 
         from controldesk_mcp.services.bus_monitor_service import clear_all_monitors
 
-        result = await clear_all_monitors(
-            BusMonitorClearAllInput(confirm=False, system_index=0, bus_type=BusType.CAN)
-        )
+        result = await clear_all_monitors(BusMonitorClearAllInput(confirm=False, system_index=0, bus_type=BusType.CAN))
 
         assert result.get("cleared") is False or "aborted" in str(result).lower()
 
@@ -169,9 +161,7 @@ class TestDryRunCreateMonitor:
             from controldesk_mcp.services.bus_monitor_service import dry_run_create_monitor
 
             result = await dry_run_create_monitor(
-                BusMonitorCreateInput(
-                    monitor_name="CANMonitor", system_index=0, bus_type=BusType.CAN, dry_run=True
-                )
+                BusMonitorCreateInput(monitor_name="CANMonitor", system_index=0, bus_type=BusType.CAN, dry_run=True)
             )
 
         assert result["would_execute"] is True
@@ -196,9 +186,7 @@ class TestDryRunCreateMonitor:
             from controldesk_mcp.services.bus_monitor_service import dry_run_create_monitor
 
             result = await dry_run_create_monitor(
-                BusMonitorCreateInput(
-                    monitor_name="CANMonitor", system_index=0, bus_type=BusType.CAN, dry_run=True
-                )
+                BusMonitorCreateInput(monitor_name="CANMonitor", system_index=0, bus_type=BusType.CAN, dry_run=True)
             )
 
         assert result["would_execute"] is False

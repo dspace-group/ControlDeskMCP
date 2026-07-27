@@ -118,9 +118,7 @@ async def layout_save(name: str) -> LayoutSaveResult | ErrorEnvelope:
 async def layout_close(name: str, save_before_close: bool) -> LayoutCloseResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.layout_com.layout_close, app, name, save_before_close
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.layout_com.layout_close, app, name, save_before_close)
         return LayoutCloseResult(
             closed=True,
             name=result["name"],
@@ -175,9 +173,7 @@ async def layout_get_info(name: str) -> LayoutGetInfoResult | ErrorEnvelope:
 async def layout_configure(name: str, editing_mode: str) -> LayoutConfigureResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.layout_com.layout_configure, app, name, editing_mode
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.layout_com.layout_configure, app, name, editing_mode)
         return LayoutConfigureResult(
             configured=True,
             name=result["name"],
@@ -195,9 +191,7 @@ async def layout_configure(name: str, editing_mode: str) -> LayoutConfigureResul
 async def layout_export(export_path: str) -> LayoutExportResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.layout_com.layout_export, app, export_path
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.layout_com.layout_export, app, export_path)
         return LayoutExportResult(
             exported=True,
             layout_name=result["layout_name"],
@@ -215,9 +209,7 @@ async def layout_export(export_path: str) -> LayoutExportResult | ErrorEnvelope:
 async def layout_import(import_path: str) -> LayoutImportResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.layout_com.layout_import, app, import_path
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.layout_com.layout_import, app, import_path)
         return LayoutImportResult(
             imported=True,
             layout_name=result["layout_name"],

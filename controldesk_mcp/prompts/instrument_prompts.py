@@ -35,11 +35,7 @@ def manage_instrument_workflow(
         if layout_name
         else "Ensure a layout is active first (use layout_manage(action='activate'))."
     )
-    instr_arg = (
-        f"instrument_name='{instrument_name}'"
-        if instrument_name
-        else "instrument_name='<your_instrument>'"
-    )
+    instr_arg = f"instrument_name='{instrument_name}'" if instrument_name else "instrument_name='<your_instrument>'"
 
     return [
         {

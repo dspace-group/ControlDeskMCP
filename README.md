@@ -12,10 +12,6 @@ ControlDesk project and experiment workflow.
 ## Prerequisites
 
 - Windows with dSPACE ControlDesk installed and licensed
-- A 64-bit Python 3.11 or newer installation
-- `uv`, the Python package and project manager used by the command launcher.
-  Install it from the official Astral documentation:
-  <https://docs.astral.sh/uv/getting-started/installation/>
 - An MCP client, such as Visual Studio Code, Cursor, Claude Code, or Claude Desktop
 
 Set `CONTROLDESK_VERSION` to a version such as `2026-A` when a specific
@@ -24,8 +20,31 @@ installation.
 
 ## Installation
 
+### Released executable
+
+1. Download `ControlDeskMCP.exe` and `ControlDeskMCP.exe.sha256` from the
+   required GitHub release.
+2. Verify the download:
+
+    ```powershell
+    (Get-FileHash .\ControlDeskMCP.exe -Algorithm SHA256).Hash
+    ```
+
+    Compare the result with `ControlDeskMCP.exe.sha256` from the same release.
+
+3. Configure the MCP client to execute the downloaded `ControlDeskMCP.exe`.
+
+The executable contains the Python runtime and server dependencies. It does not
+require a separate Python or `uv` installation.
+
+### Source checkout
+
+Use this workflow only when developing or running a local checkout. Install a
+64-bit Python 3.11 or newer and `uv` from
+<https://docs.astral.sh/uv/getting-started/installation/>.
+
 1. Clone the repository and open its root folder.
-2. Create the project environment and install the runtime dependencies:
+2. Create the project environment and install runtime dependencies:
 
     ```powershell
     uv sync
@@ -45,11 +64,12 @@ intentionally with `uv lock` whenever declared dependencies change.
 ## Using With an MCP Client
 
 1. In your MCP client, add a new **stdio** MCP server.
-2. Configure the server to call [ControlDeskMCP.cmd](ControlDeskMCP.cmd). The
-   launcher uses `uv` in the repository directory and starts `python -m controldesk_mcp.main`.
+2. Configure the server to call the released executable. For a source checkout,
+   use [ControlDeskMCP.cmd](ControlDeskMCP.cmd), which starts the server through
+   `uv` from the repository directory.
 
     ```powershell
-    C:\path\to\ControlDeskMCP\ControlDeskMCP.cmd
+    C:\path\to\ControlDeskMCP\ControlDeskMCP.exe
     ```
 
     For example, configure the server in `.vscode/mcp.json` as follows:
@@ -59,7 +79,7 @@ intentionally with `uv lock` whenever declared dependencies change.
         "servers": {
             "controlDesk": {
                 "type": "stdio",
-                "command": "${workspaceFolder}/ControlDeskMCP.cmd",
+                "command": "C:/path/to/ControlDeskMCP/ControlDeskMCP.exe",
                 "args": [],
                 "cwd": "${workspaceFolder}"
             }
@@ -80,9 +100,8 @@ intentionally with `uv lock` whenever declared dependencies change.
 3. Reload or reconnect MCP servers in the client.
 
 The workspace configuration in [.vscode/mcp.json](.vscode/mcp.json) is useful
-for development. For a cloned checkout used outside VS Code, prefer the
-`ControlDeskMCP.cmd` configuration above because it resolves the repository
-location itself.
+for source development. A released executable can be placed in a stable
+directory and referenced by its absolute path.
 
 ## Typical ControlDesk Workflow
 
@@ -115,6 +134,44 @@ retryability indicator, and recovery hint.
 
 The complete, current catalog is available through the MCP resources
 `controldesk://server/tool-catalog` and `controldesk://server/tool-groups`.
+
+## Dynamic Tool Discovery
+
+ControlDesk MCP uses a **two-tier tool model** to keep the LLM's context window lean:
+
+| Tier                            | Description                                                                               |
+| ------------------------------- | ----------------------------------------------------------------------------------------- |
+| **MAIN tools** (always visible) | Entry points, discovery tools, and lifecycle operations — always present in `tools/list`. |
+| **ADD-ON tools** (on-demand)    | Per-domain helper tools, loaded only after a `*_discover` call activates that domain.     |
+
+When an ADD-ON domain is activated the server emits a `notifications/tools/list_changed`
+notification so clients that support it (VS Code Copilot, Claude Code, etc.) refresh their
+tool list automatically.
+
+**TTL eviction:** an idle ADD-ON domain is evicted after `TOOL_TTL_SECONDS` (default: 120 s)
+of inactivity. Stateful domains (`bus_logging`, `bus_monitor`, `bus_replay`, `measurement`,
+`recorder`) are **never** auto-evicted while a session is running.
+
+**Typical sequence:** call `*_discover` to activate a domain → use its ADD-ON tools →
+the domain expires when unused; call `*_discover` again to reactivate if needed.
+
+## Server Verification
+
+The following commands run without a live ControlDesk installation:
+
+```powershell
+# Print the server version
+ControlDeskMCP.cmd --version
+
+# List all registered tools
+ControlDeskMCP.cmd --list-tools
+
+# List all registered resources
+ControlDeskMCP.cmd --list-resources
+
+# List all registered prompts
+ControlDeskMCP.cmd --list-prompts
+```
 
 ## Development
 

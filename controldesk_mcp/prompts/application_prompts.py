@@ -56,11 +56,9 @@ def manage_application_window(
                 f"   (normal, minimized, maximized).\n"
                 f"4. "
                 + (
-                    "Call `app_set_fullscreen` with enabled=True to maximize "
-                    "ControlDesk to full screen."
+                    "Call `app_set_fullscreen` with enabled=True to maximize ControlDesk to full screen."
                     if fullscreen
-                    else f"Call `app_set_window_state` with state='{window_state}' to "
-                    f"adjust the window. {state_hint}"
+                    else f"Call `app_set_window_state` with state='{window_state}' to adjust the window. {state_hint}"
                 )
                 + "\n"
                 "5. If exact placement is required: call `app_set_window_position` with "

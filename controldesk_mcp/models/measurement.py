@@ -191,8 +191,7 @@ class MeasurementConfigureBufferInput(BaseModel):
     warning_time_seconds: float = Field(
         default=3.0,
         description=(
-            "If warning_enabled is True, alert when buffer has less than this many seconds "
-            "remaining. Defaults to 3.0."
+            "If warning_enabled is True, alert when buffer has less than this many seconds remaining. Defaults to 3.0."
         ),
         examples=[3.0, 5.0],
     )
@@ -218,9 +217,7 @@ class TriggerRuleCreateInput(BaseModel):
     """Input for trigger_rule_create."""
 
     rule_name: str = Field(
-        description=(
-            "Unique name for the trigger rule (e.g., 'StartCondition', 'HighThrottleEvent')."
-        ),
+        description=("Unique name for the trigger rule (e.g., 'StartCondition', 'HighThrottleEvent')."),
         examples=["StartCondition", "HighThrottleEvent"],
     )
     expression: str = Field(
@@ -257,10 +254,7 @@ class TriggerConditionTimeLimitInput(BaseModel):
         examples=[True, False],
     )
     time_limit_seconds: float = Field(
-        description=(
-            "Duration in seconds after which to stop recording (e.g., 10.0). "
-            "Ignored if enabled is False."
-        ),
+        description=("Duration in seconds after which to stop recording (e.g., 10.0). Ignored if enabled is False."),
         examples=[10.0, 30.0],
     )
 
@@ -322,16 +316,12 @@ class MeasurementExportRecordingInput(BaseModel):
     """Input for measurement_export_recording."""
 
     recording_index: int = Field(
-        description=(
-            "Zero-based index of the recording in the data pool "
-            "(e.g., 0 for the first recording)."
-        ),
+        description=("Zero-based index of the recording in the data pool (e.g., 0 for the first recording)."),
         examples=[0, 1],
     )
     export_path: str = Field(
         description=(
-            "Full file system path where the MF4 file will be written "
-            "(e.g., 'C:\\\\exports\\\\my_recording.mf4')."
+            "Full file system path where the MF4 file will be written (e.g., 'C:\\\\exports\\\\my_recording.mf4')."
         ),
         examples=["C:\\exports\\my_recording.mf4"],
     )
@@ -351,10 +341,7 @@ class MeasurementImportRecordingInput(BaseModel):
     """Input for measurement_import_recording."""
 
     import_path: str = Field(
-        description=(
-            "Full file system path to the MF4 file to import "
-            "(e.g., 'C:\\\\archives\\\\old_recording.mf4')."
-        ),
+        description=("Full file system path to the MF4 file to import (e.g., 'C:\\\\archives\\\\old_recording.mf4')."),
         examples=["C:\\archives\\old_recording.mf4"],
     )
 
@@ -368,9 +355,7 @@ class MeasurementBookmarkAddInput(BaseModel):
     """Input for measurement_bookmark_add."""
 
     title: str = Field(
-        description=(
-            "Short title for the bookmark (e.g., 'Throttle spike', 'System error detected')."
-        ),
+        description=("Short title for the bookmark (e.g., 'Throttle spike', 'System error detected')."),
         examples=["Throttle spike", "System error detected"],
     )
     description: str = Field(
@@ -384,10 +369,7 @@ class MeasurementBookmarkListInput(BaseModel):
     """Input for measurement_bookmark_list."""
 
     recording_index: int = Field(
-        description=(
-            "Zero-based index of the recording in the data pool "
-            "(e.g., 0 for the first recording)."
-        ),
+        description=("Zero-based index of the recording in the data pool (e.g., 0 for the first recording)."),
         examples=[0, 1],
     )
     limit: int = Field(
@@ -421,8 +403,7 @@ class DataLoggerConfigureInput(BaseModel):
     )
     output_file_path: str = Field(
         description=(
-            "Absolute file path for the output MF4 file "
-            "(e.g., 'C:\\\\Logs\\\\can_log.mf4'). Directory must exist."
+            "Absolute file path for the output MF4 file (e.g., 'C:\\\\Logs\\\\can_log.mf4'). Directory must exist."
         ),
         examples=["C:\\Logs\\can_log.mf4"],
     )
@@ -489,9 +470,7 @@ class MeasurementRasterAddInput(BaseModel):
         examples=["XCP"],
     )
     raster_interval_ms: float = Field(
-        description=(
-            "Sampling interval in milliseconds (e.g., 1.0 for 1ms, 5.0 for 5ms, 10.0 for 10ms)."
-        ),
+        description=("Sampling interval in milliseconds (e.g., 1.0 for 1ms, 5.0 for 5ms, 10.0 for 10ms)."),
         examples=[1.0, 5.0, 10.0],
     )
 
@@ -797,9 +776,7 @@ class MeasurementQueryInput(BaseModel):
         description=("Read-only action to perform: get_state, get_configuration, or list_signals."),
         examples=["get_state", "get_configuration", "list_signals"],
     )
-    limit: int = Field(
-        default=200, ge=1, le=1000, description="Pagination limit (for list_signals)."
-    )
+    limit: int = Field(default=200, ge=1, le=1000, description="Pagination limit (for list_signals).")
     offset: int = Field(default=0, ge=0, description="Pagination offset (for list_signals).")
 
 
@@ -807,10 +784,7 @@ class MeasurementManageInput(BaseModel):
     """Input for measurement_manage consolidated tool (mutating actions only)."""
 
     action: MeasurementManageAction = Field(
-        description=(
-            "Mutating action to perform: configure_buffer, "
-            "configure_settings, signal_add, or signal_remove."
-        ),
+        description=("Mutating action to perform: configure_buffer, configure_settings, signal_add, or signal_remove."),
         examples=["configure_buffer", "signal_add"],
     )
     connection_path: Optional[str] = Field(
@@ -879,10 +853,7 @@ class TriggerManageInput(BaseModel):
     """Input for trigger_manage consolidated tool."""
 
     action: TriggerManageAction = Field(
-        description=(
-            "Action to perform: rule_create, rule_remove, "
-            "condition_time_limit, or condition_trigger_based."
-        ),
+        description=("Action to perform: rule_create, rule_remove, condition_time_limit, or condition_trigger_based."),
         examples=["rule_create", "condition_time_limit"],
     )
     rule_name: Optional[str] = Field(

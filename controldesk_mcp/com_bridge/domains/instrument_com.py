@@ -338,9 +338,7 @@ def instrument_get_info(app: Any, instrument_name: str) -> dict[str, Any]:
         if signal_mode == "main_variable":
             mv = str(instr.MainVariable) if instr.MainVariable else None
             if mv:
-                connections.append(
-                    {"variable_path": mv, "axis_index": None, "signal_index": None, "color": None}
-                )
+                connections.append({"variable_path": mv, "axis_index": None, "signal_index": None, "color": None})
         elif signal_mode == "plotter_signal":
             plot = instr.ActivePlot
             y_axes = plot.YAxes
@@ -374,15 +372,9 @@ def instrument_get_info(app: Any, instrument_name: str) -> dict[str, Any]:
                         }
                     )
         elif signal_mode == "sub_instrument":
-            mv = (
-                str(instr.ActiveSubInstrument.MainVariable)
-                if instr.ActiveSubInstrument.MainVariable
-                else None
-            )
+            mv = str(instr.ActiveSubInstrument.MainVariable) if instr.ActiveSubInstrument.MainVariable else None
             if mv:
-                connections.append(
-                    {"variable_path": mv, "axis_index": None, "signal_index": None, "color": None}
-                )
+                connections.append({"variable_path": mv, "axis_index": None, "signal_index": None, "color": None})
     except Exception:
         pass  # Signal info is best-effort; don't fail the whole call
 
@@ -540,9 +532,7 @@ def instrument_connect_signal(
             "connection_mode": signal_mode,
         }
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IViConnectableInstrument", method="connect_signal"
-        ) from exc
+        raise map_com_error(exc, interface="IViConnectableInstrument", method="connect_signal") from exc
 
 
 # ── instrument_disconnect_signal ───────────────────────────────────────────────
@@ -608,9 +598,7 @@ def instrument_disconnect_signal(
 
         return {"instrument_name": instrument_name, "variable_path": variable_path}
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IViConnectableInstrument", method="disconnect_signal"
-        ) from exc
+        raise map_com_error(exc, interface="IViConnectableInstrument", method="disconnect_signal") from exc
 
 
 # ── instrument_arrange ─────────────────────────────────────────────────────────

@@ -58,9 +58,7 @@ async def list_windows() -> ToolWindowListResult | ErrorEnvelope:
 async def show_window(params: ToolWindowShowInput) -> ToolWindowShowResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.tool_window_com.show_window, app, params.window_name
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.tool_window_com.show_window, app, params.window_name)
         return ToolWindowShowResult(
             window_name=params.window_name,
             caption=result["caption"],
@@ -99,9 +97,7 @@ async def get_window_state(
 ) -> ToolWindowGetStateResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.tool_window_com.get_window_state, app, params.window_name
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.tool_window_com.get_window_state, app, params.window_name)
         return ToolWindowGetStateResult(
             window_name=params.window_name,
             caption=result["caption"],

@@ -115,9 +115,7 @@ class TestProjectListRecent:
 class TestProjectOpen:
     @pytest.mark.asyncio
     async def test_returns_ok_on_success(self) -> None:
-        mock_result = ProjectOpenResult(
-            name="TestProject", open=True, experiment_count=3, timestamp_utc=_TS
-        )
+        mock_result = ProjectOpenResult(name="TestProject", open=True, experiment_count=3, timestamp_utc=_TS)
         with _patch_svc("project_open", return_value=mock_result):
             from controldesk_mcp.tools.project.management import project_open
 
@@ -158,9 +156,7 @@ class TestProjectRootManage:
     async def test_add_missing_path_returns_missing_param(self) -> None:
         from controldesk_mcp.tools.project.management import project_root_manage
 
-        result = await project_root_manage(
-            ProjectRootManageInput(action=ProjectRootManageAction.add, path=None)
-        )
+        result = await project_root_manage(ProjectRootManageInput(action=ProjectRootManageAction.add, path=None))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -182,9 +178,7 @@ class TestProjectRootManage:
     async def test_activate_missing_path_returns_missing_param(self) -> None:
         from controldesk_mcp.tools.project.management import project_root_manage
 
-        result = await project_root_manage(
-            ProjectRootManageInput(action=ProjectRootManageAction.activate, path=None)
-        )
+        result = await project_root_manage(ProjectRootManageInput(action=ProjectRootManageAction.activate, path=None))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -197,9 +191,7 @@ class TestProjectRootManage:
         with _patch_svc("project_root_list", return_value=mock_result):
             from controldesk_mcp.tools.project.management import project_root_manage
 
-            result = await project_root_manage(
-                ProjectRootManageInput(action=ProjectRootManageAction.list)
-            )
+            result = await project_root_manage(ProjectRootManageInput(action=ProjectRootManageAction.list))
 
         assert result["status"] == "ok"
         assert result["total_count"] == 1
@@ -209,9 +201,7 @@ class TestProjectRootManage:
         with _patch_svc("project_root_list", return_value=_ERROR):
             from controldesk_mcp.tools.project.management import project_root_manage
 
-            result = await project_root_manage(
-                ProjectRootManageInput(action=ProjectRootManageAction.list)
-            )
+            result = await project_root_manage(ProjectRootManageInput(action=ProjectRootManageAction.list))
 
         assert isinstance(result, ErrorEnvelope)
 
@@ -232,9 +222,7 @@ class TestProjectRootManage:
     async def test_remove_missing_path_returns_missing_param(self) -> None:
         from controldesk_mcp.tools.project.management import project_root_manage
 
-        result = await project_root_manage(
-            ProjectRootManageInput(action=ProjectRootManageAction.remove, path=None)
-        )
+        result = await project_root_manage(ProjectRootManageInput(action=ProjectRootManageAction.remove, path=None))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -246,15 +234,11 @@ class TestProjectRootManage:
 class TestProjectManage:
     @pytest.mark.asyncio
     async def test_create_returns_ok(self) -> None:
-        mock_result = ProjectCreateResult(
-            name="Proj", path="C:\\Root\\Proj", created=True, timestamp_utc=_TS
-        )
+        mock_result = ProjectCreateResult(name="Proj", path="C:\\Root\\Proj", created=True, timestamp_utc=_TS)
         with _patch_svc("project_create", return_value=mock_result):
             from controldesk_mcp.tools.project.management import project_manage
 
-            result = await project_manage(
-                ProjectManageInput(action=ProjectManageAction.create, name="Proj")
-            )
+            result = await project_manage(ProjectManageInput(action=ProjectManageAction.create, name="Proj"))
 
         assert isinstance(result, ProjectCreateResult)
         assert result["created"] is True
@@ -263,9 +247,7 @@ class TestProjectManage:
     async def test_create_missing_name_returns_missing_param(self) -> None:
         from controldesk_mcp.tools.project.management import project_manage
 
-        result = await project_manage(
-            ProjectManageInput(action=ProjectManageAction.create, name=None)
-        )
+        result = await project_manage(ProjectManageInput(action=ProjectManageAction.create, name=None))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -296,9 +278,7 @@ class TestProjectManage:
         with _patch_svc("project_close", return_value=mock_result):
             from controldesk_mcp.tools.project.management import project_manage
 
-            result = await project_manage(
-                ProjectManageInput(action=ProjectManageAction.close, save=True)
-            )
+            result = await project_manage(ProjectManageInput(action=ProjectManageAction.close, save=True))
 
         assert isinstance(result, ProjectCloseResult)
         assert result["closed"] is True
@@ -309,9 +289,7 @@ class TestProjectManage:
         with _patch_svc("project_remove", return_value=mock_result):
             from controldesk_mcp.tools.project.management import project_manage
 
-            result = await project_manage(
-                ProjectManageInput(action=ProjectManageAction.remove, name="Proj")
-            )
+            result = await project_manage(ProjectManageInput(action=ProjectManageAction.remove, name="Proj"))
 
         assert isinstance(result, ProjectRemoveResult)
         assert result["removed"] is True
@@ -320,9 +298,7 @@ class TestProjectManage:
     async def test_remove_missing_name_returns_missing_param(self) -> None:
         from controldesk_mcp.tools.project.management import project_manage
 
-        result = await project_manage(
-            ProjectManageInput(action=ProjectManageAction.remove, name=None)
-        )
+        result = await project_manage(ProjectManageInput(action=ProjectManageAction.remove, name=None))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -333,9 +309,7 @@ class TestProjectManage:
         with _patch_svc("project_exists", return_value=mock_result):
             from controldesk_mcp.tools.project.management import project_manage
 
-            result = await project_manage(
-                ProjectManageInput(action=ProjectManageAction.exists, name="Proj")
-            )
+            result = await project_manage(ProjectManageInput(action=ProjectManageAction.exists, name="Proj"))
 
         assert isinstance(result, ProjectExistsResult)
         assert result["exists"] is True
@@ -346,9 +320,7 @@ class TestProjectManage:
         with _patch_svc("project_exists", return_value=mock_result):
             from controldesk_mcp.tools.project.management import project_manage
 
-            result = await project_manage(
-                ProjectManageInput(action=ProjectManageAction.exists, name="Ghost")
-            )
+            result = await project_manage(ProjectManageInput(action=ProjectManageAction.exists, name="Ghost"))
 
         assert result["exists"] is False
 
@@ -356,9 +328,7 @@ class TestProjectManage:
     async def test_exists_missing_name_returns_missing_param(self) -> None:
         from controldesk_mcp.tools.project.management import project_manage
 
-        result = await project_manage(
-            ProjectManageInput(action=ProjectManageAction.exists, name=None)
-        )
+        result = await project_manage(ProjectManageInput(action=ProjectManageAction.exists, name=None))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -386,18 +356,14 @@ class TestProjectManage:
         with _patch_svc("project_configure_settings", return_value=mock_result):
             from controldesk_mcp.tools.project.management import project_manage
 
-            result = await project_manage(
-                ProjectManageInput(action=ProjectManageAction.configure, auto_save=True)
-            )
+            result = await project_manage(ProjectManageInput(action=ProjectManageAction.configure, auto_save=True))
 
         assert isinstance(result, ProjectConfigureSettingsResult)
         assert result["configured"] is True
 
     @pytest.mark.asyncio
     async def test_list_returns_projects(self) -> None:
-        mock_result = ProjectListResult(
-            projects=[{"name": "ProjA"}, {"name": "ProjB"}], count=2, timestamp_utc=_TS
-        )
+        mock_result = ProjectListResult(projects=[{"name": "ProjA"}, {"name": "ProjB"}], count=2, timestamp_utc=_TS)
         with _patch_svc("project_list", return_value=mock_result):
             from controldesk_mcp.tools.project.management import project_manage
 
@@ -422,9 +388,7 @@ class TestProjectManage:
 class TestProjectBackupManage:
     @pytest.mark.asyncio
     async def test_backup_returns_ok(self) -> None:
-        mock_result = ProjectBackupResult(
-            backup_path="C:\\Backups\\proj.zip", success=True, timestamp_utc=_TS
-        )
+        mock_result = ProjectBackupResult(backup_path="C:\\Backups\\proj.zip", success=True, timestamp_utc=_TS)
         with _patch_svc("project_backup", return_value=mock_result):
             from controldesk_mcp.tools.project.management import project_backup_manage
 
@@ -451,9 +415,7 @@ class TestProjectBackupManage:
 
     @pytest.mark.asyncio
     async def test_restore_returns_ok(self) -> None:
-        mock_result = ProjectOpenFromBackupResult(
-            name="RestoredProj", restored=True, timestamp_utc=_TS
-        )
+        mock_result = ProjectOpenFromBackupResult(name="RestoredProj", restored=True, timestamp_utc=_TS)
         with _patch_svc("project_open_from_backup", return_value=mock_result):
             from controldesk_mcp.tools.project.management import project_backup_manage
 
@@ -485,15 +447,11 @@ class TestProjectBackupManage:
 class TestExperimentManage:
     @pytest.mark.asyncio
     async def test_create_returns_ok(self) -> None:
-        mock_result = ExperimentCreateResult(
-            name="Exp1", created=True, is_active=True, timestamp_utc=_TS
-        )
+        mock_result = ExperimentCreateResult(name="Exp1", created=True, is_active=True, timestamp_utc=_TS)
         with _patch_svc("experiment_create", return_value=mock_result):
             from controldesk_mcp.tools.project.management import experiment_manage
 
-            result = await experiment_manage(
-                ExperimentManageInput(action=ExperimentManageAction.create, name="Exp1")
-            )
+            result = await experiment_manage(ExperimentManageInput(action=ExperimentManageAction.create, name="Exp1"))
 
         assert isinstance(result, ExperimentCreateResult)
         assert result["created"] is True
@@ -503,9 +461,7 @@ class TestExperimentManage:
     async def test_create_missing_name_returns_missing_param(self) -> None:
         from controldesk_mcp.tools.project.management import experiment_manage
 
-        result = await experiment_manage(
-            ExperimentManageInput(action=ExperimentManageAction.create, name=None)
-        )
+        result = await experiment_manage(ExperimentManageInput(action=ExperimentManageAction.create, name=None))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -516,9 +472,7 @@ class TestExperimentManage:
         with _patch_svc("experiment_activate", return_value=mock_result):
             from controldesk_mcp.tools.project.management import experiment_manage
 
-            result = await experiment_manage(
-                ExperimentManageInput(action=ExperimentManageAction.activate, name="Exp1")
-            )
+            result = await experiment_manage(ExperimentManageInput(action=ExperimentManageAction.activate, name="Exp1"))
 
         assert isinstance(result, ExperimentActivateResult)
         assert result["activated"] is True
@@ -527,9 +481,7 @@ class TestExperimentManage:
     async def test_activate_missing_name_returns_missing_param(self) -> None:
         from controldesk_mcp.tools.project.management import experiment_manage
 
-        result = await experiment_manage(
-            ExperimentManageInput(action=ExperimentManageAction.activate, name=None)
-        )
+        result = await experiment_manage(ExperimentManageInput(action=ExperimentManageAction.activate, name=None))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -547,15 +499,11 @@ class TestExperimentManage:
 
     @pytest.mark.asyncio
     async def test_list_returns_experiments(self) -> None:
-        mock_result = ExperimentListResult(
-            experiments=[{"name": "Exp1"}, {"name": "Exp2"}], count=2, timestamp_utc=_TS
-        )
+        mock_result = ExperimentListResult(experiments=[{"name": "Exp1"}, {"name": "Exp2"}], count=2, timestamp_utc=_TS)
         with _patch_svc("experiment_list", return_value=mock_result):
             from controldesk_mcp.tools.project.management import experiment_manage
 
-            result = await experiment_manage(
-                ExperimentManageInput(action=ExperimentManageAction.list)
-            )
+            result = await experiment_manage(ExperimentManageInput(action=ExperimentManageAction.list))
 
         assert result["status"] == "ok"
         assert result["total_count"] == 2
@@ -565,9 +513,7 @@ class TestExperimentManage:
         with _patch_svc("experiment_list", return_value=_ERROR):
             from controldesk_mcp.tools.project.management import experiment_manage
 
-            result = await experiment_manage(
-                ExperimentManageInput(action=ExperimentManageAction.list)
-            )
+            result = await experiment_manage(ExperimentManageInput(action=ExperimentManageAction.list))
 
         assert isinstance(result, ErrorEnvelope)
 
@@ -577,9 +523,7 @@ class TestExperimentManage:
         with _patch_svc("experiment_remove", return_value=mock_result):
             from controldesk_mcp.tools.project.management import experiment_manage
 
-            result = await experiment_manage(
-                ExperimentManageInput(action=ExperimentManageAction.remove, name="Exp1")
-            )
+            result = await experiment_manage(ExperimentManageInput(action=ExperimentManageAction.remove, name="Exp1"))
 
         assert isinstance(result, ExperimentRemoveResult)
         assert result["removed"] is True
@@ -588,9 +532,7 @@ class TestExperimentManage:
     async def test_remove_missing_name_returns_missing_param(self) -> None:
         from controldesk_mcp.tools.project.management import experiment_manage
 
-        result = await experiment_manage(
-            ExperimentManageInput(action=ExperimentManageAction.remove, name=None)
-        )
+        result = await experiment_manage(ExperimentManageInput(action=ExperimentManageAction.remove, name=None))
 
         assert isinstance(result, ErrorEnvelope)
         assert result["error_code"] == "MISSING_PARAM"
@@ -601,9 +543,7 @@ class TestExperimentManage:
         with _patch_svc("experiment_get_info", return_value=mock_result):
             from controldesk_mcp.tools.project.management import experiment_manage
 
-            result = await experiment_manage(
-                ExperimentManageInput(action=ExperimentManageAction.get_info)
-            )
+            result = await experiment_manage(ExperimentManageInput(action=ExperimentManageAction.get_info))
 
         assert isinstance(result, ExperimentGetInfoResult)
         assert result["platform_count"] == 2
@@ -615,9 +555,7 @@ class TestExperimentManage:
 class TestExperimentIoManage:
     @pytest.mark.asyncio
     async def test_export_returns_ok(self) -> None:
-        mock_result = ExperimentExportResult(
-            export_path="C:\\Exports\\exp.dsa", success=True, timestamp_utc=_TS
-        )
+        mock_result = ExperimentExportResult(export_path="C:\\Exports\\exp.dsa", success=True, timestamp_utc=_TS)
         with _patch_svc("experiment_export", return_value=mock_result):
             from controldesk_mcp.tools.project.management import experiment_io_manage
 
@@ -701,9 +639,7 @@ class TestExperimentIoManage:
             from controldesk_mcp.tools.project.management import experiment_io_manage
 
             result = await experiment_io_manage(
-                ExperimentIoManageInput(
-                    action=ExperimentIoManageAction.save_as, new_name="Exp_Copy"
-                )
+                ExperimentIoManageInput(action=ExperimentIoManageAction.save_as, new_name="Exp_Copy")
             )
 
         assert isinstance(result, ExperimentSaveAsResult)

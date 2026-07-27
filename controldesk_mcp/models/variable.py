@@ -85,9 +85,7 @@ class VariableGetInfoInput(BaseModel):
     """Input for variable_get_info."""
 
     variable_name: str = Field(
-        description=(
-            "Simple variable name (e.g., 'f_Kp_1') or connection path " "(e.g., 'XCP()://f_Kp_1')."
-        ),
+        description=("Simple variable name (e.g., 'f_Kp_1') or connection path (e.g., 'XCP()://f_Kp_1')."),
         examples=["f_Kp_1", "control_out"],
     )
 
@@ -96,17 +94,13 @@ class VariableReadScalarInput(BaseModel):
     """Input for variable_read_scalar."""
 
     variable_name: str = Field(
-        description=(
-            "Name or connection path of the variable "
-            "(e.g., 'control_out', 'XCP(5ms)://control_out')."
-        ),
+        description=("Name or connection path of the variable (e.g., 'control_out', 'XCP(5ms)://control_out')."),
         examples=["control_out", "f_Kp_1"],
     )
     value_format: ValueFormat = Field(
         default=ValueFormat.Converted,
         description=(
-            "Defaults to 'Converted' (physical value in engineering units). "
-            "Set to 'Source' for raw hardware value."
+            "Defaults to 'Converted' (physical value in engineering units). Set to 'Source' for raw hardware value."
         ),
     )
 
@@ -115,10 +109,7 @@ class VariableWriteScalarInput(BaseModel):
     """Input for variable_write_scalar."""
 
     variable_name: str = Field(
-        description=(
-            "Name or connection path of the parameter "
-            "(e.g., 'f_Kp_1', 'XCP()://SignalAmplitude')."
-        ),
+        description=("Name or connection path of the parameter (e.g., 'f_Kp_1', 'XCP()://SignalAmplitude')."),
         examples=["f_Kp_1", "SignalAmplitude"],
     )
     value: Union[float, int, str] = Field(
@@ -148,10 +139,7 @@ class VariableReadCurveInput(BaseModel):
     )
     value_format: ValueFormat = Field(
         default=ValueFormat.Converted,
-        description=(
-            "Defaults to 'Converted' (physical/engineering values). "
-            "Set to 'Source' for raw hardware values."
-        ),
+        description=("Defaults to 'Converted' (physical/engineering values). Set to 'Source' for raw hardware values."),
     )
 
 
@@ -163,10 +151,7 @@ class VariableWriteCurveInput(BaseModel):
         examples=["abs_sinp2_cosp2_table"],
     )
     function_values: list[float] = Field(
-        description=(
-            "New function values (Y-axis lookup table). "
-            "Must be same length as current function values."
-        ),
+        description=("New function values (Y-axis lookup table). Must be same length as current function values."),
     )
     axis_values: Optional[list[float]] = Field(
         default=None,
@@ -186,10 +171,7 @@ class VariableReadMapInput(BaseModel):
     """Input for variable_read_map."""
 
     variable_name: str = Field(
-        description=(
-            "Name or connection path of the map variable "
-            "(e.g., 'Rec2Sine_z_table', 'XCP()://FuelMap')."
-        ),
+        description=("Name or connection path of the map variable (e.g., 'Rec2Sine_z_table', 'XCP()://FuelMap')."),
         examples=["Rec2Sine_z_table"],
     )
     value_format: ValueFormat = Field(
@@ -213,15 +195,11 @@ class VariableWriteMapInput(BaseModel):
     )
     x_axis_values: Optional[list[float]] = Field(
         default=None,
-        description=(
-            "Optional. New X-axis values. Leave undefined to keep current X-axis unchanged."
-        ),
+        description=("Optional. New X-axis values. Leave undefined to keep current X-axis unchanged."),
     )
     y_axis_values: Optional[list[float]] = Field(
         default=None,
-        description=(
-            "Optional. New Y-axis values. Leave undefined to keep current Y-axis unchanged."
-        ),
+        description=("Optional. New Y-axis values. Leave undefined to keep current Y-axis unchanged."),
     )
     value_format: ValueFormat = Field(
         default=ValueFormat.Converted,
@@ -233,10 +211,7 @@ class VariableListArrayElementsInput(BaseModel):
     """Input for variable_list_array_elements."""
 
     variable_name: str = Field(
-        description=(
-            "Name or connection path of the array variable "
-            "(e.g., 'ParamVector', 'XCP()://ParamVector')."
-        ),
+        description=("Name or connection path of the array variable (e.g., 'ParamVector', 'XCP()://ParamVector')."),
         examples=["ParamVector"],
     )
     limit: int = Field(
@@ -257,8 +232,7 @@ class VariableReadArrayElementInput(BaseModel):
 
     element_path: str = Field(
         description=(
-            "Fully qualified path to the array element "
-            "(e.g., 'XCP()://ParamVector[0]', 'XCP(5ms)://MeasureArray[3]')."
+            "Fully qualified path to the array element (e.g., 'XCP()://ParamVector[0]', 'XCP(5ms)://MeasureArray[3]')."
         ),
         examples=["XCP()://ParamVector[0]"],
     )
@@ -312,10 +286,7 @@ class VariableDescriptionListInput(BaseModel):
     """Input for variable_description_list."""
 
     platform_name: str = Field(
-        description=(
-            "Name of the platform to query (e.g., 'XCP'). "
-            "Use platform_list to enumerate valid names."
-        ),
+        description=("Name of the platform to query (e.g., 'XCP'). Use platform_list to enumerate valid names."),
         examples=["XCP", "SCALEXIO_1"],
     )
     limit: int = Field(
@@ -340,8 +311,7 @@ class VariableDescriptionActivateInput(BaseModel):
     )
     variable_description_name: str = Field(
         description=(
-            "Name of the variable description to activate (e.g., 'myecu_v2'). "
-            "Must match a loaded description name."
+            "Name of the variable description to activate (e.g., 'myecu_v2'). Must match a loaded description name."
         ),
         examples=["myecu_v2"],
     )
@@ -356,8 +326,7 @@ class VariableDescriptionRemoveInput(BaseModel):
     )
     variable_description_name: str = Field(
         description=(
-            "Name of the variable description to remove (e.g., 'myecu'). "
-            "The active description cannot be removed."
+            "Name of the variable description to remove (e.g., 'myecu'). The active description cannot be removed."
         ),
         examples=["myecu"],
     )
@@ -367,10 +336,7 @@ class VariableReadStringInput(BaseModel):
     """Input for variable_read_string."""
 
     variable_name: str = Field(
-        description=(
-            "Name or connection path of the string variable "
-            "(e.g., 'ECU_Label', 'XCP()://CalibID')."
-        ),
+        description=("Name or connection path of the string variable (e.g., 'ECU_Label', 'XCP()://CalibID')."),
         examples=["ECU_Label"],
     )
 
@@ -747,9 +713,7 @@ class VariableListInput(BaseModel):
     variable_name: Optional[str] = None
     group_path: str = ""
     offset: int = Field(default=0, ge=0, description="Zero-based offset for pagination.")
-    limit: int = Field(
-        default=200, ge=1, le=1000, description="Maximum number of records to return per call."
-    )
+    limit: int = Field(default=200, ge=1, le=1000, description="Maximum number of records to return per call.")
 
 
 class DataSetManageInput(BaseModel):
@@ -765,9 +729,7 @@ class VariableDescriptionManageInput(BaseModel):
     platform_name: Optional[str] = None
     variable_description_name: Optional[str] = None
     offset: int = Field(default=0, ge=0, description="Zero-based offset for pagination.")
-    limit: int = Field(
-        default=200, ge=1, le=1000, description="Maximum number of records to return per call."
-    )
+    limit: int = Field(default=200, ge=1, le=1000, description="Maximum number of records to return per call.")
 
 
 # ── Discover result models ─────────────────────────────────────────────────────

@@ -152,9 +152,7 @@ async def recorder_main_manage(
                 error_code="MISSING_PARAM",
                 category="INPUT_VALIDATION",
                 message="base_filename is required for configure.",
-                recovery_hint=(
-                    "Set base_filename to the output MF4 file name (e.g., 'Recording.mf4')."
-                ),
+                recovery_hint=("Set base_filename to the output MF4 file name (e.g., 'Recording.mf4')."),
             )
         return await recorder_service.configure_main_recorder(
             RecorderMainConfigureInput(
@@ -222,12 +220,7 @@ async def recorder_query(params: RecorderQueryInput) -> RecorderMainGetStateResu
 )
 async def recorder_signal_manage(
     params: RecorderSignalManageInput,
-) -> (
-    RecorderMainAddSignalResult
-    | RecorderMainRemoveSignalResult
-    | RecorderMainListSignalsResult
-    | ErrorEnvelope
-):
+) -> RecorderMainAddSignalResult | RecorderMainRemoveSignalResult | RecorderMainListSignalsResult | ErrorEnvelope:
     action = params.action
 
     if action == RecorderSignalManageAction.add_signal:
@@ -238,9 +231,7 @@ async def recorder_signal_manage(
                 message="connection_path is required for add_signal.",
                 recovery_hint="Set connection_path to the signal connection path.",
             )
-        return await recorder_service.add_signal(
-            RecorderMainAddSignalInput(connection_path=params.connection_path)
-        )
+        return await recorder_service.add_signal(RecorderMainAddSignalInput(connection_path=params.connection_path))
 
     if action == RecorderSignalManageAction.remove_signal:
         if params.connection_path is None:
@@ -255,14 +246,10 @@ async def recorder_signal_manage(
         )
 
     # list_signals
-    result = await recorder_service.list_signals(
-        RecorderMainListSignalsInput(offset=params.offset, limit=params.limit)
-    )
+    result = await recorder_service.list_signals(RecorderMainListSignalsInput(offset=params.offset, limit=params.limit))
     if isinstance(result, ErrorEnvelope):
         return result
-    return RecorderMainListSignalsResult(
-        **paginate(result.model_dump(), params.offset, params.limit, "signals")
-    )
+    return RecorderMainListSignalsResult(**paginate(result.model_dump(), params.offset, params.limit, "signals"))
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -309,9 +296,7 @@ async def recorder_config_manage(
             )
         )
     # import_signals
-    return await recorder_service.import_signals_from_file(
-        RecorderMainImportSignalsInput(full_path=params.full_path)
-    )
+    return await recorder_service.import_signals_from_file(RecorderMainImportSignalsInput(full_path=params.full_path))
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -349,8 +334,7 @@ async def recorder_discover(ctx: Context) -> RecorderDiscoverResult:
             ToolActionEntry(
                 tool_name="recorder_signal_manage",
                 purpose=(
-                    "Add or remove signals from the recorder signal list, "
-                    "or list all currently assigned signals."
+                    "Add or remove signals from the recorder signal list, or list all currently assigned signals."
                 ),
                 actions=["add_signal", "remove_signal", "list_signals"],
                 required_params_per_action={

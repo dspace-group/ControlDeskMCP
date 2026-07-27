@@ -118,9 +118,7 @@ async def instrument_add(
 async def instrument_remove(instrument_name: str) -> InstrumentRemoveResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        await com_bridge.dispatch(
-            com_bridge.domains.instrument_com.instrument_remove, app, instrument_name
-        )
+        await com_bridge.dispatch(com_bridge.domains.instrument_com.instrument_remove, app, instrument_name)
         return InstrumentRemoveResult(
             removed=True,
             instrument_name=instrument_name,
@@ -137,9 +135,7 @@ async def instrument_remove(instrument_name: str) -> InstrumentRemoveResult | Er
 async def instrument_get_info(instrument_name: str) -> InstrumentGetInfoResult | ErrorEnvelope:
     try:
         app = await com_bridge.dispatch(_get_app)
-        result = await com_bridge.dispatch(
-            com_bridge.domains.instrument_com.instrument_get_info, app, instrument_name
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.instrument_com.instrument_get_info, app, instrument_name)
         connections = [SignalConnection(**c) for c in result["signal_connections"]]
         return InstrumentGetInfoResult(
             instrument_name=result["instrument_name"],

@@ -17,8 +17,8 @@ Write-Host '--- Ruff lint (E/F/W/I/N/T20) ---' -ForegroundColor Cyan
 & uv run ruff check controldesk_mcp tests
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-Write-Host '--- Black format check ---' -ForegroundColor Cyan
-& uv run black --check controldesk_mcp tests
+Write-Host '--- Ruff format check ---' -ForegroundColor Cyan
+& uv run ruff format --check controldesk_mcp tests
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 # ── MCP tool decorator validation ─────────────────────────────────────────────

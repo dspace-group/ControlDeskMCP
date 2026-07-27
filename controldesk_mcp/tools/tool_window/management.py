@@ -83,9 +83,7 @@ async def tool_window_list(params: ToolWindowListInput) -> ToolWindowListResult 
     result = await tool_window_service.list_windows()
     if isinstance(result, ErrorEnvelope):
         return result
-    return ToolWindowListResult(
-        **paginate(result.model_dump(), params.offset, params.limit, "windows")
-    )
+    return ToolWindowListResult(**paginate(result.model_dump(), params.offset, params.limit, "windows"))
 
 
 # ── Tool 2 — tool_window_show ─────────────────────────────────────────────────
@@ -142,8 +140,7 @@ async def tool_window_manage(
             category="INPUT_VALIDATION",
             message="window_name is required for all tool_window_manage actions.",
             recovery_hint=(
-                "Set window_name to the exact caption of the panel "
-                "(use tool_window_list to discover names)."
+                "Set window_name to the exact caption of the panel (use tool_window_list to discover names)."
             ),
         )
 
@@ -161,10 +158,7 @@ async def tool_window_manage(
             error_code="MISSING_PARAM",
             category="INPUT_VALIDATION",
             message="dock_state is required for set_dock_state.",
-            recovery_hint=(
-                "Set dock_state to one of: Docked, DockedAsDocument, "
-                "AutoHidden, Floating, Closed."
-            ),
+            recovery_hint=("Set dock_state to one of: Docked, DockedAsDocument, AutoHidden, Floating, Closed."),
         )
     return await tool_window_service.set_window_dock_state(
         ToolWindowSetDockStateInput(
@@ -202,37 +196,25 @@ async def tool_window_manage(
 )
 async def tool_window_query(
     params: ToolWindowQueryInput,
-) -> (
-    ToolWindowGetStateResult
-    | ToolWindowCheckExistsResult
-    | ToolWindowGetGeometryResult
-    | ErrorEnvelope
-):
+) -> ToolWindowGetStateResult | ToolWindowCheckExistsResult | ToolWindowGetGeometryResult | ErrorEnvelope:
     if params.window_name is None:
         return ErrorEnvelope(
             error_code="MISSING_PARAM",
             category="INPUT_VALIDATION",
             message="window_name is required for all tool_window_query actions.",
             recovery_hint=(
-                "Set window_name to the exact caption of the panel "
-                "(use tool_window_list to discover names)."
+                "Set window_name to the exact caption of the panel (use tool_window_list to discover names)."
             ),
         )
 
     if params.action == ToolWindowQueryAction.get_state:
-        return await tool_window_service.get_window_state(
-            ToolWindowGetStateInput(window_name=params.window_name)
-        )
+        return await tool_window_service.get_window_state(ToolWindowGetStateInput(window_name=params.window_name))
 
     if params.action == ToolWindowQueryAction.check_exists:
-        return await tool_window_service.check_window_exists(
-            ToolWindowCheckExistsInput(window_name=params.window_name)
-        )
+        return await tool_window_service.check_window_exists(ToolWindowCheckExistsInput(window_name=params.window_name))
 
     # get_geometry
-    return await tool_window_service.get_window_geometry(
-        ToolWindowGetGeometryInput(window_name=params.window_name)
-    )
+    return await tool_window_service.get_window_geometry(ToolWindowGetGeometryInput(window_name=params.window_name))
 
 
 # ═══════════════════════════════════════════════════════════════════════════════

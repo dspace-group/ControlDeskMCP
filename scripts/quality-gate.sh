@@ -8,8 +8,8 @@ if ! command -v uv >/dev/null 2>&1; then
 fi
 
 uv sync --extra dev
-uv run ruff check sources tests
-uv run black --check sources tests
+uv run ruff check controldesk_mcp tests
+uv run ruff format --check controldesk_mcp tests
 uv run python scripts/validate_mcp_tools.py
 uv run pytest tests/unit/ -q -m "not integration"
 

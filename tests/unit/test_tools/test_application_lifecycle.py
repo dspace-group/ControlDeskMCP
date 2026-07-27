@@ -63,9 +63,7 @@ class TestAppStartOrAttach:
         conn = _make_connected_bridge()
 
         with (
-            patch(
-                "controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
-            ),
+            patch("controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False),
             patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
                 "controldesk_mcp.com_bridge.dispatch",
@@ -119,9 +117,7 @@ class TestAppStartOrAttach:
             return None
 
         with (
-            patch(
-                "controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
-            ),
+            patch("controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False),
             patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch("controldesk_mcp.com_bridge.dispatch", side_effect=_capture),
             patch("controldesk_mcp.services.application_service.get_settings", return_value=_default_cfg()),
@@ -145,18 +141,14 @@ class TestAppStartOrAttach:
             return None
 
         with (
-            patch(
-                "controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
-            ),
+            patch("controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False),
             patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch("controldesk_mcp.com_bridge.dispatch", side_effect=_capture),
             patch("controldesk_mcp.services.application_service.get_settings", return_value=_default_cfg()),
         ):
             from controldesk_mcp.tools.application.lifecycle import start_controldesk
 
-            result = await start_controldesk(
-                AppStartOrAttachInput(initial_window_state=MainWindowState.Maximized)
-            )
+            result = await start_controldesk(AppStartOrAttachInput(initial_window_state=MainWindowState.Maximized))
 
         assert result["window_state"] == "Maximized"
         assert application_com.set_window_state in dispatched_fns
@@ -214,9 +206,7 @@ class TestAppStartOrAttach:
             return None
 
         with (
-            patch(
-                "controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
-            ),
+            patch("controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False),
             patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch("controldesk_mcp.com_bridge.dispatch", side_effect=_capture),
             patch("controldesk_mcp.services.application_service.get_settings", return_value=_default_cfg()),
@@ -310,9 +300,7 @@ class TestAppStartOrAttach:
             patch("controldesk_mcp.com_bridge.get_connected_version", return_value="2026-A"),
             patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch("controldesk_mcp.com_bridge.dispatch", side_effect=_capture),
-            patch(
-                "controldesk_mcp.com_bridge.disconnect_for_switch", new_callable=AsyncMock
-            ) as mock_disconnect,
+            patch("controldesk_mcp.com_bridge.disconnect_for_switch", new_callable=AsyncMock) as mock_disconnect,
             patch(
                 "controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=True
             ) as mock_ensure,
@@ -390,9 +378,7 @@ class TestAppStartOrAttach:
         with (
             patch("controldesk_mcp.com_bridge.is_version_installed", return_value=True),
             patch("controldesk_mcp.com_bridge.get_connected_version", return_value="2024-A"),
-            patch(
-                "controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
-            ),
+            patch("controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False),
             patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
                 "controldesk_mcp.com_bridge.dispatch",
@@ -453,9 +439,7 @@ class TestAppSetWindowVisible:
     async def test_missing_visible_returns_error(self) -> None:
         from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
-        result = await app_window_manage(
-            AppWindowManageInput(action=AppWindowManageAction.set_visible)
-        )
+        result = await app_window_manage(AppWindowManageInput(action=AppWindowManageAction.set_visible))
         assert result["error_code"] == "MISSING_PARAM"
 
 
@@ -477,9 +461,7 @@ class TestAppGetWindowVisibility:
         ):
             from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
-            result = await app_window_manage(
-                AppWindowManageInput(action=AppWindowManageAction.get_visibility)
-            )
+            result = await app_window_manage(AppWindowManageInput(action=AppWindowManageAction.get_visibility))
 
         assert result["is_visible"] is True
         assert "timestamp_utc" in result
@@ -492,9 +474,7 @@ class TestAppGetWindowVisibility:
         ):
             from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
-            result = await app_window_manage(
-                AppWindowManageInput(action=AppWindowManageAction.get_visibility)
-            )
+            result = await app_window_manage(AppWindowManageInput(action=AppWindowManageAction.get_visibility))
 
         assert "error_code" in result
 
@@ -549,9 +529,7 @@ class TestAppSetWindowState:
     async def test_missing_window_state_returns_error(self) -> None:
         from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
-        result = await app_window_manage(
-            AppWindowManageInput(action=AppWindowManageAction.set_state)
-        )
+        result = await app_window_manage(AppWindowManageInput(action=AppWindowManageAction.set_state))
         assert result["error_code"] == "MISSING_PARAM"
 
 
@@ -573,9 +551,7 @@ class TestAppGetWindowState:
         ):
             from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
-            result = await app_window_manage(
-                AppWindowManageInput(action=AppWindowManageAction.get_state)
-            )
+            result = await app_window_manage(AppWindowManageInput(action=AppWindowManageAction.get_state))
 
         assert result["window_state"] == "Maximized"
         assert result["is_visible"] is True
@@ -589,9 +565,7 @@ class TestAppGetWindowState:
         ):
             from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
-            result = await app_window_manage(
-                AppWindowManageInput(action=AppWindowManageAction.get_state)
-            )
+            result = await app_window_manage(AppWindowManageInput(action=AppWindowManageAction.get_state))
 
         assert "error_code" in result
 
@@ -681,9 +655,7 @@ class TestAppGetLogs:
                     "status": "ok",
                     "file_pattern": "ControlDesk*.log",
                     "searched_folders": ["C:\\Users\\u\\AppData\\Local\\dSPACE\\ControlDesk\\Log"],
-                    "resolved_log_folders": [
-                        "C:\\Users\\u\\AppData\\Local\\dSPACE\\ControlDesk\\Log"
-                    ],
+                    "resolved_log_folders": ["C:\\Users\\u\\AppData\\Local\\dSPACE\\ControlDesk\\Log"],
                     "files": [
                         {
                             "path": "C:\\Users\\u\\AppData\\Local\\dSPACE\\ControlDesk\\Log\\ControlDesk.20260702.log",
@@ -786,9 +758,7 @@ class TestAppSetWindowPosition:
         from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
         result = await app_window_manage(
-            AppWindowManageInput(
-                action=AppWindowManageAction.set_position, left=0, top=0, width=800
-            )
+            AppWindowManageInput(action=AppWindowManageAction.set_position, left=0, top=0, width=800)
         )
         assert result["error_code"] == "MISSING_PARAM"
 

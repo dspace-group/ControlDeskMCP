@@ -157,13 +157,9 @@ async def calibration_manage(
     | ErrorEnvelope
 ):
     if params.action == CalibrationManageAction.activate_reference_page:
-        return await calibration_service.activate_reference_page(
-            CalibrationActivateReferencePageInput()
-        )
+        return await calibration_service.activate_reference_page(CalibrationActivateReferencePageInput())
     if params.action == CalibrationManageAction.activate_working_page:
-        return await calibration_service.activate_working_page(
-            CalibrationActivateWorkingPageInput()
-        )
+        return await calibration_service.activate_working_page(CalibrationActivateWorkingPageInput())
     # refresh_parameters
     return await calibration_service.refresh_parameters(CalibrationRefreshParametersInput())
 
@@ -263,11 +259,7 @@ async def proposed_calibration_manage(
 )
 async def calibration_page_manage(
     params: CalibrationPageManageInput,
-) -> (
-    CalibrationCopyWorkingPageToReferenceResult
-    | CalibrationCopyReferencePageToWorkingResult
-    | ErrorEnvelope
-):
+) -> CalibrationCopyWorkingPageToReferenceResult | CalibrationCopyReferencePageToWorkingResult | ErrorEnvelope:
     if params.platform_name is None:
         return ErrorEnvelope(
             error_code="MISSING_PARAM",
@@ -320,8 +312,7 @@ async def calibration_discover(ctx: Context) -> CalibrationDiscoverResult:
             ToolActionEntry(
                 tool_name="proposed_calibration_manage",
                 purpose=(
-                    "Manage proposed calibration session lifecycle: "
-                    "start, stop, apply, or cancel a proposed session."
+                    "Manage proposed calibration session lifecycle: start, stop, apply, or cancel a proposed session."
                 ),
                 actions=["start", "stop", "apply", "cancel"],
                 required_params_per_action={
@@ -334,8 +325,7 @@ async def calibration_discover(ctx: Context) -> CalibrationDiscoverResult:
             ToolActionEntry(
                 tool_name="calibration_page_manage",
                 purpose=(
-                    "Copy ECU calibration pages: working-to-reference or "
-                    "reference-to-working (requires platform_name)."
+                    "Copy ECU calibration pages: working-to-reference or reference-to-working (requires platform_name)."
                 ),
                 actions=["copy_working_to_reference", "copy_reference_to_working"],
                 required_params_per_action={
