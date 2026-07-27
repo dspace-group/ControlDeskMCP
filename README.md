@@ -37,11 +37,16 @@ installation.
     uv sync --extra dev
     ```
 
+`uv sync` is the developer workflow and may refresh `uv.lock` when dependency
+metadata changes. The lockfile is committed; CI and release automation use
+locked installs and fail when it needs to be regenerated. Update it
+intentionally with `uv lock` whenever declared dependencies change.
+
 ## Using With an MCP Client
 
 1. In your MCP client, add a new **stdio** MCP server.
 2. Configure the server to call [ControlDeskMCP.cmd](ControlDeskMCP.cmd). The
-   launcher uses `uv` in the repository directory and starts `python -m sources.main`.
+   launcher uses `uv` in the repository directory and starts `python -m controldesk_mcp.main`.
 
     ```powershell
     C:\path\to\ControlDeskMCP\ControlDeskMCP.cmd
@@ -52,10 +57,11 @@ installation.
     ```json
     {
         "servers": {
-            "ControlDesk MCP": {
+            "controlDesk": {
                 "type": "stdio",
-                "command": "C:\\path\\to\\ControlDeskMCP\\ControlDeskMCP.cmd",
-                "args": []
+                "command": "${workspaceFolder}/ControlDeskMCP.cmd",
+                "args": [],
+                "cwd": "${workspaceFolder}"
             }
         }
     }
@@ -161,6 +167,7 @@ uv run pytest -m integration
 - [Client configuration and examples](docs/clients.md)
 - [Server architecture](docs/architecture.md)
 - [Error handling](docs/error-handling.md)
+- [Release verification and artifact policy](docs/release.md)
 - [Contributing guide](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)

@@ -24,8 +24,8 @@ async def load_tools() -> tuple[str, list[Any]]:
     """
     _ensure_project_on_path()
 
-    from sources.server.app import mcp  # noqa: PLC0415
-    import sources.server.registry  # noqa: F401, PLC0415 — registers all @mcp.tool
+    from controldesk_mcp.server.app import mcp  # noqa: PLC0415
+    import controldesk_mcp.server.registry  # noqa: F401, PLC0415 — registers all @mcp.tool
 
     tools = await mcp.list_tools()
     return mcp.name, tools
@@ -37,7 +37,7 @@ def load_tools_sync() -> tuple[str, list[Any]]:
 
 
 def _ensure_project_on_path() -> None:
-    """Add the repository root to sys.path so 'sources' can be imported."""
+    """Add the repository root to sys.path so 'controldesk_mcp' can be imported."""
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     if repo_root not in sys.path:
         sys.path.insert(0, repo_root)

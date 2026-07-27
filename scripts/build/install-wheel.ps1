@@ -305,7 +305,7 @@ if ($entryFound) {
     Write-Host "  Entry point : $entryExe" -ForegroundColor Green
 
     # Verify the package imports correctly (fast; does NOT start the stdio server)
-    $importCheck = & $pythonExe -c "import sources; print('OK')" 2>&1
+    $importCheck = & $pythonExe -c "import controldesk_mcp; print('OK')" 2>&1
     if ($importCheck -match 'OK') {
         Write-Host "  Import check: PASSED" -ForegroundColor Green
     }

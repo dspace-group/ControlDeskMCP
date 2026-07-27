@@ -1,0 +1,13 @@
+{
+    "servers": {
+        "controlDesk": {
+            "type": "stdio",
+            "command": "${workspaceFolder}/ControlDeskMCP.cmd",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "LOG_LEVEL": "INFO"
+            }
+        }
+    }
+}

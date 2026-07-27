@@ -1,4 +1,4 @@
-"""Unit tests for sources.services.project_service.
+"""Unit tests for controldesk_mcp.services.project_service.
 
 Tests mock com_bridge.dispatch; no real COM is invoked.
 """
@@ -9,9 +9,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import sources.com_bridge as bridge
-from sources.com_bridge.errors import BridgeConnectionError, BridgePreconditionError
-from sources.models.project import (
+import controldesk_mcp.com_bridge as bridge
+from controldesk_mcp.com_bridge.errors import BridgeConnectionError, BridgePreconditionError
+from controldesk_mcp.models.project import (
     ProjectOpenInput,
     ProjectRootAddInput,
 )
@@ -22,7 +22,7 @@ from sources.models.project import (
 @pytest.fixture(autouse=True)
 def _reset_bridge():
     bridge._connection = None
-    import sources.com_bridge.sta_thread as _sta
+    import controldesk_mcp.com_bridge.sta_thread as _sta
 
     _sta._sta_thread = None
     yield
@@ -31,7 +31,7 @@ def _reset_bridge():
 
 
 def _make_connected_bridge() -> MagicMock:
-    from sources.com_bridge.connection import ConnectionState
+    from controldesk_mcp.com_bridge.connection import ConnectionState
 
     conn = MagicMock()
     conn.state = ConnectionState.CONNECTED
@@ -51,11 +51,11 @@ class TestProjectRootAdd:
         com_result = {"path": "C:\\Root", "added": True}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.project_service import project_root_add
+            from controldesk_mcp.services.project_service import project_root_add
 
             result = await project_root_add(ProjectRootAddInput(path="C:\\Root"))
 
@@ -68,11 +68,11 @@ class TestProjectRootAdd:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("disconnected"),
         ):
-            from sources.services.project_service import project_root_add
+            from controldesk_mcp.services.project_service import project_root_add
 
             result = await project_root_add(ProjectRootAddInput(path="C:\\Root"))
 
@@ -90,11 +90,11 @@ class TestProjectRootList:
         com_result = [{"path": "C:\\Root1"}]
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.project_service import project_root_list
+            from controldesk_mcp.services.project_service import project_root_list
 
             result = await project_root_list()
 
@@ -105,11 +105,11 @@ class TestProjectRootList:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgePreconditionError("no project"),
         ):
-            from sources.services.project_service import project_root_list
+            from controldesk_mcp.services.project_service import project_root_list
 
             result = await project_root_list()
 
@@ -127,11 +127,11 @@ class TestProjectOpen:
         com_result = {"name": "TestProj", "open": True, "experiment_count": 2}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.project_service import project_open
+            from controldesk_mcp.services.project_service import project_open
 
             result = await project_open(ProjectOpenInput(name="TestProj"))
 
@@ -162,13 +162,13 @@ class TestProjectList:
 
         with (
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[app_mock, com_result],
             ),
             patch("os.scandir", return_value=[]),
         ):
-            from sources.services.project_service import project_list
+            from controldesk_mcp.services.project_service import project_list
 
             result = await project_list()
 
@@ -183,13 +183,13 @@ class TestProjectList:
 
         with (
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[app_mock, []],
             ),
             patch("os.scandir", return_value=[]),
         ):
-            from sources.services.project_service import project_list
+            from controldesk_mcp.services.project_service import project_list
 
             result = await project_list()
 
@@ -201,11 +201,11 @@ class TestProjectList:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("not running"),
         ):
-            from sources.services.project_service import project_list
+            from controldesk_mcp.services.project_service import project_list
 
             result = await project_list()
 
@@ -239,13 +239,13 @@ class TestProjectList:
 
         with (
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[app_mock, com_result],
             ),
             patch("os.scandir", side_effect=_scandir),
         ):
-            from sources.services.project_service import project_list
+            from controldesk_mcp.services.project_service import project_list
 
             result = await project_list()
 
@@ -271,15 +271,15 @@ class TestProjectListRecent:
 
         with (
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[app_mock, com_result],
             ),
             patch("os.path.getmtime", side_effect=fake_getmtime),
             patch("os.scandir", return_value=[]),
         ):
-            from sources.models.project import ProjectListRecentInput
-            from sources.services.project_service import project_list_recent
+            from controldesk_mcp.models.project import ProjectListRecentInput
+            from controldesk_mcp.services.project_service import project_list_recent
 
             result = await project_list_recent(ProjectListRecentInput(limit=10))
 
@@ -299,15 +299,15 @@ class TestProjectListRecent:
 
         with (
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[app_mock, com_result],
             ),
             patch("os.path.getmtime", side_effect=OSError),
             patch("os.scandir", return_value=[]),
         ):
-            from sources.models.project import ProjectListRecentInput
-            from sources.services.project_service import project_list_recent
+            from controldesk_mcp.models.project import ProjectListRecentInput
+            from controldesk_mcp.services.project_service import project_list_recent
 
             result = await project_list_recent(ProjectListRecentInput(limit=2))
 
@@ -342,15 +342,15 @@ class TestProjectListRecent:
 
         with (
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[app_mock, com_result],
             ),
             patch("os.path.getmtime", return_value=1000.0),
             patch("os.scandir", side_effect=_scandir),
         ):
-            from sources.models.project import ProjectListRecentInput
-            from sources.services.project_service import project_list_recent
+            from controldesk_mcp.models.project import ProjectListRecentInput
+            from controldesk_mcp.services.project_service import project_list_recent
 
             result = await project_list_recent(ProjectListRecentInput())
 
@@ -361,12 +361,12 @@ class TestProjectListRecent:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("not running"),
         ):
-            from sources.models.project import ProjectListRecentInput
-            from sources.services.project_service import project_list_recent
+            from controldesk_mcp.models.project import ProjectListRecentInput
+            from controldesk_mcp.services.project_service import project_list_recent
 
             result = await project_list_recent(ProjectListRecentInput())
 

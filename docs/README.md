@@ -9,6 +9,8 @@ This directory contains supporting documentation for ControlDesk MCP Server.
   MCP server layers.
 - [Error handling](error-handling.md): Interpret errors and recovery guidance.
 - [MCP Inspector](mcp-inspector.md): Inspect and test the MCP surface locally.
+- [Release verification and artifact policy](release.md): Verify published
+  packages and understand the signing and dependency-notice policy.
 
 ## Project Documents
 

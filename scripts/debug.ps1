@@ -61,8 +61,8 @@ Write-Host ""
 
 # ── Launch ───────────────────────────────────────────────────────────────────
 if ($Transport -eq "http") {
-    uv run python -m sources --transport streamable-http
+    uv run python -m controldesk_mcp --transport streamable-http
 }
 else {
-    uv run python -m sources
+    uv run python -m controldesk_mcp
 }

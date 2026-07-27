@@ -1,4 +1,4 @@
-"""Unit tests for sources.tools.application.lifecycle (consolidated tools)."""
+"""Unit tests for controldesk_mcp.tools.application.lifecycle (consolidated tools)."""
 
 from __future__ import annotations
 
@@ -6,10 +6,10 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import sources.com_bridge as bridge
-from sources.com_bridge.domains import application_com
-from sources.com_bridge.errors import BridgeConnectionError
-from sources.models.application import (
+import controldesk_mcp.com_bridge as bridge
+from controldesk_mcp.com_bridge.domains import application_com
+from controldesk_mcp.com_bridge.errors import BridgeConnectionError
+from controldesk_mcp.models.application import (
     AppGetLogsInput,
     AppStartOrAttachInput,
     AppWindowManageAction,
@@ -24,7 +24,7 @@ from sources.models.application import (
 def _reset_bridge():
     """Reset the com_bridge singleton before and after each test."""
     bridge._connection = None
-    import sources.com_bridge.sta_thread as _sta
+    import controldesk_mcp.com_bridge.sta_thread as _sta
 
     _sta._sta_thread = None
     yield
@@ -37,7 +37,7 @@ def _make_connected_bridge(
     prog_id: str = "ControlDeskNG.Application.2026-A",
 ) -> MagicMock:
     """Return a mock ComConnection in CONNECTED state."""
-    from sources.com_bridge.connection import ConnectionState
+    from controldesk_mcp.com_bridge.connection import ConnectionState
 
     conn = MagicMock()
     conn.state = ConnectionState.CONNECTED
@@ -64,17 +64,17 @@ class TestAppStartOrAttach:
 
         with (
             patch(
-                "sources.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
+                "controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
             ),
-            patch("sources.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[conn.get_app.return_value, None, "2026-A"],
             ),
-            patch("sources.services.application_service.get_settings", return_value=_default_cfg()),
+            patch("controldesk_mcp.services.application_service.get_settings", return_value=_default_cfg()),
         ):
-            from sources.tools.application.lifecycle import start_controldesk
+            from controldesk_mcp.tools.application.lifecycle import start_controldesk
 
             result = await start_controldesk(AppStartOrAttachInput())
 
@@ -91,16 +91,16 @@ class TestAppStartOrAttach:
         conn = _make_connected_bridge()
 
         with (
-            patch("sources.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=True),
-            patch("sources.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=True),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[conn.get_app.return_value, None, "2026-A"],
             ),
-            patch("sources.services.application_service.get_settings", return_value=_default_cfg()),
+            patch("controldesk_mcp.services.application_service.get_settings", return_value=_default_cfg()),
         ):
-            from sources.tools.application.lifecycle import start_controldesk
+            from controldesk_mcp.tools.application.lifecycle import start_controldesk
 
             result = await start_controldesk(AppStartOrAttachInput())
 
@@ -120,13 +120,13 @@ class TestAppStartOrAttach:
 
         with (
             patch(
-                "sources.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
+                "controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
             ),
-            patch("sources.com_bridge.get_connection", return_value=conn),
-            patch("sources.com_bridge.dispatch", side_effect=_capture),
-            patch("sources.services.application_service.get_settings", return_value=_default_cfg()),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.dispatch", side_effect=_capture),
+            patch("controldesk_mcp.services.application_service.get_settings", return_value=_default_cfg()),
         ):
-            from sources.tools.application.lifecycle import start_controldesk
+            from controldesk_mcp.tools.application.lifecycle import start_controldesk
 
             result = await start_controldesk(AppStartOrAttachInput(make_visible=False))
 
@@ -146,13 +146,13 @@ class TestAppStartOrAttach:
 
         with (
             patch(
-                "sources.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
+                "controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
             ),
-            patch("sources.com_bridge.get_connection", return_value=conn),
-            patch("sources.com_bridge.dispatch", side_effect=_capture),
-            patch("sources.services.application_service.get_settings", return_value=_default_cfg()),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.dispatch", side_effect=_capture),
+            patch("controldesk_mcp.services.application_service.get_settings", return_value=_default_cfg()),
         ):
-            from sources.tools.application.lifecycle import start_controldesk
+            from controldesk_mcp.tools.application.lifecycle import start_controldesk
 
             result = await start_controldesk(
                 AppStartOrAttachInput(initial_window_state=MainWindowState.Maximized)
@@ -167,22 +167,22 @@ class TestAppStartOrAttach:
 
         with (
             patch(
-                "sources.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
+                "controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
             ) as mock_ensure,
-            patch("sources.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[conn.get_app.return_value, None, "2025-B"],
             ),
             patch(
-                "sources.services.application_service.get_settings",
+                "controldesk_mcp.services.application_service.get_settings",
                 return_value=_default_cfg(controldesk_version="2026-A"),
             ),
-            patch("sources.com_bridge.is_version_installed", return_value=True),
-            patch("sources.com_bridge.get_connected_version", return_value=""),
+            patch("controldesk_mcp.com_bridge.is_version_installed", return_value=True),
+            patch("controldesk_mcp.com_bridge.get_connected_version", return_value=""),
         ):
-            from sources.tools.application.lifecycle import start_controldesk
+            from controldesk_mcp.tools.application.lifecycle import start_controldesk
 
             await start_controldesk(AppStartOrAttachInput(controldesk_version="2025-B"))
 
@@ -191,11 +191,11 @@ class TestAppStartOrAttach:
     @pytest.mark.asyncio
     async def test_returns_error_envelope_on_cd_error(self) -> None:
         with patch(
-            "sources.com_bridge.ensure_connected",
+            "controldesk_mcp.com_bridge.ensure_connected",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("not running"),
         ):
-            from sources.tools.application.lifecycle import start_controldesk
+            from controldesk_mcp.tools.application.lifecycle import start_controldesk
 
             result = await start_controldesk(AppStartOrAttachInput())
 
@@ -215,13 +215,13 @@ class TestAppStartOrAttach:
 
         with (
             patch(
-                "sources.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
+                "controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
             ),
-            patch("sources.com_bridge.get_connection", return_value=conn),
-            patch("sources.com_bridge.dispatch", side_effect=_capture),
-            patch("sources.services.application_service.get_settings", return_value=_default_cfg()),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.dispatch", side_effect=_capture),
+            patch("controldesk_mcp.services.application_service.get_settings", return_value=_default_cfg()),
         ):
-            from sources.tools.application.lifecycle import start_controldesk
+            from controldesk_mcp.tools.application.lifecycle import start_controldesk
 
             await start_controldesk(AppStartOrAttachInput(make_visible=True))
 
@@ -230,16 +230,16 @@ class TestAppStartOrAttach:
     @pytest.mark.asyncio
     async def test_version_not_installed_returns_error(self) -> None:
         """Requested version not in registry → CD_NOT_INSTALLED error envelope."""
-        from sources.com_bridge.errors import BridgeNotInstalledError
+        from controldesk_mcp.com_bridge.errors import BridgeNotInstalledError
 
         with (
             patch(
-                "sources.com_bridge.normalize_user_version",
+                "controldesk_mcp.com_bridge.normalize_user_version",
                 side_effect=BridgeNotInstalledError("not installed"),
             ),
-            patch("sources.services.application_service.get_settings", return_value=_default_cfg()),
+            patch("controldesk_mcp.services.application_service.get_settings", return_value=_default_cfg()),
         ):
-            from sources.tools.application.lifecycle import start_controldesk
+            from controldesk_mcp.tools.application.lifecycle import start_controldesk
 
             result = await start_controldesk(AppStartOrAttachInput(controldesk_version="2024-A"))
 
@@ -252,23 +252,23 @@ class TestAppStartOrAttach:
 
         with (
             patch(
-                "sources.com_bridge.normalize_user_version",
+                "controldesk_mcp.com_bridge.normalize_user_version",
                 return_value="2026-A",
             ),
-            patch("sources.com_bridge.is_version_installed", return_value=True),
-            patch("sources.com_bridge.get_connected_version", return_value=""),
+            patch("controldesk_mcp.com_bridge.is_version_installed", return_value=True),
+            patch("controldesk_mcp.com_bridge.get_connected_version", return_value=""),
             patch(
-                "sources.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=True
+                "controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=True
             ) as mock_ensure,
-            patch("sources.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[conn.get_app.return_value, None, "2026-A"],
             ),
-            patch("sources.services.application_service.get_settings", return_value=_default_cfg()),
+            patch("controldesk_mcp.services.application_service.get_settings", return_value=_default_cfg()),
         ):
-            from sources.tools.application.lifecycle import start_controldesk
+            from controldesk_mcp.tools.application.lifecycle import start_controldesk
 
             result = await start_controldesk(AppStartOrAttachInput(controldesk_version="2026"))
 
@@ -280,11 +280,11 @@ class TestAppStartOrAttach:
     async def test_version_mismatch_returns_confirmation_required(self) -> None:
         """Different version already running without force flag → confirmation_required."""
         with (
-            patch("sources.com_bridge.is_version_installed", return_value=True),
-            patch("sources.com_bridge.get_connected_version", return_value="2026-A"),
-            patch("sources.services.application_service.get_settings", return_value=_default_cfg()),
+            patch("controldesk_mcp.com_bridge.is_version_installed", return_value=True),
+            patch("controldesk_mcp.com_bridge.get_connected_version", return_value="2026-A"),
+            patch("controldesk_mcp.services.application_service.get_settings", return_value=_default_cfg()),
         ):
-            from sources.tools.application.lifecycle import start_controldesk
+            from controldesk_mcp.tools.application.lifecycle import start_controldesk
 
             result = await start_controldesk(AppStartOrAttachInput(controldesk_version="2024-A"))
 
@@ -306,19 +306,19 @@ class TestAppStartOrAttach:
             return MagicMock()
 
         with (
-            patch("sources.com_bridge.is_version_installed", return_value=True),
-            patch("sources.com_bridge.get_connected_version", return_value="2026-A"),
-            patch("sources.com_bridge.get_connection", return_value=conn),
-            patch("sources.com_bridge.dispatch", side_effect=_capture),
+            patch("controldesk_mcp.com_bridge.is_version_installed", return_value=True),
+            patch("controldesk_mcp.com_bridge.get_connected_version", return_value="2026-A"),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.dispatch", side_effect=_capture),
             patch(
-                "sources.com_bridge.disconnect_for_switch", new_callable=AsyncMock
+                "controldesk_mcp.com_bridge.disconnect_for_switch", new_callable=AsyncMock
             ) as mock_disconnect,
             patch(
-                "sources.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=True
+                "controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=True
             ) as mock_ensure,
-            patch("sources.services.application_service.get_settings", return_value=_default_cfg()),
+            patch("controldesk_mcp.services.application_service.get_settings", return_value=_default_cfg()),
         ):
-            from sources.tools.application.lifecycle import start_controldesk
+            from controldesk_mcp.tools.application.lifecycle import start_controldesk
 
             result = await start_controldesk(
                 AppStartOrAttachInput(controldesk_version="2024-A", force_version_switch=True)
@@ -333,7 +333,7 @@ class TestAppStartOrAttach:
 
     @pytest.mark.asyncio
     async def test_dry_run_delegates_to_preview_without_starting(self) -> None:
-        from sources.models.base import DryRunPreviewResult
+        from controldesk_mcp.models.base import DryRunPreviewResult
 
         preview = DryRunPreviewResult(
             tool="start_controldesk",
@@ -356,17 +356,17 @@ class TestAppStartOrAttach:
 
         with (
             patch(
-                "sources.services.application_service.dry_run_start_or_attach",
+                "controldesk_mcp.services.application_service.dry_run_start_or_attach",
                 new_callable=AsyncMock,
                 return_value=preview,
             ) as mock_dry_run,
             patch(
-                "sources.services.application_service.start_or_attach",
+                "controldesk_mcp.services.application_service.start_or_attach",
                 new_callable=AsyncMock,
                 return_value=None,
             ) as mock_start,
         ):
-            from sources.tools.application.lifecycle import start_controldesk
+            from controldesk_mcp.tools.application.lifecycle import start_controldesk
 
             result = await start_controldesk(
                 AppStartOrAttachInput(
@@ -388,20 +388,20 @@ class TestAppStartOrAttach:
         conn = _make_connected_bridge(version="2024-A")
 
         with (
-            patch("sources.com_bridge.is_version_installed", return_value=True),
-            patch("sources.com_bridge.get_connected_version", return_value="2024-A"),
+            patch("controldesk_mcp.com_bridge.is_version_installed", return_value=True),
+            patch("controldesk_mcp.com_bridge.get_connected_version", return_value="2024-A"),
             patch(
-                "sources.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
+                "controldesk_mcp.com_bridge.ensure_connected", new_callable=AsyncMock, return_value=False
             ),
-            patch("sources.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[conn.get_app.return_value, None, "2024-A"],
             ),
-            patch("sources.services.application_service.get_settings", return_value=_default_cfg()),
+            patch("controldesk_mcp.services.application_service.get_settings", return_value=_default_cfg()),
         ):
-            from sources.tools.application.lifecycle import start_controldesk
+            from controldesk_mcp.tools.application.lifecycle import start_controldesk
 
             result = await start_controldesk(AppStartOrAttachInput(controldesk_version="2024-A"))
 
@@ -418,14 +418,14 @@ class TestAppSetWindowVisible:
         conn = _make_connected_bridge()
 
         with (
-            patch("sources.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[conn.get_app.return_value, None],
             ),
         ):
-            from sources.tools.application.lifecycle import app_window_manage
+            from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
             result = await app_window_manage(
                 AppWindowManageInput(action=AppWindowManageAction.set_visible, visible=True)
@@ -438,10 +438,10 @@ class TestAppSetWindowVisible:
     @pytest.mark.asyncio
     async def test_returns_error_on_cd_error(self) -> None:
         with patch(
-            "sources.com_bridge.get_connection",
+            "controldesk_mcp.com_bridge.get_connection",
             side_effect=BridgeConnectionError("not connected"),
         ):
-            from sources.tools.application.lifecycle import app_window_manage
+            from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
             result = await app_window_manage(
                 AppWindowManageInput(action=AppWindowManageAction.set_visible, visible=True)
@@ -451,7 +451,7 @@ class TestAppSetWindowVisible:
 
     @pytest.mark.asyncio
     async def test_missing_visible_returns_error(self) -> None:
-        from sources.tools.application.lifecycle import app_window_manage
+        from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
         result = await app_window_manage(
             AppWindowManageInput(action=AppWindowManageAction.set_visible)
@@ -468,14 +468,14 @@ class TestAppGetWindowVisibility:
         conn = _make_connected_bridge()
 
         with (
-            patch("sources.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[conn.get_app.return_value, True],
             ),
         ):
-            from sources.tools.application.lifecycle import app_window_manage
+            from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
             result = await app_window_manage(
                 AppWindowManageInput(action=AppWindowManageAction.get_visibility)
@@ -487,10 +487,10 @@ class TestAppGetWindowVisibility:
     @pytest.mark.asyncio
     async def test_returns_error_on_cd_error(self) -> None:
         with patch(
-            "sources.com_bridge.get_connection",
+            "controldesk_mcp.com_bridge.get_connection",
             side_effect=BridgeConnectionError("not connected"),
         ):
-            from sources.tools.application.lifecycle import app_window_manage
+            from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
             result = await app_window_manage(
                 AppWindowManageInput(action=AppWindowManageAction.get_visibility)
@@ -508,14 +508,14 @@ class TestAppSetWindowState:
         conn = _make_connected_bridge()
 
         with (
-            patch("sources.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[conn.get_app.return_value, None],
             ),
         ):
-            from sources.tools.application.lifecycle import app_window_manage
+            from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
             result = await app_window_manage(
                 AppWindowManageInput(
@@ -531,10 +531,10 @@ class TestAppSetWindowState:
     @pytest.mark.asyncio
     async def test_returns_error_on_cd_error(self) -> None:
         with patch(
-            "sources.com_bridge.get_connection",
+            "controldesk_mcp.com_bridge.get_connection",
             side_effect=BridgeConnectionError("not connected"),
         ):
-            from sources.tools.application.lifecycle import app_window_manage
+            from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
             result = await app_window_manage(
                 AppWindowManageInput(
@@ -547,7 +547,7 @@ class TestAppSetWindowState:
 
     @pytest.mark.asyncio
     async def test_missing_window_state_returns_error(self) -> None:
-        from sources.tools.application.lifecycle import app_window_manage
+        from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
         result = await app_window_manage(
             AppWindowManageInput(action=AppWindowManageAction.set_state)
@@ -564,14 +564,14 @@ class TestAppGetWindowState:
         conn = _make_connected_bridge()
 
         with (
-            patch("sources.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[conn.get_app.return_value, "Maximized", True],
             ),
         ):
-            from sources.tools.application.lifecycle import app_window_manage
+            from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
             result = await app_window_manage(
                 AppWindowManageInput(action=AppWindowManageAction.get_state)
@@ -584,10 +584,10 @@ class TestAppGetWindowState:
     @pytest.mark.asyncio
     async def test_returns_error_on_cd_error(self) -> None:
         with patch(
-            "sources.com_bridge.get_connection",
+            "controldesk_mcp.com_bridge.get_connection",
             side_effect=BridgeConnectionError("not connected"),
         ):
-            from sources.tools.application.lifecycle import app_window_manage
+            from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
             result = await app_window_manage(
                 AppWindowManageInput(action=AppWindowManageAction.get_state)
@@ -605,15 +605,15 @@ class TestAppQuit:
         conn = _make_connected_bridge()
 
         with (
-            patch("sources.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[conn.get_app.return_value, None],
             ),
         ):
-            from sources.models.application import AppQuitInput
-            from sources.tools.application.lifecycle import stop_controldesk
+            from controldesk_mcp.models.application import AppQuitInput
+            from controldesk_mcp.tools.application.lifecycle import stop_controldesk
 
             result = await stop_controldesk(AppQuitInput())
 
@@ -623,11 +623,11 @@ class TestAppQuit:
     @pytest.mark.asyncio
     async def test_returns_error_envelope_when_not_connected(self) -> None:
         with patch(
-            "sources.com_bridge.get_connection",
+            "controldesk_mcp.com_bridge.get_connection",
             side_effect=BridgeConnectionError("not connected"),
         ):
-            from sources.models.application import AppQuitInput
-            from sources.tools.application.lifecycle import stop_controldesk
+            from controldesk_mcp.models.application import AppQuitInput
+            from controldesk_mcp.tools.application.lifecycle import stop_controldesk
 
             result = await stop_controldesk(AppQuitInput())
 
@@ -635,8 +635,8 @@ class TestAppQuit:
 
     @pytest.mark.asyncio
     async def test_dry_run_delegates_to_preview_without_quitting(self) -> None:
-        from sources.models.application import AppQuitInput
-        from sources.models.base import DryRunPreviewResult
+        from controldesk_mcp.models.application import AppQuitInput
+        from controldesk_mcp.models.base import DryRunPreviewResult
 
         preview = DryRunPreviewResult(
             tool="stop_controldesk",
@@ -648,17 +648,17 @@ class TestAppQuit:
         )
         with (
             patch(
-                "sources.services.application_service.dry_run_quit_application",
+                "controldesk_mcp.services.application_service.dry_run_quit_application",
                 new_callable=AsyncMock,
                 return_value=preview,
             ) as mock_dry_run,
             patch(
-                "sources.services.application_service.quit_application",
+                "controldesk_mcp.services.application_service.quit_application",
                 new_callable=AsyncMock,
                 return_value=None,
             ) as mock_quit,
         ):
-            from sources.tools.application.lifecycle import stop_controldesk
+            from controldesk_mcp.tools.application.lifecycle import stop_controldesk
 
             result = await stop_controldesk(AppQuitInput(dry_run=True))
 
@@ -675,7 +675,7 @@ class TestAppGetLogs:
     @pytest.mark.asyncio
     async def test_returns_log_entries_on_success(self) -> None:
         with patch(
-            "sources.services.application_service.get_logs",
+            "controldesk_mcp.services.application_service.get_logs",
             new=AsyncMock(
                 return_value={
                     "status": "ok",
@@ -697,7 +697,7 @@ class TestAppGetLogs:
                 }
             ),
         ):
-            from sources.tools.application.lifecycle import app_get_logs
+            from controldesk_mcp.tools.application.lifecycle import app_get_logs
 
             result = await app_get_logs(AppGetLogsInput())
 
@@ -708,7 +708,7 @@ class TestAppGetLogs:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with patch(
-            "sources.services.application_service.get_logs",
+            "controldesk_mcp.services.application_service.get_logs",
             new=AsyncMock(
                 return_value={
                     "error_code": "LOG_ENUMERATION_FAILED",
@@ -719,7 +719,7 @@ class TestAppGetLogs:
                 }
             ),
         ):
-            from sources.tools.application.lifecycle import app_get_logs
+            from controldesk_mcp.tools.application.lifecycle import app_get_logs
 
             result = await app_get_logs(AppGetLogsInput())
 
@@ -735,14 +735,14 @@ class TestAppSetWindowPosition:
         conn = _make_connected_bridge()
 
         with (
-            patch("sources.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[conn.get_app.return_value, None],
             ),
         ):
-            from sources.tools.application.lifecycle import app_window_manage
+            from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
             result = await app_window_manage(
                 AppWindowManageInput(
@@ -764,10 +764,10 @@ class TestAppSetWindowPosition:
     @pytest.mark.asyncio
     async def test_returns_error_on_cd_error(self) -> None:
         with patch(
-            "sources.com_bridge.get_connection",
+            "controldesk_mcp.com_bridge.get_connection",
             side_effect=BridgeConnectionError("not connected"),
         ):
-            from sources.tools.application.lifecycle import app_window_manage
+            from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
             result = await app_window_manage(
                 AppWindowManageInput(
@@ -783,7 +783,7 @@ class TestAppSetWindowPosition:
 
     @pytest.mark.asyncio
     async def test_missing_height_returns_error(self) -> None:
-        from sources.tools.application.lifecycle import app_window_manage
+        from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
         result = await app_window_manage(
             AppWindowManageInput(
@@ -802,14 +802,14 @@ class TestAppSetFullscreen:
         conn = _make_connected_bridge()
 
         with (
-            patch("sources.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[conn.get_app.return_value, None],
             ),
         ):
-            from sources.tools.application.lifecycle import app_window_manage
+            from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
             result = await app_window_manage(
                 AppWindowManageInput(action=AppWindowManageAction.set_fullscreen, enabled=True)
@@ -824,14 +824,14 @@ class TestAppSetFullscreen:
         conn = _make_connected_bridge()
 
         with (
-            patch("sources.com_bridge.get_connection", return_value=conn),
+            patch("controldesk_mcp.com_bridge.get_connection", return_value=conn),
             patch(
-                "sources.com_bridge.dispatch",
+                "controldesk_mcp.com_bridge.dispatch",
                 new_callable=AsyncMock,
                 side_effect=[conn.get_app.return_value, None],
             ),
         ):
-            from sources.tools.application.lifecycle import app_window_manage
+            from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
             result = await app_window_manage(
                 AppWindowManageInput(action=AppWindowManageAction.set_fullscreen, enabled=False)
@@ -842,10 +842,10 @@ class TestAppSetFullscreen:
     @pytest.mark.asyncio
     async def test_returns_error_on_cd_error(self) -> None:
         with patch(
-            "sources.com_bridge.get_connection",
+            "controldesk_mcp.com_bridge.get_connection",
             side_effect=BridgeConnectionError("not connected"),
         ):
-            from sources.tools.application.lifecycle import app_window_manage
+            from controldesk_mcp.tools.application.lifecycle import app_window_manage
 
             result = await app_window_manage(
                 AppWindowManageInput(action=AppWindowManageAction.set_fullscreen, enabled=True)

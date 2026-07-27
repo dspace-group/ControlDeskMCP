@@ -66,9 +66,13 @@ If you prefer full control:
 uv sync --extra dev
 
 # Verify installation
-uv run python -m sources --help
+uv run python -m controldesk_mcp --help
 uv run pytest --version
 ```
+
+`uv sync` is intended for local development and may update `uv.lock` when
+project dependencies change. Commit that update with the same change. CI and
+release workflows use locked dependency installation and reject stale locks.
 
 ### Package Index / Proxy Configuration
 
@@ -148,11 +152,11 @@ Then open a PR on GitHub targeting `main`. Link related issues using `Closes #12
 
 - **Formatter**: Black (zero-config, non-negotiable)
     ```bash
-    black sources tests
+    black controldesk_mcp tests
     ```
 - **Linter**: Ruff with rules `E/F/W/I/N/T20`
     ```bash
-    ruff check sources tests
+    ruff check controldesk_mcp tests
     ```
 - **Type hints**: Not enforced but encouraged (use `Pydantic` models for inputs)
 
@@ -197,18 +201,18 @@ Run `python scripts/validate_mcp_tools.py` to verify.
 
 | Layer              | Module                               | Rule                                            |
 | ------------------ | ------------------------------------ | ----------------------------------------------- |
-| **1 — Protocol**   | `sources/server/`, `sources/main.py` | MCP handshake, validation, logging              |
-| **2 — Tools**      | `sources/tools/<domain>/`            | Domain logic, formatting, preconditions         |
-| **3 — Dispatch**   | `sources.com_bridge.dispatch()`      | Single async entry point; timeout guard         |
-| **4 — COM Bridge** | `sources/com_bridge/`                | STA thread, COM lifecycle, error classification |
+| **1 — Protocol**   | `controldesk_mcp/server/`, `controldesk_mcp/main.py` | MCP handshake, validation, logging              |
+| **2 — Tools**      | `controldesk_mcp/tools/<domain>/`            | Domain logic, formatting, preconditions         |
+| **3 — Dispatch**   | `controldesk_mcp.com_bridge.dispatch()`      | Single async entry point; timeout guard         |
+| **4 — COM Bridge** | `controldesk_mcp/com_bridge/`                | STA thread, COM lifecycle, error classification |
 
 **FORBIDDEN**:
 
-- Tools importing `sources.com_bridge.connection`, `sources.com_bridge.domains`, `sources.com_bridge.error_mapper`, or `sources.com_bridge.sta_thread` directly.
+- Tools importing `controldesk_mcp.com_bridge.connection`, `controldesk_mcp.com_bridge.domains`, `controldesk_mcp.com_bridge.error_mapper`, or `controldesk_mcp.com_bridge.sta_thread` directly.
 - Service code using `@mcp.tool()` decorator.
-- COM code importing from `sources.tools` or `sources.server`.
+- COM code importing from `controldesk_mcp.tools` or `controldesk_mcp.server`.
 
-**Permitted crossing point**: Only `sources.com_bridge.dispatch()` may be imported outside `com_bridge/`.
+**Permitted crossing point**: Only `controldesk_mcp.com_bridge.dispatch()` may be imported outside `com_bridge/`.
 
 The quality gate **automatically checks** for violations:
 
@@ -218,9 +222,9 @@ The quality gate **automatically checks** for violations:
 
 ### When Adding a New Tool
 
-1. Create input/output **Pydantic models** in `sources/models/<domain>.py`
-2. Add **service function** in `sources/services/<domain>_service.py` (calls `com_bridge.dispatch()` only)
-3. Add **@mcp.tool** wrapper in `sources/tools/<domain>/<tool_name>.py` (calls service function)
+1. Create input/output **Pydantic models** in `controldesk_mcp/models/<domain>.py`
+2. Add **service function** in `controldesk_mcp/services/<domain>_service.py` (calls `com_bridge.dispatch()` only)
+3. Add **@mcp.tool** wrapper in `controldesk_mcp/tools/<domain>/<tool_name>.py` (calls service function)
 4. Add **unit tests** in `tests/unit/test_tools/test_<domain>_tools.py` (mock the service)
 5. Verify with `./scripts/quality-gate.ps1`
 
@@ -237,7 +241,7 @@ See [AGENTS.md](AGENTS.md) for detailed governance rules.
 pytest tests/unit/ -v
 
 # Run with coverage report
-pytest tests/unit/ --cov=sources --cov-report=html
+pytest tests/unit/ --cov=controldesk_mcp --cov-report=html
 
 # Run a specific test file or function
 pytest tests/unit/test_tools/test_measurement_tools.py::test_add_bookmark
@@ -257,11 +261,11 @@ pytest -m "not integration"
 
 ```python
 import pytest
-from sources.services.measurement_service import add_bookmark
+from controldesk_mcp.services.measurement_service import add_bookmark
 
 @pytest.fixture
 def mock_com_bridge(mocker):
-    return mocker.patch("sources.com_bridge.connection.ComBridge")
+    return mocker.patch("controldesk_mcp.com_bridge.connection.ComBridge")
 
 def test_add_bookmark_success(mock_com_bridge):
     # Arrange: set up mocks

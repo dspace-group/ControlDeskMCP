@@ -1,4 +1,4 @@
-"""Unit tests for sources.services.variable_service.
+"""Unit tests for controldesk_mcp.services.variable_service.
 
 Tests mock com_bridge.dispatch; no real COM is invoked.
 """
@@ -9,9 +9,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import sources.com_bridge as bridge
-from sources.com_bridge.errors import BridgeConnectionError, BridgeOperationError
-from sources.models.variable import (
+import controldesk_mcp.com_bridge as bridge
+from controldesk_mcp.com_bridge.errors import BridgeConnectionError, BridgeOperationError
+from controldesk_mcp.models.variable import (
     VariableFindInput,
     VariableReadScalarInput,
     VariableWriteScalarInput,
@@ -23,7 +23,7 @@ from sources.models.variable import (
 @pytest.fixture(autouse=True)
 def _reset_bridge():
     bridge._connection = None
-    import sources.com_bridge.sta_thread as _sta
+    import controldesk_mcp.com_bridge.sta_thread as _sta
 
     _sta._sta_thread = None
     yield
@@ -32,7 +32,7 @@ def _reset_bridge():
 
 
 def _make_connected_bridge() -> MagicMock:
-    from sources.com_bridge.connection import ConnectionState
+    from controldesk_mcp.com_bridge.connection import ConnectionState
 
     conn = MagicMock()
     conn.state = ConnectionState.CONNECTED
@@ -52,11 +52,11 @@ class TestFindVariable:
         com_result = {"name": "f_Kp_1", "type": "Parameter", "found": True}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.variable_service import find_variable
+            from controldesk_mcp.services.variable_service import find_variable
 
             result = await find_variable(VariableFindInput(identifier="f_Kp_1"))
 
@@ -68,11 +68,11 @@ class TestFindVariable:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("not connected"),
         ):
-            from sources.services.variable_service import find_variable
+            from controldesk_mcp.services.variable_service import find_variable
 
             result = await find_variable(VariableFindInput(identifier="f_Kp_1"))
 
@@ -97,11 +97,11 @@ class TestReadScalar:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.variable_service import read_scalar_variable
+            from controldesk_mcp.services.variable_service import read_scalar_variable
 
             result = await read_scalar_variable(
                 VariableReadScalarInput(variable_name="control_out")
@@ -114,11 +114,11 @@ class TestReadScalar:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("variable not found", error_code="BRIDGE_OPERATION"),
         ):
-            from sources.services.variable_service import read_scalar_variable
+            from controldesk_mcp.services.variable_service import read_scalar_variable
 
             result = await read_scalar_variable(
                 VariableReadScalarInput(variable_name="nonexistent")
@@ -148,11 +148,11 @@ class TestWriteScalar:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.variable_service import write_scalar_variable
+            from controldesk_mcp.services.variable_service import write_scalar_variable
 
             result = await write_scalar_variable(
                 VariableWriteScalarInput(variable_name="f_Kp_1", value=2.5)
@@ -166,11 +166,11 @@ class TestWriteScalar:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("disconnected"),
         ):
-            from sources.services.variable_service import write_scalar_variable
+            from controldesk_mcp.services.variable_service import write_scalar_variable
 
             result = await write_scalar_variable(
                 VariableWriteScalarInput(variable_name="f_Kp_1", value=2.5)

@@ -1,4 +1,4 @@
-"""Unit tests for sources.resources.server_resources."""
+"""Unit tests for controldesk_mcp.resources.server_resources."""
 
 from __future__ import annotations
 
@@ -34,8 +34,8 @@ def _make_tool(name: str, description: str) -> MagicMock:
 class TestGetServerInfo:
     def test_returns_all_config_fields(self) -> None:
         cfg = _make_settings(server_version="1.2.3", mcp_transport="streamable-http", mcp_port=9000)
-        with patch("sources.resources.server_resources.get_settings", return_value=cfg):
-            from sources.resources.server_resources import get_server_info
+        with patch("controldesk_mcp.resources.server_resources.get_settings", return_value=cfg):
+            from controldesk_mcp.resources.server_resources import get_server_info
 
             result = json.loads(get_server_info())
 
@@ -47,8 +47,8 @@ class TestGetServerInfo:
 
     def test_empty_version_shows_auto_detect(self) -> None:
         cfg = _make_settings(controldesk_version="")
-        with patch("sources.resources.server_resources.get_settings", return_value=cfg):
-            from sources.resources.server_resources import get_server_info
+        with patch("controldesk_mcp.resources.server_resources.get_settings", return_value=cfg):
+            from controldesk_mcp.resources.server_resources import get_server_info
 
             result = json.loads(get_server_info())
 
@@ -56,8 +56,8 @@ class TestGetServerInfo:
 
     def test_set_version_shown_as_is(self) -> None:
         cfg = _make_settings(controldesk_version="2026-A")
-        with patch("sources.resources.server_resources.get_settings", return_value=cfg):
-            from sources.resources.server_resources import get_server_info
+        with patch("controldesk_mcp.resources.server_resources.get_settings", return_value=cfg):
+            from controldesk_mcp.resources.server_resources import get_server_info
 
             result = json.loads(get_server_info())
 
@@ -76,9 +76,9 @@ class TestGetToolCatalog:
         mock_mgr = MagicMock()
         mock_mgr.list_tools.return_value = fake_tools
 
-        with patch("sources.resources.server_resources.mcp") as mock_mcp:
+        with patch("controldesk_mcp.resources.server_resources.mcp") as mock_mcp:
             mock_mcp._tool_manager = mock_mgr
-            from sources.resources import server_resources
+            from controldesk_mcp.resources import server_resources
 
             result = json.loads(server_resources.get_tool_catalog())
 
@@ -91,9 +91,9 @@ class TestGetToolCatalog:
         mock_mgr = MagicMock()
         mock_mgr.list_tools.return_value = fake_tools
 
-        with patch("sources.resources.server_resources.mcp") as mock_mcp:
+        with patch("controldesk_mcp.resources.server_resources.mcp") as mock_mcp:
             mock_mcp._tool_manager = mock_mgr
-            from sources.resources import server_resources
+            from controldesk_mcp.resources import server_resources
 
             result = json.loads(server_resources.get_tool_catalog())
 
@@ -105,9 +105,9 @@ class TestGetToolCatalog:
         mock_mgr = MagicMock()
         mock_mgr.list_tools.return_value = fake_tools
 
-        with patch("sources.resources.server_resources.mcp") as mock_mcp:
+        with patch("controldesk_mcp.resources.server_resources.mcp") as mock_mcp:
             mock_mcp._tool_manager = mock_mgr
-            from sources.resources import server_resources
+            from controldesk_mcp.resources import server_resources
 
             result = json.loads(server_resources.get_tool_catalog())
 
@@ -126,9 +126,9 @@ class TestGetConnectionStatus:
             "prog_id": "ControlDeskNG.Application.2026-A",
         }
 
-        with patch("sources.resources.server_resources.com_bridge") as mock_bridge:
+        with patch("controldesk_mcp.resources.server_resources.com_bridge") as mock_bridge:
             mock_bridge.get_connection.return_value = mock_conn
-            from sources.resources import server_resources
+            from controldesk_mcp.resources import server_resources
 
             result = json.loads(server_resources.get_connection_status())
 
@@ -136,9 +136,9 @@ class TestGetConnectionStatus:
         assert result["state"] == "CONNECTED"
 
     def test_returns_not_started_when_bridge_uninitialized(self) -> None:
-        with patch("sources.resources.server_resources.com_bridge") as mock_bridge:
+        with patch("controldesk_mcp.resources.server_resources.com_bridge") as mock_bridge:
             mock_bridge.get_connection.side_effect = RuntimeError("Bridge not started")
-            from sources.resources import server_resources
+            from controldesk_mcp.resources import server_resources
 
             result = json.loads(server_resources.get_connection_status())
 
@@ -147,9 +147,9 @@ class TestGetConnectionStatus:
         assert "message" in result
 
     def test_not_started_message_is_actionable(self) -> None:
-        with patch("sources.resources.server_resources.com_bridge") as mock_bridge:
+        with patch("controldesk_mcp.resources.server_resources.com_bridge") as mock_bridge:
             mock_bridge.get_connection.side_effect = RuntimeError("not started")
-            from sources.resources import server_resources
+            from controldesk_mcp.resources import server_resources
 
             result = json.loads(server_resources.get_connection_status())
 

@@ -1,4 +1,4 @@
-"""Unit tests for sources.services.platform_service.
+"""Unit tests for controldesk_mcp.services.platform_service.
 
 Tests mock com_bridge.dispatch; no real COM is invoked.
 """
@@ -9,9 +9,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import sources.com_bridge as bridge
-from sources.com_bridge.errors import BridgeConnectionError, BridgeOperationError
-from sources.models.platform import PlatformAddInput, PlatformGetInfoInput, PlatformType
+import controldesk_mcp.com_bridge as bridge
+from controldesk_mcp.com_bridge.errors import BridgeConnectionError, BridgeOperationError
+from controldesk_mcp.models.platform import PlatformAddInput, PlatformGetInfoInput, PlatformType
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
@@ -19,7 +19,7 @@ from sources.models.platform import PlatformAddInput, PlatformGetInfoInput, Plat
 @pytest.fixture(autouse=True)
 def _reset_bridge():
     bridge._connection = None
-    import sources.com_bridge.sta_thread as _sta
+    import controldesk_mcp.com_bridge.sta_thread as _sta
 
     _sta._sta_thread = None
     yield
@@ -28,7 +28,7 @@ def _reset_bridge():
 
 
 def _make_connected_bridge() -> MagicMock:
-    from sources.com_bridge.connection import ConnectionState
+    from controldesk_mcp.com_bridge.connection import ConnectionState
 
     conn = MagicMock()
     conn.state = ConnectionState.CONNECTED
@@ -47,11 +47,11 @@ class TestListPlatforms:
         app_mock = conn.get_app.return_value
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, [{"name": "MyCAN"}]],
         ):
-            from sources.services.platform_service import list_platforms
+            from controldesk_mcp.services.platform_service import list_platforms
 
             result = await list_platforms()
 
@@ -63,11 +63,11 @@ class TestListPlatforms:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("disconnected"),
         ):
-            from sources.services.platform_service import list_platforms
+            from controldesk_mcp.services.platform_service import list_platforms
 
             result = await list_platforms()
 
@@ -93,11 +93,11 @@ class TestGetPlatformInfo:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, info],
         ):
-            from sources.services.platform_service import get_platform_info
+            from controldesk_mcp.services.platform_service import get_platform_info
 
             result = await get_platform_info(PlatformGetInfoInput(platform_name="MyCAN"))
 
@@ -108,11 +108,11 @@ class TestGetPlatformInfo:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("not found", error_code="BRIDGE_OPERATION"),
         ):
-            from sources.services.platform_service import get_platform_info
+            from controldesk_mcp.services.platform_service import get_platform_info
 
             result = await get_platform_info(PlatformGetInfoInput(platform_name="Unknown"))
 
@@ -135,11 +135,11 @@ class TestAddPlatform:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, add_result],
         ):
-            from sources.services.platform_service import add_platform
+            from controldesk_mcp.services.platform_service import add_platform
 
             result = await add_platform(PlatformAddInput(platform_type=PlatformType.CANMonitoring))
 
@@ -153,7 +153,7 @@ class TestListHardwareTypes:
     @pytest.mark.asyncio
     async def test_returns_hardware_types_catalog(self) -> None:
         """Verify list_hardware_types returns static catalog with proper structure."""
-        from sources.services.platform_service import list_hardware_types
+        from controldesk_mcp.services.platform_service import list_hardware_types
 
         result = await list_hardware_types()
 
@@ -167,7 +167,7 @@ class TestListHardwareTypes:
     @pytest.mark.asyncio
     async def test_ip_addressable_types_listed(self) -> None:
         """Verify IP-addressable types are in the catalog."""
-        from sources.services.platform_service import list_hardware_types
+        from controldesk_mcp.services.platform_service import list_hardware_types
 
         result = await list_hardware_types()
         ip_types = result["hardware_platforms"]["ip_addressable"]
@@ -184,7 +184,7 @@ class TestListHardwareTypes:
     @pytest.mark.asyncio
     async def test_direct_add_types_listed(self) -> None:
         """Verify direct-add types are in the catalog."""
-        from sources.services.platform_service import list_hardware_types
+        from controldesk_mcp.services.platform_service import list_hardware_types
 
         result = await list_hardware_types()
         direct_types = result["hardware_platforms"]["direct_add"]
@@ -195,7 +195,7 @@ class TestListHardwareTypes:
     @pytest.mark.asyncio
     async def test_each_hardware_type_has_description(self) -> None:
         """Verify each hardware type entry has required fields."""
-        from sources.services.platform_service import list_hardware_types
+        from controldesk_mcp.services.platform_service import list_hardware_types
 
         result = await list_hardware_types()
         all_types = (
@@ -235,11 +235,11 @@ class TestListRegisteredHardware:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, registered_data],
         ):
-            from sources.services.platform_service import list_registered_hardware
+            from controldesk_mcp.services.platform_service import list_registered_hardware
 
             result = await list_registered_hardware()
 
@@ -254,7 +254,7 @@ class TestListRegisteredHardware:
         app_mock = conn.get_app.return_value
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[
                 app_mock,
@@ -264,7 +264,7 @@ class TestListRegisteredHardware:
                 },
             ],
         ):
-            from sources.services.platform_service import list_registered_hardware
+            from controldesk_mcp.services.platform_service import list_registered_hardware
 
             result = await list_registered_hardware()
 
@@ -277,11 +277,11 @@ class TestListRegisteredHardware:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("COM connection failed", error_code="BRIDGE_ERROR"),
         ):
-            from sources.services.platform_service import list_registered_hardware
+            from controldesk_mcp.services.platform_service import list_registered_hardware
 
             result = await list_registered_hardware()
 
@@ -307,11 +307,11 @@ class TestGetRegisteredInfo:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, platform_data],
         ):
-            from sources.services.platform_service import get_registered_info
+            from controldesk_mcp.services.platform_service import get_registered_info
 
             result = await get_registered_info(0)
 
@@ -325,13 +325,13 @@ class TestGetRegisteredInfo:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError(
                 "Index not found", error_code="BRIDGE_INVALID_ARGUMENT"
             ),
         ):
-            from sources.services.platform_service import get_registered_info
+            from controldesk_mcp.services.platform_service import get_registered_info
 
             result = await get_registered_info(99)
 
@@ -353,11 +353,11 @@ class TestGetRegisteredInfo:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, platform_data],
         ):
-            from sources.services.platform_service import get_registered_info
+            from controldesk_mcp.services.platform_service import get_registered_info
 
             result = await get_registered_info(1)
 
@@ -376,12 +376,12 @@ class TestClearRegisteredPlatformsService:
         app_mock = conn.get_app.return_value
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, None],
         ):
-            from sources.models.platform import PlatformClearRegisteredInput
-            from sources.services.platform_service import clear_registered_platforms
+            from controldesk_mcp.models.platform import PlatformClearRegisteredInput
+            from controldesk_mcp.services.platform_service import clear_registered_platforms
 
             params = PlatformClearRegisteredInput(confirm=True, force_driver_reset=False)
             result = await clear_registered_platforms(params)
@@ -395,12 +395,12 @@ class TestClearRegisteredPlatformsService:
         app_mock = conn.get_app.return_value
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, None],
         ):
-            from sources.models.platform import PlatformClearRegisteredInput
-            from sources.services.platform_service import clear_registered_platforms
+            from controldesk_mcp.models.platform import PlatformClearRegisteredInput
+            from controldesk_mcp.services.platform_service import clear_registered_platforms
 
             params = PlatformClearRegisteredInput(confirm=True, force_driver_reset=True)
             result = await clear_registered_platforms(params)
@@ -412,9 +412,9 @@ class TestClearRegisteredPlatformsService:
     async def test_clear_aborted_when_confirm_false(self) -> None:
         _make_connected_bridge()
 
-        with patch("sources.com_bridge.dispatch", new_callable=AsyncMock):
-            from sources.models.platform import PlatformClearRegisteredInput
-            from sources.services.platform_service import clear_registered_platforms
+        with patch("controldesk_mcp.com_bridge.dispatch", new_callable=AsyncMock):
+            from controldesk_mcp.models.platform import PlatformClearRegisteredInput
+            from controldesk_mcp.services.platform_service import clear_registered_platforms
 
             params = PlatformClearRegisteredInput(confirm=False)
             result = await clear_registered_platforms(params)
@@ -433,12 +433,12 @@ class TestRefreshPlatformConfigurationService:
         refresh_result = {"refreshed": True, "operation": "RefreshPlatformConfiguration"}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, refresh_result],
         ):
-            from sources.models.platform import PlatformRefreshConfigurationInput
-            from sources.services.platform_service import refresh_platform_configuration
+            from controldesk_mcp.models.platform import PlatformRefreshConfigurationInput
+            from controldesk_mcp.services.platform_service import refresh_platform_configuration
 
             params = PlatformRefreshConfigurationInput()
             result = await refresh_platform_configuration(params)
@@ -451,12 +451,12 @@ class TestRefreshPlatformConfigurationService:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("COM error"),
         ):
-            from sources.models.platform import PlatformRefreshConfigurationInput
-            from sources.services.platform_service import refresh_platform_configuration
+            from controldesk_mcp.models.platform import PlatformRefreshConfigurationInput
+            from controldesk_mcp.services.platform_service import refresh_platform_configuration
 
             params = PlatformRefreshConfigurationInput()
             result = await refresh_platform_configuration(params)
@@ -479,12 +479,12 @@ class TestRefreshInterfaceConnectionsService:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, refresh_result],
         ):
-            from sources.models.platform import PlatformRefreshInterfaceConnectionsInput
-            from sources.services.platform_service import refresh_interface_connections
+            from controldesk_mcp.models.platform import PlatformRefreshInterfaceConnectionsInput
+            from controldesk_mcp.services.platform_service import refresh_interface_connections
 
             params = PlatformRefreshInterfaceConnectionsInput(force_driver_reset=True)
             result = await refresh_interface_connections(params)
@@ -497,12 +497,12 @@ class TestRefreshInterfaceConnectionsService:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("COM error"),
         ):
-            from sources.models.platform import PlatformRefreshInterfaceConnectionsInput
-            from sources.services.platform_service import refresh_interface_connections
+            from controldesk_mcp.models.platform import PlatformRefreshInterfaceConnectionsInput
+            from controldesk_mcp.services.platform_service import refresh_interface_connections
 
             params = PlatformRefreshInterfaceConnectionsInput()
             result = await refresh_interface_connections(params)
@@ -521,12 +521,12 @@ class TestSetPlatformEnabledService:
         enabled_result = {"configured": True, "platform_name": "XCP", "enabled": True}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, enabled_result],
         ):
-            from sources.models.platform import PlatformSetEnabledInput
-            from sources.services.platform_service import set_platform_enabled
+            from controldesk_mcp.models.platform import PlatformSetEnabledInput
+            from controldesk_mcp.services.platform_service import set_platform_enabled
 
             params = PlatformSetEnabledInput(platform_name="XCP", enabled=True)
             result = await set_platform_enabled(params)
@@ -542,12 +542,12 @@ class TestSetPlatformEnabledService:
         disabled_result = {"configured": True, "platform_name": "XCP", "enabled": False}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, disabled_result],
         ):
-            from sources.models.platform import PlatformSetEnabledInput
-            from sources.services.platform_service import set_platform_enabled
+            from controldesk_mcp.models.platform import PlatformSetEnabledInput
+            from controldesk_mcp.services.platform_service import set_platform_enabled
 
             params = PlatformSetEnabledInput(platform_name="XCP", enabled=False)
             result = await set_platform_enabled(params)
@@ -559,12 +559,12 @@ class TestSetPlatformEnabledService:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("COM error"),
         ):
-            from sources.models.platform import PlatformSetEnabledInput
-            from sources.services.platform_service import set_platform_enabled
+            from controldesk_mcp.models.platform import PlatformSetEnabledInput
+            from controldesk_mcp.services.platform_service import set_platform_enabled
 
             params = PlatformSetEnabledInput(platform_name="XCP", enabled=True)
             result = await set_platform_enabled(params)

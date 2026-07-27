@@ -1,4 +1,4 @@
-"""Unit tests for sources.tools.project.management (consolidated manage-tools).
+"""Unit tests for controldesk_mcp.tools.project.management (consolidated manage-tools).
 
 Mocks at the service layer — no COM bridge involved.
 """
@@ -9,8 +9,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from sources.models.errors import ErrorEnvelope
-from sources.models.project import (
+from controldesk_mcp.models.errors import ErrorEnvelope
+from controldesk_mcp.models.project import (
     ExperimentActivateResult,
     ExperimentCreateResult,
     ExperimentExportResult,
@@ -62,7 +62,7 @@ _ERROR = ErrorEnvelope(
 
 def _patch_svc(method: str, *, return_value):
     return patch(
-        f"sources.tools.project.management.project_service.{method}",
+        f"controldesk_mcp.tools.project.management.project_service.{method}",
         new_callable=AsyncMock,
         return_value=return_value,
     )
@@ -91,7 +91,7 @@ class TestProjectListRecent:
             timestamp_utc=_TS,
         )
         with _patch_svc("project_list_recent", return_value=mock_result):
-            from sources.tools.project.management import project_list_recent
+            from controldesk_mcp.tools.project.management import project_list_recent
 
             result = await project_list_recent(ProjectListRecentInput(limit=10))
 
@@ -102,7 +102,7 @@ class TestProjectListRecent:
     @pytest.mark.asyncio
     async def test_returns_error_on_service_error(self) -> None:
         with _patch_svc("project_list_recent", return_value=_ERROR):
-            from sources.tools.project.management import project_list_recent
+            from controldesk_mcp.tools.project.management import project_list_recent
 
             result = await project_list_recent(ProjectListRecentInput())
 
@@ -119,7 +119,7 @@ class TestProjectOpen:
             name="TestProject", open=True, experiment_count=3, timestamp_utc=_TS
         )
         with _patch_svc("project_open", return_value=mock_result):
-            from sources.tools.project.management import project_open
+            from controldesk_mcp.tools.project.management import project_open
 
             result = await project_open(ProjectOpenInput(name="TestProject"))
 
@@ -130,7 +130,7 @@ class TestProjectOpen:
     @pytest.mark.asyncio
     async def test_returns_error_on_service_error(self) -> None:
         with _patch_svc("project_open", return_value=_ERROR):
-            from sources.tools.project.management import project_open
+            from controldesk_mcp.tools.project.management import project_open
 
             result = await project_open(ProjectOpenInput(name="Missing"))
 
@@ -145,7 +145,7 @@ class TestProjectRootManage:
     async def test_add_returns_ok(self) -> None:
         mock_result = ProjectRootAddResult(path="C:\\Root", added=True, timestamp_utc=_TS)
         with _patch_svc("project_root_add", return_value=mock_result):
-            from sources.tools.project.management import project_root_manage
+            from controldesk_mcp.tools.project.management import project_root_manage
 
             result = await project_root_manage(
                 ProjectRootManageInput(action=ProjectRootManageAction.add, path="C:\\Root")
@@ -156,7 +156,7 @@ class TestProjectRootManage:
 
     @pytest.mark.asyncio
     async def test_add_missing_path_returns_missing_param(self) -> None:
-        from sources.tools.project.management import project_root_manage
+        from controldesk_mcp.tools.project.management import project_root_manage
 
         result = await project_root_manage(
             ProjectRootManageInput(action=ProjectRootManageAction.add, path=None)
@@ -169,7 +169,7 @@ class TestProjectRootManage:
     async def test_activate_returns_ok(self) -> None:
         mock_result = ProjectRootActivateResult(activated=True, path="C:\\Root", timestamp_utc=_TS)
         with _patch_svc("project_root_activate", return_value=mock_result):
-            from sources.tools.project.management import project_root_manage
+            from controldesk_mcp.tools.project.management import project_root_manage
 
             result = await project_root_manage(
                 ProjectRootManageInput(action=ProjectRootManageAction.activate, path="C:\\Root")
@@ -180,7 +180,7 @@ class TestProjectRootManage:
 
     @pytest.mark.asyncio
     async def test_activate_missing_path_returns_missing_param(self) -> None:
-        from sources.tools.project.management import project_root_manage
+        from controldesk_mcp.tools.project.management import project_root_manage
 
         result = await project_root_manage(
             ProjectRootManageInput(action=ProjectRootManageAction.activate, path=None)
@@ -195,7 +195,7 @@ class TestProjectRootManage:
             roots=[{"path": "C:\\Root", "project_count": 2}], count=1, timestamp_utc=_TS
         )
         with _patch_svc("project_root_list", return_value=mock_result):
-            from sources.tools.project.management import project_root_manage
+            from controldesk_mcp.tools.project.management import project_root_manage
 
             result = await project_root_manage(
                 ProjectRootManageInput(action=ProjectRootManageAction.list)
@@ -207,7 +207,7 @@ class TestProjectRootManage:
     @pytest.mark.asyncio
     async def test_list_service_error_propagates(self) -> None:
         with _patch_svc("project_root_list", return_value=_ERROR):
-            from sources.tools.project.management import project_root_manage
+            from controldesk_mcp.tools.project.management import project_root_manage
 
             result = await project_root_manage(
                 ProjectRootManageInput(action=ProjectRootManageAction.list)
@@ -219,7 +219,7 @@ class TestProjectRootManage:
     async def test_remove_returns_ok(self) -> None:
         mock_result = ProjectRootRemoveResult(removed=True, path="C:\\Root", timestamp_utc=_TS)
         with _patch_svc("project_root_remove", return_value=mock_result):
-            from sources.tools.project.management import project_root_manage
+            from controldesk_mcp.tools.project.management import project_root_manage
 
             result = await project_root_manage(
                 ProjectRootManageInput(action=ProjectRootManageAction.remove, path="C:\\Root")
@@ -230,7 +230,7 @@ class TestProjectRootManage:
 
     @pytest.mark.asyncio
     async def test_remove_missing_path_returns_missing_param(self) -> None:
-        from sources.tools.project.management import project_root_manage
+        from controldesk_mcp.tools.project.management import project_root_manage
 
         result = await project_root_manage(
             ProjectRootManageInput(action=ProjectRootManageAction.remove, path=None)
@@ -250,7 +250,7 @@ class TestProjectManage:
             name="Proj", path="C:\\Root\\Proj", created=True, timestamp_utc=_TS
         )
         with _patch_svc("project_create", return_value=mock_result):
-            from sources.tools.project.management import project_manage
+            from controldesk_mcp.tools.project.management import project_manage
 
             result = await project_manage(
                 ProjectManageInput(action=ProjectManageAction.create, name="Proj")
@@ -261,7 +261,7 @@ class TestProjectManage:
 
     @pytest.mark.asyncio
     async def test_create_missing_name_returns_missing_param(self) -> None:
-        from sources.tools.project.management import project_manage
+        from controldesk_mcp.tools.project.management import project_manage
 
         result = await project_manage(
             ProjectManageInput(action=ProjectManageAction.create, name=None)
@@ -274,7 +274,7 @@ class TestProjectManage:
     async def test_save_returns_ok(self) -> None:
         mock_result = ProjectSaveResult(saved=True, timestamp_utc=_TS)
         with _patch_svc("project_save", return_value=mock_result):
-            from sources.tools.project.management import project_manage
+            from controldesk_mcp.tools.project.management import project_manage
 
             result = await project_manage(ProjectManageInput(action=ProjectManageAction.save))
 
@@ -284,7 +284,7 @@ class TestProjectManage:
     @pytest.mark.asyncio
     async def test_save_service_error_propagates(self) -> None:
         with _patch_svc("project_save", return_value=_ERROR):
-            from sources.tools.project.management import project_manage
+            from controldesk_mcp.tools.project.management import project_manage
 
             result = await project_manage(ProjectManageInput(action=ProjectManageAction.save))
 
@@ -294,7 +294,7 @@ class TestProjectManage:
     async def test_close_returns_ok(self) -> None:
         mock_result = ProjectCloseResult(closed=True, timestamp_utc=_TS)
         with _patch_svc("project_close", return_value=mock_result):
-            from sources.tools.project.management import project_manage
+            from controldesk_mcp.tools.project.management import project_manage
 
             result = await project_manage(
                 ProjectManageInput(action=ProjectManageAction.close, save=True)
@@ -307,7 +307,7 @@ class TestProjectManage:
     async def test_remove_returns_ok(self) -> None:
         mock_result = ProjectRemoveResult(removed=True, timestamp_utc=_TS)
         with _patch_svc("project_remove", return_value=mock_result):
-            from sources.tools.project.management import project_manage
+            from controldesk_mcp.tools.project.management import project_manage
 
             result = await project_manage(
                 ProjectManageInput(action=ProjectManageAction.remove, name="Proj")
@@ -318,7 +318,7 @@ class TestProjectManage:
 
     @pytest.mark.asyncio
     async def test_remove_missing_name_returns_missing_param(self) -> None:
-        from sources.tools.project.management import project_manage
+        from controldesk_mcp.tools.project.management import project_manage
 
         result = await project_manage(
             ProjectManageInput(action=ProjectManageAction.remove, name=None)
@@ -331,7 +331,7 @@ class TestProjectManage:
     async def test_exists_true(self) -> None:
         mock_result = ProjectExistsResult(name="Proj", exists=True, timestamp_utc=_TS)
         with _patch_svc("project_exists", return_value=mock_result):
-            from sources.tools.project.management import project_manage
+            from controldesk_mcp.tools.project.management import project_manage
 
             result = await project_manage(
                 ProjectManageInput(action=ProjectManageAction.exists, name="Proj")
@@ -344,7 +344,7 @@ class TestProjectManage:
     async def test_exists_false(self) -> None:
         mock_result = ProjectExistsResult(name="Ghost", exists=False, timestamp_utc=_TS)
         with _patch_svc("project_exists", return_value=mock_result):
-            from sources.tools.project.management import project_manage
+            from controldesk_mcp.tools.project.management import project_manage
 
             result = await project_manage(
                 ProjectManageInput(action=ProjectManageAction.exists, name="Ghost")
@@ -354,7 +354,7 @@ class TestProjectManage:
 
     @pytest.mark.asyncio
     async def test_exists_missing_name_returns_missing_param(self) -> None:
-        from sources.tools.project.management import project_manage
+        from controldesk_mcp.tools.project.management import project_manage
 
         result = await project_manage(
             ProjectManageInput(action=ProjectManageAction.exists, name=None)
@@ -373,7 +373,7 @@ class TestProjectManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("project_get_info", return_value=mock_result):
-            from sources.tools.project.management import project_manage
+            from controldesk_mcp.tools.project.management import project_manage
 
             result = await project_manage(ProjectManageInput(action=ProjectManageAction.get_info))
 
@@ -384,7 +384,7 @@ class TestProjectManage:
     async def test_configure_returns_ok(self) -> None:
         mock_result = ProjectConfigureSettingsResult(configured=True, timestamp_utc=_TS)
         with _patch_svc("project_configure_settings", return_value=mock_result):
-            from sources.tools.project.management import project_manage
+            from controldesk_mcp.tools.project.management import project_manage
 
             result = await project_manage(
                 ProjectManageInput(action=ProjectManageAction.configure, auto_save=True)
@@ -399,7 +399,7 @@ class TestProjectManage:
             projects=[{"name": "ProjA"}, {"name": "ProjB"}], count=2, timestamp_utc=_TS
         )
         with _patch_svc("project_list", return_value=mock_result):
-            from sources.tools.project.management import project_manage
+            from controldesk_mcp.tools.project.management import project_manage
 
             result = await project_manage(ProjectManageInput(action=ProjectManageAction.list))
 
@@ -409,7 +409,7 @@ class TestProjectManage:
     @pytest.mark.asyncio
     async def test_list_service_error_propagates(self) -> None:
         with _patch_svc("project_list", return_value=_ERROR):
-            from sources.tools.project.management import project_manage
+            from controldesk_mcp.tools.project.management import project_manage
 
             result = await project_manage(ProjectManageInput(action=ProjectManageAction.list))
 
@@ -426,7 +426,7 @@ class TestProjectBackupManage:
             backup_path="C:\\Backups\\proj.zip", success=True, timestamp_utc=_TS
         )
         with _patch_svc("project_backup", return_value=mock_result):
-            from sources.tools.project.management import project_backup_manage
+            from controldesk_mcp.tools.project.management import project_backup_manage
 
             result = await project_backup_manage(
                 ProjectBackupManageInput(
@@ -440,7 +440,7 @@ class TestProjectBackupManage:
 
     @pytest.mark.asyncio
     async def test_backup_missing_path_returns_missing_param(self) -> None:
-        from sources.tools.project.management import project_backup_manage
+        from controldesk_mcp.tools.project.management import project_backup_manage
 
         result = await project_backup_manage(
             ProjectBackupManageInput(action=ProjectBackupManageAction.backup, backup_path=None)
@@ -455,7 +455,7 @@ class TestProjectBackupManage:
             name="RestoredProj", restored=True, timestamp_utc=_TS
         )
         with _patch_svc("project_open_from_backup", return_value=mock_result):
-            from sources.tools.project.management import project_backup_manage
+            from controldesk_mcp.tools.project.management import project_backup_manage
 
             result = await project_backup_manage(
                 ProjectBackupManageInput(
@@ -469,7 +469,7 @@ class TestProjectBackupManage:
 
     @pytest.mark.asyncio
     async def test_restore_missing_path_returns_missing_param(self) -> None:
-        from sources.tools.project.management import project_backup_manage
+        from controldesk_mcp.tools.project.management import project_backup_manage
 
         result = await project_backup_manage(
             ProjectBackupManageInput(action=ProjectBackupManageAction.restore, backup_path=None)
@@ -489,7 +489,7 @@ class TestExperimentManage:
             name="Exp1", created=True, is_active=True, timestamp_utc=_TS
         )
         with _patch_svc("experiment_create", return_value=mock_result):
-            from sources.tools.project.management import experiment_manage
+            from controldesk_mcp.tools.project.management import experiment_manage
 
             result = await experiment_manage(
                 ExperimentManageInput(action=ExperimentManageAction.create, name="Exp1")
@@ -501,7 +501,7 @@ class TestExperimentManage:
 
     @pytest.mark.asyncio
     async def test_create_missing_name_returns_missing_param(self) -> None:
-        from sources.tools.project.management import experiment_manage
+        from controldesk_mcp.tools.project.management import experiment_manage
 
         result = await experiment_manage(
             ExperimentManageInput(action=ExperimentManageAction.create, name=None)
@@ -514,7 +514,7 @@ class TestExperimentManage:
     async def test_activate_returns_ok(self) -> None:
         mock_result = ExperimentActivateResult(activated=True, name="Exp1", timestamp_utc=_TS)
         with _patch_svc("experiment_activate", return_value=mock_result):
-            from sources.tools.project.management import experiment_manage
+            from controldesk_mcp.tools.project.management import experiment_manage
 
             result = await experiment_manage(
                 ExperimentManageInput(action=ExperimentManageAction.activate, name="Exp1")
@@ -525,7 +525,7 @@ class TestExperimentManage:
 
     @pytest.mark.asyncio
     async def test_activate_missing_name_returns_missing_param(self) -> None:
-        from sources.tools.project.management import experiment_manage
+        from controldesk_mcp.tools.project.management import experiment_manage
 
         result = await experiment_manage(
             ExperimentManageInput(action=ExperimentManageAction.activate, name=None)
@@ -537,7 +537,7 @@ class TestExperimentManage:
     @pytest.mark.asyncio
     async def test_activate_service_error_propagates(self) -> None:
         with _patch_svc("experiment_activate", return_value=_ERROR):
-            from sources.tools.project.management import experiment_manage
+            from controldesk_mcp.tools.project.management import experiment_manage
 
             result = await experiment_manage(
                 ExperimentManageInput(action=ExperimentManageAction.activate, name="Missing")
@@ -551,7 +551,7 @@ class TestExperimentManage:
             experiments=[{"name": "Exp1"}, {"name": "Exp2"}], count=2, timestamp_utc=_TS
         )
         with _patch_svc("experiment_list", return_value=mock_result):
-            from sources.tools.project.management import experiment_manage
+            from controldesk_mcp.tools.project.management import experiment_manage
 
             result = await experiment_manage(
                 ExperimentManageInput(action=ExperimentManageAction.list)
@@ -563,7 +563,7 @@ class TestExperimentManage:
     @pytest.mark.asyncio
     async def test_list_service_error_propagates(self) -> None:
         with _patch_svc("experiment_list", return_value=_ERROR):
-            from sources.tools.project.management import experiment_manage
+            from controldesk_mcp.tools.project.management import experiment_manage
 
             result = await experiment_manage(
                 ExperimentManageInput(action=ExperimentManageAction.list)
@@ -575,7 +575,7 @@ class TestExperimentManage:
     async def test_remove_returns_ok(self) -> None:
         mock_result = ExperimentRemoveResult(removed=True, timestamp_utc=_TS)
         with _patch_svc("experiment_remove", return_value=mock_result):
-            from sources.tools.project.management import experiment_manage
+            from controldesk_mcp.tools.project.management import experiment_manage
 
             result = await experiment_manage(
                 ExperimentManageInput(action=ExperimentManageAction.remove, name="Exp1")
@@ -586,7 +586,7 @@ class TestExperimentManage:
 
     @pytest.mark.asyncio
     async def test_remove_missing_name_returns_missing_param(self) -> None:
-        from sources.tools.project.management import experiment_manage
+        from controldesk_mcp.tools.project.management import experiment_manage
 
         result = await experiment_manage(
             ExperimentManageInput(action=ExperimentManageAction.remove, name=None)
@@ -599,7 +599,7 @@ class TestExperimentManage:
     async def test_get_info_returns_metadata(self) -> None:
         mock_result = ExperimentGetInfoResult(name="Exp1", platform_count=2, timestamp_utc=_TS)
         with _patch_svc("experiment_get_info", return_value=mock_result):
-            from sources.tools.project.management import experiment_manage
+            from controldesk_mcp.tools.project.management import experiment_manage
 
             result = await experiment_manage(
                 ExperimentManageInput(action=ExperimentManageAction.get_info)
@@ -619,7 +619,7 @@ class TestExperimentIoManage:
             export_path="C:\\Exports\\exp.dsa", success=True, timestamp_utc=_TS
         )
         with _patch_svc("experiment_export", return_value=mock_result):
-            from sources.tools.project.management import experiment_io_manage
+            from controldesk_mcp.tools.project.management import experiment_io_manage
 
             result = await experiment_io_manage(
                 ExperimentIoManageInput(
@@ -633,7 +633,7 @@ class TestExperimentIoManage:
 
     @pytest.mark.asyncio
     async def test_export_missing_path_returns_missing_param(self) -> None:
-        from sources.tools.project.management import experiment_io_manage
+        from controldesk_mcp.tools.project.management import experiment_io_manage
 
         result = await experiment_io_manage(
             ExperimentIoManageInput(action=ExperimentIoManageAction.export, export_path=None)
@@ -646,7 +646,7 @@ class TestExperimentIoManage:
     async def test_import_returns_ok(self) -> None:
         mock_result = ExperimentImportResult(name="ImportedExp", imported=True, timestamp_utc=_TS)
         with _patch_svc("experiment_import", return_value=mock_result):
-            from sources.tools.project.management import experiment_io_manage
+            from controldesk_mcp.tools.project.management import experiment_io_manage
 
             result = await experiment_io_manage(
                 ExperimentIoManageInput(
@@ -660,7 +660,7 @@ class TestExperimentIoManage:
 
     @pytest.mark.asyncio
     async def test_import_missing_path_returns_missing_param(self) -> None:
-        from sources.tools.project.management import experiment_io_manage
+        from controldesk_mcp.tools.project.management import experiment_io_manage
 
         result = await experiment_io_manage(
             ExperimentIoManageInput(action=ExperimentIoManageAction.import_, import_path=None)
@@ -673,7 +673,7 @@ class TestExperimentIoManage:
     async def test_rename_returns_ok(self) -> None:
         mock_result = ExperimentRenameResult(new_name="NewName", renamed=True, timestamp_utc=_TS)
         with _patch_svc("experiment_rename", return_value=mock_result):
-            from sources.tools.project.management import experiment_io_manage
+            from controldesk_mcp.tools.project.management import experiment_io_manage
 
             result = await experiment_io_manage(
                 ExperimentIoManageInput(action=ExperimentIoManageAction.rename, new_name="NewName")
@@ -685,7 +685,7 @@ class TestExperimentIoManage:
 
     @pytest.mark.asyncio
     async def test_rename_missing_name_returns_missing_param(self) -> None:
-        from sources.tools.project.management import experiment_io_manage
+        from controldesk_mcp.tools.project.management import experiment_io_manage
 
         result = await experiment_io_manage(
             ExperimentIoManageInput(action=ExperimentIoManageAction.rename, new_name=None)
@@ -698,7 +698,7 @@ class TestExperimentIoManage:
     async def test_save_as_returns_ok(self) -> None:
         mock_result = ExperimentSaveAsResult(new_name="Exp_Copy", saved=True, timestamp_utc=_TS)
         with _patch_svc("experiment_save_as", return_value=mock_result):
-            from sources.tools.project.management import experiment_io_manage
+            from controldesk_mcp.tools.project.management import experiment_io_manage
 
             result = await experiment_io_manage(
                 ExperimentIoManageInput(
@@ -712,7 +712,7 @@ class TestExperimentIoManage:
 
     @pytest.mark.asyncio
     async def test_save_as_missing_name_returns_missing_param(self) -> None:
-        from sources.tools.project.management import experiment_io_manage
+        from controldesk_mcp.tools.project.management import experiment_io_manage
 
         result = await experiment_io_manage(
             ExperimentIoManageInput(action=ExperimentIoManageAction.save_as, new_name=None)
@@ -728,7 +728,7 @@ class TestExperimentIoManage:
 class TestProjectDiscover:
     @pytest.mark.asyncio
     async def test_returns_catalogue_with_all_tools(self) -> None:
-        from sources.tools.project.management import project_discover
+        from controldesk_mcp.tools.project.management import project_discover
 
         result = await project_discover(AsyncMock())
 
@@ -742,7 +742,7 @@ class TestProjectDiscover:
 
     @pytest.mark.asyncio
     async def test_required_params_populated(self) -> None:
-        from sources.tools.project.management import project_discover
+        from controldesk_mcp.tools.project.management import project_discover
 
         result = await project_discover(AsyncMock())
 

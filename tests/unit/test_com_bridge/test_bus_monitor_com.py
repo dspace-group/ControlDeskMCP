@@ -1,4 +1,4 @@
-"""Unit tests for sources.com_bridge.domains.bus_monitor_com."""
+"""Unit tests for controldesk_mcp.com_bridge.domains.bus_monitor_com."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, PropertyMock
 
 import pytest
 
-from sources.com_bridge.domains.bus_monitor_com import (
+from controldesk_mcp.com_bridge.domains.bus_monitor_com import (
     clear_all_monitors,
     configure_monitor,
     create_monitor,
@@ -20,7 +20,7 @@ from sources.com_bridge.domains.bus_monitor_com import (
     start_monitor,
     stop_monitor,
 )
-from sources.com_bridge.errors import BridgePreconditionError
+from controldesk_mcp.com_bridge.errors import BridgePreconditionError
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -74,7 +74,7 @@ def _make_app(
     system = MagicMock()
     bus_platform = MagicMock()
 
-    from sources.com_bridge.domains.bus_monitor_com import _BUS_TYPE_PROPERTY
+    from controldesk_mcp.com_bridge.domains.bus_monitor_com import _BUS_TYPE_PROPERTY
 
     prop_name = _BUS_TYPE_PROPERTY.get(bus_type, "CANBusSystem")
     bus_system = MagicMock()

@@ -1,4 +1,4 @@
-"""Unit tests for sources.com_bridge.sta_thread."""
+"""Unit tests for controldesk_mcp.com_bridge.sta_thread."""
 
 from __future__ import annotations
 
@@ -7,8 +7,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from sources.com_bridge import sta_thread as _module
-from sources.com_bridge.sta_thread import STAThread, get_sta_thread, shutdown, startup
+from controldesk_mcp.com_bridge import sta_thread as _module
+from controldesk_mcp.com_bridge.sta_thread import STAThread, get_sta_thread, shutdown, startup
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
 

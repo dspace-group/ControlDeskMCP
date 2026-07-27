@@ -1,4 +1,4 @@
-"""Unit tests for sources.com_bridge.connection."""
+"""Unit tests for controldesk_mcp.com_bridge.connection."""
 
 from __future__ import annotations
 
@@ -6,8 +6,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from sources.com_bridge.connection import ComConnection, ConnectionState
-from sources.com_bridge.errors import BridgeConnectionError, BridgeError
+from controldesk_mcp.com_bridge.connection import ComConnection, ConnectionState
+from controldesk_mcp.com_bridge.errors import BridgeConnectionError, BridgeError
 
 
 class TestComConnection:
@@ -20,7 +20,7 @@ class TestComConnection:
         conn = self._make()
         mock_app = MagicMock()
         with patch.object(conn, "_dispatch", return_value=(mock_app, True)):
-            with patch("sources.com_bridge.connection.resolve_prog_id", return_value="CD.App"):
+            with patch("controldesk_mcp.com_bridge.connection.resolve_prog_id", return_value="CD.App"):
                 launched = conn.connect("")  # empty = auto-detect
         assert conn.state is ConnectionState.CONNECTED
         assert conn._prog_id == "CD.App"
@@ -30,7 +30,7 @@ class TestComConnection:
     def test_connect_raises_cd_error_on_dispatch_failure(self) -> None:
         conn = self._make()
         with patch.object(conn, "_dispatch", side_effect=BridgeConnectionError("fail")):
-            with patch("sources.com_bridge.connection.resolve_prog_id", return_value="CD.App"):
+            with patch("controldesk_mcp.com_bridge.connection.resolve_prog_id", return_value="CD.App"):
                 with pytest.raises(BridgeConnectionError):
                     conn.connect("")
 
@@ -119,14 +119,14 @@ class TestComConnection:
 
 class TestApplicationCom:
     def test_get_version_returns_string(self) -> None:
-        from sources.com_bridge.domains.application_com import get_version
+        from controldesk_mcp.com_bridge.domains.application_com import get_version
 
         app = MagicMock()
         app.Version = "2026-A"
         assert get_version(app) == "2026-A"
 
     def test_get_version_raises_cd_error_on_failure(self) -> None:
-        from sources.com_bridge.domains.application_com import get_version
+        from controldesk_mcp.com_bridge.domains.application_com import get_version
 
         app = MagicMock()
         type(app).Version = property(  # type: ignore[assignment]
@@ -136,21 +136,21 @@ class TestApplicationCom:
             get_version(app)
 
     def test_is_experiment_open_true(self) -> None:
-        from sources.com_bridge.domains.application_com import is_experiment_open
+        from controldesk_mcp.com_bridge.domains.application_com import is_experiment_open
 
         app = MagicMock()
         app.ActiveExperiment = MagicMock()
         assert is_experiment_open(app) is True
 
     def test_is_experiment_open_false_when_none(self) -> None:
-        from sources.com_bridge.domains.application_com import is_experiment_open
+        from controldesk_mcp.com_bridge.domains.application_com import is_experiment_open
 
         app = MagicMock()
         app.ActiveExperiment = None
         assert is_experiment_open(app) is False
 
     def test_show_window_sets_visible(self) -> None:
-        from sources.com_bridge.domains.application_com import show_window
+        from controldesk_mcp.com_bridge.domains.application_com import show_window
 
         app = MagicMock()
         show_window(app)
@@ -158,7 +158,7 @@ class TestApplicationCom:
 
     def test_show_window_retries_on_server_unavailable(self) -> None:
         """Should poll and succeed once the COM server becomes ready."""
-        from sources.com_bridge.domains.application_com import show_window
+        from controldesk_mcp.com_bridge.domains.application_com import show_window
 
         call_count = 0
 
@@ -175,8 +175,8 @@ class TestApplicationCom:
         assert call_count == 3
 
     def test_show_window_raises_timeout_when_always_unavailable(self) -> None:
-        from sources.com_bridge.domains.application_com import show_window
-        from sources.com_bridge.errors import BridgeTimeoutError
+        from controldesk_mcp.com_bridge.domains.application_com import show_window
+        from controldesk_mcp.com_bridge.errors import BridgeTimeoutError
 
         def _fset(self: object, value: bool) -> None:
             signed = 0x800706BA - 0x100000000
@@ -189,7 +189,7 @@ class TestApplicationCom:
 
     def test_show_window_raises_cd_error_on_non_transient_failure(self) -> None:
         """Errors that are not startup-race HRESULTs must not be retried."""
-        from sources.com_bridge.domains.application_com import show_window
+        from controldesk_mcp.com_bridge.domains.application_com import show_window
 
         def _fset(self: object, value: bool) -> None:
             raise Exception("some other error")

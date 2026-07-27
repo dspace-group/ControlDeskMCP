@@ -1,4 +1,4 @@
-"""Unit tests for sources.services.tool_window_service.
+"""Unit tests for controldesk_mcp.services.tool_window_service.
 
 Tests mock com_bridge.dispatch; no real COM is invoked.
 """
@@ -9,9 +9,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import sources.com_bridge as bridge
-from sources.com_bridge.errors import BridgeConnectionError, BridgePreconditionError
-from sources.models.tool_window import (
+import controldesk_mcp.com_bridge as bridge
+from controldesk_mcp.com_bridge.errors import BridgeConnectionError, BridgePreconditionError
+from controldesk_mcp.models.tool_window import (
     ToolWindowCheckExistsInput,
     ToolWindowShowInput,
 )
@@ -22,7 +22,7 @@ from sources.models.tool_window import (
 @pytest.fixture(autouse=True)
 def _reset_bridge():
     bridge._connection = None
-    import sources.com_bridge.sta_thread as _sta
+    import controldesk_mcp.com_bridge.sta_thread as _sta
 
     _sta._sta_thread = None
     yield
@@ -31,7 +31,7 @@ def _reset_bridge():
 
 
 def _make_connected_bridge() -> MagicMock:
-    from sources.com_bridge.connection import ConnectionState
+    from controldesk_mcp.com_bridge.connection import ConnectionState
 
     conn = MagicMock()
     conn.state = ConnectionState.CONNECTED
@@ -58,11 +58,11 @@ class TestListWindows:
         ]
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, windows],
         ):
-            from sources.services.tool_window_service import list_windows
+            from controldesk_mcp.services.tool_window_service import list_windows
 
             result = await list_windows()
 
@@ -74,11 +74,11 @@ class TestListWindows:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("disconnected"),
         ):
-            from sources.services.tool_window_service import list_windows
+            from controldesk_mcp.services.tool_window_service import list_windows
 
             result = await list_windows()
 
@@ -100,11 +100,11 @@ class TestShowWindow:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.tool_window_service import show_window
+            from controldesk_mcp.services.tool_window_service import show_window
 
             result = await show_window(ToolWindowShowInput(window_name="Variables"))
 
@@ -116,11 +116,11 @@ class TestShowWindow:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgePreconditionError("no experiment"),
         ):
-            from sources.services.tool_window_service import show_window
+            from controldesk_mcp.services.tool_window_service import show_window
 
             result = await show_window(ToolWindowShowInput(window_name="Variables"))
 
@@ -137,11 +137,11 @@ class TestCheckWindowExists:
         app_mock = conn.get_app.return_value
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, True],
         ):
-            from sources.services.tool_window_service import check_window_exists
+            from controldesk_mcp.services.tool_window_service import check_window_exists
 
             result = await check_window_exists(ToolWindowCheckExistsInput(window_name="Variables"))
 

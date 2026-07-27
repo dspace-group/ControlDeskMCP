@@ -6,21 +6,21 @@ import sys
 
 class TestGetLogger:
     def test_returns_logger(self) -> None:
-        from sources.utils.logger import get_logger
+        from controldesk_mcp.utils.logger import get_logger
 
         lg = get_logger("test.module")
         assert isinstance(lg, logging.Logger)
         assert lg.name == "test.module"
 
     def test_same_name_returns_same_instance(self) -> None:
-        from sources.utils.logger import get_logger
+        from controldesk_mcp.utils.logger import get_logger
 
         lg1 = get_logger("test.dedup")
         lg2 = get_logger("test.dedup")
         assert lg1 is lg2
 
     def test_handler_writes_to_stderr(self) -> None:
-        from sources.utils.logger import get_logger
+        from controldesk_mcp.utils.logger import get_logger
 
         lg = get_logger("test.stderr_check")
         assert any(
@@ -29,13 +29,13 @@ class TestGetLogger:
 
     def test_propagate_is_false(self) -> None:
         """Logger must not forward to root — root handler may use stdout."""
-        from sources.utils.logger import get_logger
+        from controldesk_mcp.utils.logger import get_logger
 
         lg = get_logger("test.propagate")
         assert lg.propagate is False
 
     def test_no_stdout_handler(self) -> None:
-        from sources.utils.logger import get_logger
+        from controldesk_mcp.utils.logger import get_logger
 
         lg = get_logger("test.no_stdout")
         for handler in lg.handlers:
@@ -46,7 +46,7 @@ class TestGetLogger:
 class TestConfigureRootLevel:
     def test_handler_level_reflects_config(self) -> None:
         """Handler level should match configured log level, with WARNING as minimum on stdio."""
-        from sources.utils.logger import (
+        from controldesk_mcp.utils.logger import (
             _configured,
             _StderrOnlyHandler,
             configure_root_level,
@@ -72,7 +72,7 @@ class TestConfigureRootLevel:
 
     def test_info_messages_filtered_by_default(self) -> None:
         """INFO messages should not reach stderr handler by default (WARNING+)."""
-        from sources.utils.logger import (
+        from controldesk_mcp.utils.logger import (
             _configured,
             _StderrOnlyHandler,
             configure_root_level,

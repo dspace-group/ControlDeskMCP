@@ -10,7 +10,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from sources.models.calibration import (
+from controldesk_mcp.models.calibration import (
     CalibrationActivateReferencePageResult,
     CalibrationActivateWorkingPageResult,
     CalibrationCopyReferencePageToWorkingResult,
@@ -35,7 +35,7 @@ from sources.models.calibration import (
     ProposedCalibrationStartResult,
     ProposedCalibrationStopResult,
 )
-from sources.models.errors import ErrorEnvelope
+from controldesk_mcp.models.errors import ErrorEnvelope
 
 _TS = "2024-01-01T00:00:00Z"
 _ERROR = ErrorEnvelope(error_code="E001", category="UNKNOWN", message="fail", retryable=False)
@@ -43,7 +43,7 @@ _ERROR = ErrorEnvelope(error_code="E001", category="UNKNOWN", message="fail", re
 
 def _patch_svc(method: str, *, return_value):
     return patch(
-        f"sources.services.calibration_service.{method}",
+        f"controldesk_mcp.services.calibration_service.{method}",
         new_callable=AsyncMock,
         return_value=return_value,
     )
@@ -54,7 +54,7 @@ class TestCalibrationStart:
     async def test_calls_service(self) -> None:
         expected = CalibrationStartResult(started=True)
         with _patch_svc("start_calibration", return_value=expected):
-            from sources.tools.calibration.management import calibration_start
+            from controldesk_mcp.tools.calibration.management import calibration_start
 
             result = await calibration_start(CalibrationStartInput())
 
@@ -64,7 +64,7 @@ class TestCalibrationStart:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("start_calibration", return_value=_ERROR):
-            from sources.tools.calibration.management import calibration_start
+            from controldesk_mcp.tools.calibration.management import calibration_start
 
             result = await calibration_start(CalibrationStartInput())
 
@@ -73,7 +73,7 @@ class TestCalibrationStart:
 
     @pytest.mark.asyncio
     async def test_dry_run_delegates_to_preview_without_starting(self) -> None:
-        from sources.models.base import DryRunPreviewResult
+        from controldesk_mcp.models.base import DryRunPreviewResult
 
         preview = DryRunPreviewResult(
             tool="calibration_start",
@@ -87,7 +87,7 @@ class TestCalibrationStart:
             _patch_svc("dry_run_start_calibration", return_value=preview) as mock_dry_run,
             _patch_svc("start_calibration", return_value=_ERROR) as mock_start,
         ):
-            from sources.tools.calibration.management import calibration_start
+            from controldesk_mcp.tools.calibration.management import calibration_start
 
             result = await calibration_start(CalibrationStartInput(dry_run=True))
 
@@ -102,7 +102,7 @@ class TestCalibrationStop:
     async def test_calls_service(self) -> None:
         expected = CalibrationStopResult(stopped=True)
         with _patch_svc("stop_calibration", return_value=expected):
-            from sources.tools.calibration.management import calibration_stop
+            from controldesk_mcp.tools.calibration.management import calibration_stop
 
             result = await calibration_stop(CalibrationStopInput())
 
@@ -120,7 +120,7 @@ class TestCalibrationQuery:
             proposed_calibration_state_raw=0,
         )
         with _patch_svc("get_calibration_state", return_value=expected):
-            from sources.tools.calibration.management import calibration_query
+            from controldesk_mcp.tools.calibration.management import calibration_query
 
             result = await calibration_query(
                 CalibrationQueryInput(action=CalibrationQueryAction.get_state)
@@ -132,7 +132,7 @@ class TestCalibrationQuery:
     @pytest.mark.asyncio
     async def test_get_state_returns_error(self) -> None:
         with _patch_svc("get_calibration_state", return_value=_ERROR):
-            from sources.tools.calibration.management import calibration_query
+            from controldesk_mcp.tools.calibration.management import calibration_query
 
             result = await calibration_query(
                 CalibrationQueryInput(action=CalibrationQueryAction.get_state)
@@ -146,7 +146,7 @@ class TestCalibrationManage:
     async def test_activate_reference_page(self) -> None:
         expected = CalibrationActivateReferencePageResult(activated=True, page="ReferencePage")
         with _patch_svc("activate_reference_page", return_value=expected):
-            from sources.tools.calibration.management import calibration_manage
+            from controldesk_mcp.tools.calibration.management import calibration_manage
 
             result = await calibration_manage(
                 CalibrationManageInput(action=CalibrationManageAction.activate_reference_page)
@@ -160,7 +160,7 @@ class TestCalibrationManage:
     async def test_activate_working_page(self) -> None:
         expected = CalibrationActivateWorkingPageResult(activated=True, page="WorkingPage")
         with _patch_svc("activate_working_page", return_value=expected):
-            from sources.tools.calibration.management import calibration_manage
+            from controldesk_mcp.tools.calibration.management import calibration_manage
 
             result = await calibration_manage(
                 CalibrationManageInput(action=CalibrationManageAction.activate_working_page)
@@ -174,7 +174,7 @@ class TestCalibrationManage:
     async def test_refresh_parameters(self) -> None:
         expected = CalibrationRefreshParametersResult(refreshed=True, timestamp_utc=_TS)
         with _patch_svc("refresh_parameters", return_value=expected):
-            from sources.tools.calibration.management import calibration_manage
+            from controldesk_mcp.tools.calibration.management import calibration_manage
 
             result = await calibration_manage(
                 CalibrationManageInput(action=CalibrationManageAction.refresh_parameters)
@@ -190,7 +190,7 @@ class TestProposedCalibrationManage:
     async def test_start(self) -> None:
         expected = ProposedCalibrationStartResult(started=True, proposed_calibration_active=True)
         with _patch_svc("start_proposed_calibration", return_value=expected):
-            from sources.tools.calibration.management import proposed_calibration_manage
+            from controldesk_mcp.tools.calibration.management import proposed_calibration_manage
 
             result = await proposed_calibration_manage(
                 ProposedCalibrationManageInput(action=ProposedCalibrationManageAction.start)
@@ -206,7 +206,7 @@ class TestProposedCalibrationManage:
             stopped=True, changes_applied=False, proposed_calibration_active=False
         )
         with _patch_svc("stop_proposed_calibration", return_value=expected):
-            from sources.tools.calibration.management import proposed_calibration_manage
+            from controldesk_mcp.tools.calibration.management import proposed_calibration_manage
 
             result = await proposed_calibration_manage(
                 ProposedCalibrationManageInput(action=ProposedCalibrationManageAction.stop)
@@ -220,7 +220,7 @@ class TestProposedCalibrationManage:
     async def test_apply(self) -> None:
         expected = ProposedCalibrationApplyResult(applied=True, proposed_calibration_active=False)
         with _patch_svc("apply_proposed_calibration", return_value=expected):
-            from sources.tools.calibration.management import proposed_calibration_manage
+            from controldesk_mcp.tools.calibration.management import proposed_calibration_manage
 
             result = await proposed_calibration_manage(
                 ProposedCalibrationManageInput(action=ProposedCalibrationManageAction.apply)
@@ -236,7 +236,7 @@ class TestProposedCalibrationManage:
             cancelled=True, proposed_calibration_active=False
         )
         with _patch_svc("cancel_proposed_calibration", return_value=expected):
-            from sources.tools.calibration.management import proposed_calibration_manage
+            from controldesk_mcp.tools.calibration.management import proposed_calibration_manage
 
             result = await proposed_calibration_manage(
                 ProposedCalibrationManageInput(action=ProposedCalibrationManageAction.cancel)
@@ -257,7 +257,7 @@ class TestCalibrationPageManage:
             target_page="ReferencePage",
         )
         with _patch_svc("copy_working_page_to_reference", return_value=expected):
-            from sources.tools.calibration.management import calibration_page_manage
+            from controldesk_mcp.tools.calibration.management import calibration_page_manage
 
             result = await calibration_page_manage(
                 CalibrationPageManageInput(
@@ -281,7 +281,7 @@ class TestCalibrationPageManage:
             target_page="WorkingPage",
         )
         with _patch_svc("copy_reference_page_to_working", return_value=expected):
-            from sources.tools.calibration.management import calibration_page_manage
+            from controldesk_mcp.tools.calibration.management import calibration_page_manage
 
             result = await calibration_page_manage(
                 CalibrationPageManageInput(
@@ -298,7 +298,7 @@ class TestCalibrationPageManage:
 
     @pytest.mark.asyncio
     async def test_missing_platform_name_returns_error(self) -> None:
-        from sources.tools.calibration.management import calibration_page_manage
+        from controldesk_mcp.tools.calibration.management import calibration_page_manage
 
         result = await calibration_page_manage(
             CalibrationPageManageInput(
@@ -313,7 +313,7 @@ class TestCalibrationPageManage:
     @pytest.mark.asyncio
     async def test_copy_working_to_reference_returns_error(self) -> None:
         with _patch_svc("copy_working_page_to_reference", return_value=_ERROR):
-            from sources.tools.calibration.management import calibration_page_manage
+            from controldesk_mcp.tools.calibration.management import calibration_page_manage
 
             result = await calibration_page_manage(
                 CalibrationPageManageInput(
@@ -328,7 +328,7 @@ class TestCalibrationPageManage:
 class TestCalibrationDiscover:
     @pytest.mark.asyncio
     async def test_returns_discover_result(self) -> None:
-        from sources.tools.calibration.management import calibration_discover
+        from controldesk_mcp.tools.calibration.management import calibration_discover
 
         result = await calibration_discover(AsyncMock())
 

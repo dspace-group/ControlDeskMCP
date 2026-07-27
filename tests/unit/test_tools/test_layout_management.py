@@ -10,8 +10,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from sources.models.errors import ErrorEnvelope
-from sources.models.layout import (
+from controldesk_mcp.models.errors import ErrorEnvelope
+from controldesk_mcp.models.layout import (
     LayoutActivateResult,
     LayoutCreateResult,
     LayoutDiscoverResult,
@@ -37,7 +37,7 @@ _INFO = LayoutInfo(
 
 def _patch_svc(method: str, *, return_value):
     return patch(
-        f"sources.services.layout_service.{method}",
+        f"controldesk_mcp.services.layout_service.{method}",
         new_callable=AsyncMock,
         return_value=return_value,
     )
@@ -51,7 +51,7 @@ class TestLayoutList:
     async def test_returns_list_result(self) -> None:
         expected = LayoutListResult(total_layouts=1, layouts=[_INFO])
         with _patch_svc("layout_list", return_value=expected):
-            from sources.tools.layout.management import layout_list
+            from controldesk_mcp.tools.layout.management import layout_list
 
             result = await layout_list(LayoutListInput())
 
@@ -61,7 +61,7 @@ class TestLayoutList:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("layout_list", return_value=_ERROR):
-            from sources.tools.layout.management import layout_list
+            from controldesk_mcp.tools.layout.management import layout_list
 
             result = await layout_list(LayoutListInput())
 
@@ -78,7 +78,7 @@ class TestLayoutManageCreate:
             created=True, name="NewLayout", file_path="", timestamp_utc=_TS
         )
         with _patch_svc("layout_create", return_value=expected):
-            from sources.tools.layout.management import layout_manage
+            from controldesk_mcp.tools.layout.management import layout_manage
 
             result = await layout_manage(
                 LayoutManageInput(action=LayoutManageAction.create, name="NewLayout")
@@ -89,7 +89,7 @@ class TestLayoutManageCreate:
 
     @pytest.mark.asyncio
     async def test_create_missing_name_returns_error(self) -> None:
-        from sources.tools.layout.management import layout_manage
+        from controldesk_mcp.tools.layout.management import layout_manage
 
         result = await layout_manage(LayoutManageInput(action=LayoutManageAction.create))
 
@@ -103,7 +103,7 @@ class TestLayoutManageCreate:
 class TestLayoutManageConfigure:
     @pytest.mark.asyncio
     async def test_configure_missing_editing_mode_returns_error(self) -> None:
-        from sources.tools.layout.management import layout_manage
+        from controldesk_mcp.tools.layout.management import layout_manage
 
         result = await layout_manage(
             LayoutManageInput(action=LayoutManageAction.configure, name="Layout1")
@@ -121,7 +121,7 @@ class TestLayoutManageActivate:
     async def test_activate_returns_result(self) -> None:
         expected = LayoutActivateResult(activated=True, name="ControlLayout", timestamp_utc=_TS)
         with _patch_svc("layout_activate", return_value=expected):
-            from sources.tools.layout.management import layout_manage
+            from controldesk_mcp.tools.layout.management import layout_manage
 
             result = await layout_manage(
                 LayoutManageInput(action=LayoutManageAction.activate, name="ControlLayout")
@@ -137,8 +137,8 @@ class TestLayoutManageActivate:
 class TestLayoutIoManage:
     @pytest.mark.asyncio
     async def test_export_missing_path_returns_error(self) -> None:
-        from sources.models.layout import LayoutIoManageAction
-        from sources.tools.layout.management import layout_io_manage
+        from controldesk_mcp.models.layout import LayoutIoManageAction
+        from controldesk_mcp.tools.layout.management import layout_io_manage
 
         result = await layout_io_manage(LayoutIoManageInput(action=LayoutIoManageAction.export))
 
@@ -147,7 +147,7 @@ class TestLayoutIoManage:
 
     @pytest.mark.asyncio
     async def test_export_returns_result(self) -> None:
-        from sources.models.layout import LayoutIoManageAction
+        from controldesk_mcp.models.layout import LayoutIoManageAction
 
         expected = LayoutExportResult(
             exported=True,
@@ -156,7 +156,7 @@ class TestLayoutIoManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("layout_export", return_value=expected):
-            from sources.tools.layout.management import layout_io_manage
+            from controldesk_mcp.tools.layout.management import layout_io_manage
 
             result = await layout_io_manage(
                 LayoutIoManageInput(
@@ -178,16 +178,16 @@ class TestLayoutDiscover:
 
         ctx = MagicMock()
         with (
-            patch("sources.tools.layout.management.get_settings") as mock_settings,
+            patch("controldesk_mcp.tools.layout.management.get_settings") as mock_settings,
             patch(
-                "sources.tools.layout.management.mcp.evict_stale_domains", new_callable=AsyncMock
+                "controldesk_mcp.tools.layout.management.mcp.evict_stale_domains", new_callable=AsyncMock
             ),
             patch(
-                "sources.tools.layout.management.mcp.activate_domain_tools", new_callable=AsyncMock
+                "controldesk_mcp.tools.layout.management.mcp.activate_domain_tools", new_callable=AsyncMock
             ),
         ):
             mock_settings.return_value.tool_ttl_enabled = False
-            from sources.tools.layout.management import layout_discover
+            from controldesk_mcp.tools.layout.management import layout_discover
 
             result = await layout_discover(ctx)
 

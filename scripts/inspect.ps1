@@ -66,7 +66,7 @@ Write-Host ''
 Write-Host '=== ControlDesk MCP — Inspector ===' -ForegroundColor Cyan
 Write-Host ''
 Write-Host '  UI   : http://localhost:5173' -ForegroundColor Green
-Write-Host '  Server : uv run python -m sources  (stdio transport)' -ForegroundColor Green
+Write-Host '  Server : uv run python -m controldesk_mcp  (stdio transport)' -ForegroundColor Green
 Write-Host '  PYTHONPATH : ' + $env:PYTHONPATH
 Write-Host ''
 Write-Host 'The Inspector spawns the server as a child process.' -ForegroundColor Yellow
@@ -75,4 +75,4 @@ Write-Host ''
 
 # ── Launch ────────────────────────────────────────────────────────────────────
 # -y  : auto-confirm the one-time npx package download (no interactive prompt)
-npx -y @modelcontextprotocol/inspector uv run python -m sources
+npx -y @modelcontextprotocol/inspector uv run python -m controldesk_mcp

@@ -1,4 +1,4 @@
-"""Unit tests for sources.services.bus_replay_service.
+"""Unit tests for controldesk_mcp.services.bus_replay_service.
 
 Tests mock com_bridge.dispatch; no real COM is invoked.
 """
@@ -9,9 +9,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import sources.com_bridge as bridge
-from sources.com_bridge.errors import BridgeConnectionError, BridgeOperationError
-from sources.models.bus_replay import (
+import controldesk_mcp.com_bridge as bridge
+from controldesk_mcp.com_bridge.errors import BridgeConnectionError, BridgeOperationError
+from controldesk_mcp.models.bus_replay import (
     BusReplayClearAllInput,
     BusReplayConfigureInput,
     BusReplayCreateInput,
@@ -31,7 +31,7 @@ from sources.models.bus_replay import (
 @pytest.fixture(autouse=True)
 def _reset_bridge():
     bridge._connection = None
-    import sources.com_bridge.sta_thread as _sta
+    import controldesk_mcp.com_bridge.sta_thread as _sta
 
     _sta._sta_thread = None
     yield
@@ -40,7 +40,7 @@ def _reset_bridge():
 
 
 def _make_connected_bridge() -> MagicMock:
-    from sources.com_bridge.connection import ConnectionState
+    from controldesk_mcp.com_bridge.connection import ConnectionState
 
     conn = MagicMock()
     conn.state = ConnectionState.CONNECTED
@@ -68,11 +68,11 @@ class TestCreateReplay:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.bus_replay_service import create_replay
+            from controldesk_mcp.services.bus_replay_service import create_replay
 
             result = await create_replay(
                 BusReplayCreateInput(replay_name="CANReplay", system_index=0, bus_type=BusType.CAN)
@@ -86,11 +86,11 @@ class TestCreateReplay:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("no connection"),
         ):
-            from sources.services.bus_replay_service import create_replay
+            from controldesk_mcp.services.bus_replay_service import create_replay
 
             result = await create_replay(
                 BusReplayCreateInput(replay_name="CANReplay", system_index=0, bus_type=BusType.CAN)
@@ -119,11 +119,11 @@ class TestConfigureReplay:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.bus_replay_service import configure_replay
+            from controldesk_mcp.services.bus_replay_service import configure_replay
 
             result = await configure_replay(
                 BusReplayConfigureInput(
@@ -144,14 +144,14 @@ class TestConfigureReplay:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[
                 MagicMock(),  # First call: get_app
                 BridgeOperationError("config failed"),  # Second call: COM
             ],
         ):
-            from sources.services.bus_replay_service import configure_replay
+            from controldesk_mcp.services.bus_replay_service import configure_replay
 
             result = await configure_replay(
                 BusReplayConfigureInput(
@@ -183,11 +183,11 @@ class TestStartReplay:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.bus_replay_service import start_replay
+            from controldesk_mcp.services.bus_replay_service import start_replay
 
             result = await start_replay(
                 BusReplayStartInput(replay_name="CANReplay", system_index=0, bus_type=BusType.CAN)
@@ -201,14 +201,14 @@ class TestStartReplay:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[
                 MagicMock(),  # First call: get_app
                 BridgeOperationError("start failed"),  # Second call: COM
             ],
         ):
-            from sources.services.bus_replay_service import start_replay
+            from controldesk_mcp.services.bus_replay_service import start_replay
 
             result = await start_replay(
                 BusReplayStartInput(replay_name="CANReplay", system_index=0, bus_type=BusType.CAN)
@@ -234,11 +234,11 @@ class TestStopReplay:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.bus_replay_service import stop_replay
+            from controldesk_mcp.services.bus_replay_service import stop_replay
 
             result = await stop_replay(
                 BusReplayStopInput(replay_name="CANReplay", system_index=0, bus_type=BusType.CAN)
@@ -267,11 +267,11 @@ class TestGetReplayState:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.bus_replay_service import get_replay_state
+            from controldesk_mcp.services.bus_replay_service import get_replay_state
 
             result = await get_replay_state(
                 BusReplayGetStateInput(
@@ -315,11 +315,11 @@ class TestListReplays:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.bus_replay_service import list_replays
+            from controldesk_mcp.services.bus_replay_service import list_replays
 
             result = await list_replays(BusReplayListInput(system_index=0, bus_type=BusType.CAN))
 
@@ -339,11 +339,11 @@ class TestListReplays:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.bus_replay_service import list_replays
+            from controldesk_mcp.services.bus_replay_service import list_replays
 
             result = await list_replays(BusReplayListInput(system_index=0, bus_type=BusType.CAN))
 
@@ -366,11 +366,11 @@ class TestRemoveReplay:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.bus_replay_service import remove_replay
+            from controldesk_mcp.services.bus_replay_service import remove_replay
 
             result = await remove_replay(
                 BusReplayRemoveInput(replay_name="CANReplay", system_index=0, bus_type=BusType.CAN)
@@ -396,11 +396,11 @@ class TestClearAllReplays:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.bus_replay_service import clear_all_replays
+            from controldesk_mcp.services.bus_replay_service import clear_all_replays
 
             result = await clear_all_replays(
                 BusReplayClearAllInput(system_index=0, bus_type=BusType.CAN, confirm=True)
@@ -413,8 +413,8 @@ class TestClearAllReplays:
     async def test_returns_aborted_without_confirm(self) -> None:
         _make_connected_bridge()
 
-        with patch("sources.com_bridge.dispatch", new_callable=AsyncMock):
-            from sources.services.bus_replay_service import clear_all_replays
+        with patch("controldesk_mcp.com_bridge.dispatch", new_callable=AsyncMock):
+            from controldesk_mcp.services.bus_replay_service import clear_all_replays
 
             result = await clear_all_replays(
                 BusReplayClearAllInput(system_index=0, bus_type=BusType.CAN, confirm=False)
@@ -441,11 +441,11 @@ class TestSetReplayActivated:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, expected],
         ):
-            from sources.services.bus_replay_service import set_replay_activated
+            from controldesk_mcp.services.bus_replay_service import set_replay_activated
 
             result = await set_replay_activated(
                 BusReplaySetActivatedInput(
@@ -469,11 +469,11 @@ class TestDryRunCreateReplay:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("Replay 'CANReplay' not found."),
         ):
-            from sources.services.bus_replay_service import dry_run_create_replay
+            from controldesk_mcp.services.bus_replay_service import dry_run_create_replay
 
             result = await dry_run_create_replay(
                 BusReplayCreateInput(
@@ -499,11 +499,11 @@ class TestDryRunCreateReplay:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, existing_state],
         ):
-            from sources.services.bus_replay_service import dry_run_create_replay
+            from controldesk_mcp.services.bus_replay_service import dry_run_create_replay
 
             result = await dry_run_create_replay(
                 BusReplayCreateInput(

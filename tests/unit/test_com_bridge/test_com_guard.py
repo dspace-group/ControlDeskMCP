@@ -1,4 +1,4 @@
-"""Unit tests for sources.com_bridge.com_guard."""
+"""Unit tests for controldesk_mcp.com_bridge.com_guard."""
 
 from __future__ import annotations
 
@@ -7,9 +7,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from sources.com_bridge.error_handling.circuit_breaker import CircuitBreaker
-from sources.com_bridge.error_handling.guard import com_guard, guarded_dispatch
-from sources.com_bridge.errors import (
+from controldesk_mcp.com_bridge.error_handling.circuit_breaker import CircuitBreaker
+from controldesk_mcp.com_bridge.error_handling.guard import com_guard, guarded_dispatch
+from controldesk_mcp.com_bridge.errors import (
     BridgeCircuitOpenError,
     BridgeConnectionError,
     BridgeOperationError,
@@ -65,14 +65,14 @@ class TestComGuard:
 class TestGuardedDispatch:
     @pytest.mark.asyncio
     async def test_returns_result_on_success(self) -> None:
-        with patch("sources.com_bridge.dispatch", new_callable=AsyncMock, return_value=42):
+        with patch("controldesk_mcp.com_bridge.dispatch", new_callable=AsyncMock, return_value=42):
             result = await guarded_dispatch(MagicMock(), operation="test_op")
         assert result == 42
 
     @pytest.mark.asyncio
     async def test_raises_cd_error_on_failure(self) -> None:
         exc = BridgeOperationError("op failed", error_code="BRIDGE_OPERATION_ERROR")
-        with patch("sources.com_bridge.dispatch", new_callable=AsyncMock, side_effect=exc):
+        with patch("controldesk_mcp.com_bridge.dispatch", new_callable=AsyncMock, side_effect=exc):
             with pytest.raises(BridgeOperationError):
                 await guarded_dispatch(MagicMock(), operation="test_op")
 
@@ -89,7 +89,7 @@ class TestGuardedDispatch:
             return "ok"
 
         with (
-            patch("sources.com_bridge.dispatch", new_callable=AsyncMock, side_effect=_flaky),
+            patch("controldesk_mcp.com_bridge.dispatch", new_callable=AsyncMock, side_effect=_flaky),
             patch("asyncio.sleep", new_callable=AsyncMock),
         ):
             result = await guarded_dispatch(MagicMock(), operation="test_op", max_attempts=3)
@@ -106,7 +106,7 @@ class TestGuardedDispatch:
             call_count += 1
             raise non_retryable
 
-        with patch("sources.com_bridge.dispatch", new_callable=AsyncMock, side_effect=_fail):
+        with patch("controldesk_mcp.com_bridge.dispatch", new_callable=AsyncMock, side_effect=_fail):
             with pytest.raises(BridgeOperationError):
                 await guarded_dispatch(MagicMock(), operation="test_op", max_attempts=3)
         assert call_count == 1  # no retry for non-retryable
@@ -122,7 +122,7 @@ class TestGuardedDispatch:
             raise retryable_exc
 
         with (
-            patch("sources.com_bridge.dispatch", new_callable=AsyncMock, side_effect=_always_fail),
+            patch("controldesk_mcp.com_bridge.dispatch", new_callable=AsyncMock, side_effect=_always_fail),
             patch("asyncio.sleep", new_callable=AsyncMock),
         ):
             with pytest.raises(BridgeConnectionError):
@@ -137,7 +137,7 @@ class TestGuardedDispatch:
         )
 
         with patch(
-            "sources.com_bridge.error_handling.guard.get_breaker",
+            "controldesk_mcp.com_bridge.error_handling.guard.get_breaker",
             return_value=mock_breaker,
         ):
             with pytest.raises(BridgeCircuitOpenError):
@@ -152,8 +152,8 @@ class TestGuardedDispatch:
         mock_breaker.assert_call_allowed.return_value = None
 
         with (
-            patch("sources.com_bridge.error_handling.guard.get_breaker", return_value=mock_breaker),
-            patch("sources.com_bridge.dispatch", new_callable=AsyncMock, return_value="ok"),
+            patch("controldesk_mcp.com_bridge.error_handling.guard.get_breaker", return_value=mock_breaker),
+            patch("controldesk_mcp.com_bridge.dispatch", new_callable=AsyncMock, return_value="ok"),
         ):
             await guarded_dispatch(MagicMock(), operation="start_controldesk")
 
@@ -166,8 +166,8 @@ class TestGuardedDispatch:
         exc = BridgeOperationError("fail")
 
         with (
-            patch("sources.com_bridge.error_handling.guard.get_breaker", return_value=mock_breaker),
-            patch("sources.com_bridge.dispatch", new_callable=AsyncMock, side_effect=exc),
+            patch("controldesk_mcp.com_bridge.error_handling.guard.get_breaker", return_value=mock_breaker),
+            patch("controldesk_mcp.com_bridge.dispatch", new_callable=AsyncMock, side_effect=exc),
         ):
             with pytest.raises(BridgeOperationError):
                 await guarded_dispatch(MagicMock(), operation="start_controldesk")

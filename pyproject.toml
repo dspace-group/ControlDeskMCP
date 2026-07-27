@@ -21,14 +21,12 @@ dev = [
     "pytest-cov>=5.0",
     "build>=1.0",
 ]
-product = ["openai>=1.0"]
-agentic = ["github-copilot-sdk>=0.3.0"]
 
 [project.scripts]
-controldesk-mcp = "controldesk_mcp.server:main"
+controldesk-mcp = "controldesk_mcp.main:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["sources", "controldesk_mcp"]
+packages = ["controldesk_mcp"]
 
 [tool.ruff]
 line-length = 120
@@ -52,6 +50,4 @@ log_cli_level = "INFO"
 log_cli_format = "%(message)s"
 markers = [
     "integration: marks tests requiring a live ControlDesk instance (deselect with -m 'not integration')",
-    "product: direct product test against real ControlDesk — no LLM (deselect with -m 'not product')",
-    "llm_product: LLM-driven product test; requires GITHUB_TOKEN + live ControlDesk (deselect with -m 'not llm_product')",
 ]

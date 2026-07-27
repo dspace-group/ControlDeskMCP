@@ -5,5 +5,5 @@
 # Example:
 #   @pytest.fixture
 #   def mock_com_bridge(mocker):
-#       return mocker.patch("sources.com_bridge.connection.ComBridge")
+#       return mocker.patch("controldesk_mcp.com_bridge.connection.ComBridge")
 # ---------------------------------------------------------------------------

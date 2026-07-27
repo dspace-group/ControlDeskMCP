@@ -1,10 +1,10 @@
-"""Unit tests for sources.com_bridge.domains.bus_replay_com."""
+"""Unit tests for controldesk_mcp.com_bridge.domains.bus_replay_com."""
 
 from __future__ import annotations
 
 from unittest.mock import MagicMock
 
-from sources.com_bridge.domains.bus_replay_com import (
+from controldesk_mcp.com_bridge.domains.bus_replay_com import (
     clear_cache,
     create_replay,
     get_replay_state,
@@ -200,7 +200,7 @@ class TestRenameReplay:
 
     def test_renames_from_cache(self) -> None:
         """Test rename works when the replay is already in cache."""
-        from sources.com_bridge.domains.bus_replay_com import _replay_cache
+        from controldesk_mcp.com_bridge.domains.bus_replay_com import _replay_cache
 
         rep = _make_replay(name="CAN Replay")
         _replay_cache[(0, "CAN", "CAN Replay")] = rep

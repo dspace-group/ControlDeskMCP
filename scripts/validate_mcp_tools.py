@@ -118,9 +118,9 @@ def validate_file(filepath: Path) -> list[str]:
 
 def main() -> int:
     """Scan all tool files and validate decorators."""
-    tool_dir = Path("sources/tools")
+    tool_dir = Path("controldesk_mcp/tools")
     if not tool_dir.exists():
-        print("sources/tools/ not found", file=sys.stderr)
+        print("controldesk_mcp/tools/ not found", file=sys.stderr)
         return 1
 
     all_violations: list[str] = []

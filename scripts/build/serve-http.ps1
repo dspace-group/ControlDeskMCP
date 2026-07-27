@@ -30,7 +30,7 @@
     Server log level: DEBUG | INFO | WARNING | ERROR.  Default: INFO.
 
 .PARAMETER DevMode
-    When specified, launches via 'python -m sources' (source tree) instead
+    When specified, launches via 'python -m controldesk_mcp' (source tree) instead
     of the installed controldesk-mcp executable.  Useful during development.
 
 .EXAMPLE
@@ -72,7 +72,7 @@ Write-Host ""
 if ($DevMode) {
     # Dev mode: use local source tree
     $pythonVersion = uv run python --version 2>&1
-    Write-Host "Mode   : development (python -m sources)"
+    Write-Host "Mode   : development (python -m controldesk_mcp)"
     Write-Host "Python : $pythonVersion"
 
     $installed = uv run python -c "import mcp, pydantic" 2>&1
@@ -81,7 +81,7 @@ if ($DevMode) {
         uv sync --extra dev
     }
     $env:PYTHONPATH = (Get-Location).Path
-    $launcher = { uv run python -m sources }
+    $launcher = { uv run python -m controldesk_mcp }
 }
 else {
     # Installed wheel: prefer venv exe, fall back to PATH

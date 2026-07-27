@@ -1,4 +1,4 @@
-"""Unit tests for sources.services.instrument_service.
+"""Unit tests for controldesk_mcp.services.instrument_service.
 
 Tests mock com_bridge.dispatch; no real COM is invoked.
 """
@@ -9,8 +9,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import sources.com_bridge as bridge
-from sources.com_bridge.errors import BridgeConnectionError, BridgePreconditionError
+import controldesk_mcp.com_bridge as bridge
+from controldesk_mcp.com_bridge.errors import BridgeConnectionError, BridgePreconditionError
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
 
@@ -18,7 +18,7 @@ from sources.com_bridge.errors import BridgeConnectionError, BridgePreconditionE
 @pytest.fixture(autouse=True)
 def _reset_bridge():
     bridge._connection = None
-    import sources.com_bridge.sta_thread as _sta
+    import controldesk_mcp.com_bridge.sta_thread as _sta
 
     _sta._sta_thread = None
     yield
@@ -27,7 +27,7 @@ def _reset_bridge():
 
 
 def _make_connected_bridge() -> MagicMock:
-    from sources.com_bridge.connection import ConnectionState
+    from controldesk_mcp.com_bridge.connection import ConnectionState
 
     conn = MagicMock()
     conn.state = ConnectionState.CONNECTED
@@ -60,11 +60,11 @@ class TestInstrumentList:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.instrument_service import instrument_list
+            from controldesk_mcp.services.instrument_service import instrument_list
 
             result = await instrument_list()
 
@@ -77,11 +77,11 @@ class TestInstrumentList:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("disconnected"),
         ):
-            from sources.services.instrument_service import instrument_list
+            from controldesk_mcp.services.instrument_service import instrument_list
 
             result = await instrument_list()
 
@@ -104,11 +104,11 @@ class TestInstrumentListTypes:
         ]
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             return_value=types,
         ):
-            from sources.services.instrument_service import instrument_list_types
+            from controldesk_mcp.services.instrument_service import instrument_list_types
 
             result = await instrument_list_types()
 
@@ -134,11 +134,11 @@ class TestInstrumentAdd:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.instrument_service import instrument_add
+            from controldesk_mcp.services.instrument_service import instrument_add
 
             result = await instrument_add("Knob", "SpeedKnob", 10, 10, 100, 100)
 
@@ -151,13 +151,13 @@ class TestInstrumentAdd:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgePreconditionError(
                 "no active layout", error_code="BRIDGE_NO_ACTIVE_LAYOUT"
             ),
         ):
-            from sources.services.instrument_service import instrument_add
+            from controldesk_mcp.services.instrument_service import instrument_add
 
             result = await instrument_add("Knob", "SpeedKnob", 10, 10, 100, 100)
 
@@ -174,11 +174,11 @@ class TestInstrumentRemove:
         app_mock = conn.get_app.return_value
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, None],
         ):
-            from sources.services.instrument_service import instrument_remove
+            from controldesk_mcp.services.instrument_service import instrument_remove
 
             result = await instrument_remove("SpeedKnob")
 
@@ -202,11 +202,11 @@ class TestInstrumentConnectSignal:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.instrument_service import instrument_connect_signal
+            from controldesk_mcp.services.instrument_service import instrument_connect_signal
 
             result = await instrument_connect_signal(
                 "SpeedKnob", "XCP(5ms)://engine_speed", None, 0
@@ -231,11 +231,11 @@ class TestInstrumentArrange:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.instrument_service import instrument_arrange
+            from controldesk_mcp.services.instrument_service import instrument_arrange
 
             result = await instrument_arrange(["SpeedKnob", "ThrottlePlotter"], "align_top")
 

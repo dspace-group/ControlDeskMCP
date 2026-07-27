@@ -10,8 +10,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from sources.models.errors import ErrorEnvelope
-from sources.models.measurement import (
+from controldesk_mcp.models.errors import ErrorEnvelope
+from controldesk_mcp.models.measurement import (
     DataLoggerConfigureResult,
     DataLoggerCreateResult,
     DataLoggerListResult,
@@ -63,7 +63,7 @@ _ERROR = ErrorEnvelope(error_code="E001", category="UNKNOWN", message="fail", re
 
 def _patch_svc(method: str, *, return_value):
     return patch(
-        f"sources.services.measurement_service.{method}",
+        f"controldesk_mcp.services.measurement_service.{method}",
         new_callable=AsyncMock,
         return_value=return_value,
     )
@@ -79,7 +79,7 @@ class TestMeasurementStart:
             started=True, platforms_measuring=["XCP"], timestamp_utc=_TS
         )
         with _patch_svc("start_measurement", return_value=expected):
-            from sources.tools.measurement.management import measurement_start
+            from controldesk_mcp.tools.measurement.management import measurement_start
 
             result = await measurement_start(MeasurementStartInput())
 
@@ -89,7 +89,7 @@ class TestMeasurementStart:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("start_measurement", return_value=_ERROR):
-            from sources.tools.measurement.management import measurement_start
+            from controldesk_mcp.tools.measurement.management import measurement_start
 
             result = await measurement_start(MeasurementStartInput())
 
@@ -105,7 +105,7 @@ class TestMeasurementStop:
     async def test_calls_service(self) -> None:
         expected = MeasurementStopResult(stopped=True, timestamp_utc=_TS)
         with _patch_svc("stop_measurement", return_value=expected):
-            from sources.tools.measurement.management import measurement_stop
+            from controldesk_mcp.tools.measurement.management import measurement_stop
 
             result = await measurement_stop(MeasurementStopInput())
 
@@ -123,7 +123,7 @@ class TestMeasurementQuery:
             state="Measuring", is_measuring=True, timestamp_utc=_TS
         )
         with _patch_svc("get_measurement_state", return_value=expected):
-            from sources.tools.measurement.management import measurement_query
+            from controldesk_mcp.tools.measurement.management import measurement_query
 
             result = await measurement_query(
                 MeasurementQueryInput(action=MeasurementQueryAction.get_state)
@@ -136,7 +136,7 @@ class TestMeasurementQuery:
     async def test_get_configuration(self) -> None:
         expected = MeasurementGetConfigurationResult(buffer={}, signal_count=2, timestamp_utc=_TS)
         with _patch_svc("get_configuration", return_value=expected):
-            from sources.tools.measurement.management import measurement_query
+            from controldesk_mcp.tools.measurement.management import measurement_query
 
             result = await measurement_query(
                 MeasurementQueryInput(action=MeasurementQueryAction.get_configuration)
@@ -149,7 +149,7 @@ class TestMeasurementQuery:
     async def test_list_signals(self) -> None:
         expected = MeasurementListSignalsResult(total_count=2, signals=[], has_more=False)
         with _patch_svc("list_signals", return_value=expected):
-            from sources.tools.measurement.management import measurement_query
+            from controldesk_mcp.tools.measurement.management import measurement_query
 
             result = await measurement_query(
                 MeasurementQueryInput(action=MeasurementQueryAction.list_signals)
@@ -169,7 +169,7 @@ class TestMeasurementManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("configure_buffer", return_value=expected):
-            from sources.tools.measurement.management import measurement_manage
+            from controldesk_mcp.tools.measurement.management import measurement_manage
 
             result = await measurement_manage(
                 MeasurementManageInput(
@@ -183,7 +183,7 @@ class TestMeasurementManage:
 
     @pytest.mark.asyncio
     async def test_configure_buffer_missing_param(self) -> None:
-        from sources.tools.measurement.management import measurement_manage
+        from controldesk_mcp.tools.measurement.management import measurement_manage
 
         result = await measurement_manage(
             MeasurementManageInput(
@@ -205,7 +205,7 @@ class TestMeasurementManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("configure_settings", return_value=expected):
-            from sources.tools.measurement.management import measurement_manage
+            from controldesk_mcp.tools.measurement.management import measurement_manage
 
             result = await measurement_manage(
                 MeasurementManageInput(
@@ -231,7 +231,7 @@ class TestMeasurementManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("signal_add", return_value=expected):
-            from sources.tools.measurement.management import measurement_manage
+            from controldesk_mcp.tools.measurement.management import measurement_manage
 
             result = await measurement_manage(
                 MeasurementManageInput(
@@ -245,7 +245,7 @@ class TestMeasurementManage:
 
     @pytest.mark.asyncio
     async def test_signal_add_missing_param(self) -> None:
-        from sources.tools.measurement.management import measurement_manage
+        from controldesk_mcp.tools.measurement.management import measurement_manage
 
         result = await measurement_manage(
             MeasurementManageInput(action=MeasurementManageAction.signal_add)
@@ -260,7 +260,7 @@ class TestMeasurementManage:
             removed=True, connection_path="XCP(5ms)://ctrl", timestamp_utc=_TS
         )
         with _patch_svc("signal_remove", return_value=expected):
-            from sources.tools.measurement.management import measurement_manage
+            from controldesk_mcp.tools.measurement.management import measurement_manage
 
             result = await measurement_manage(
                 MeasurementManageInput(
@@ -274,7 +274,7 @@ class TestMeasurementManage:
 
     @pytest.mark.asyncio
     async def test_signal_remove_missing_param(self) -> None:
-        from sources.tools.measurement.management import measurement_manage
+        from controldesk_mcp.tools.measurement.management import measurement_manage
 
         result = await measurement_manage(
             MeasurementManageInput(action=MeasurementManageAction.signal_remove)
@@ -298,7 +298,7 @@ class TestMeasurementRasterManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("add_raster", return_value=expected):
-            from sources.tools.measurement.management import measurement_raster_manage
+            from controldesk_mcp.tools.measurement.management import measurement_raster_manage
 
             result = await measurement_raster_manage(
                 MeasurementRasterManageInput(
@@ -313,7 +313,7 @@ class TestMeasurementRasterManage:
 
     @pytest.mark.asyncio
     async def test_raster_add_missing_platform(self) -> None:
-        from sources.tools.measurement.management import measurement_raster_manage
+        from controldesk_mcp.tools.measurement.management import measurement_raster_manage
 
         result = await measurement_raster_manage(
             MeasurementRasterManageInput(
@@ -327,7 +327,7 @@ class TestMeasurementRasterManage:
 
     @pytest.mark.asyncio
     async def test_raster_add_missing_interval(self) -> None:
-        from sources.tools.measurement.management import measurement_raster_manage
+        from controldesk_mcp.tools.measurement.management import measurement_raster_manage
 
         result = await measurement_raster_manage(
             MeasurementRasterManageInput(
@@ -343,7 +343,7 @@ class TestMeasurementRasterManage:
     async def test_raster_list(self) -> None:
         expected = MeasurementRasterListResult(total_rasters=1, rasters=[], has_more=False)
         with _patch_svc("list_rasters", return_value=expected):
-            from sources.tools.measurement.management import measurement_raster_manage
+            from controldesk_mcp.tools.measurement.management import measurement_raster_manage
 
             result = await measurement_raster_manage(
                 MeasurementRasterManageInput(action=MeasurementRasterManageAction.raster_list)
@@ -354,7 +354,7 @@ class TestMeasurementRasterManage:
     @pytest.mark.asyncio
     async def test_raster_list_returns_error(self) -> None:
         with _patch_svc("list_rasters", return_value=_ERROR):
-            from sources.tools.measurement.management import measurement_raster_manage
+            from controldesk_mcp.tools.measurement.management import measurement_raster_manage
 
             result = await measurement_raster_manage(
                 MeasurementRasterManageInput(action=MeasurementRasterManageAction.raster_list)
@@ -368,7 +368,7 @@ class TestMeasurementRasterManage:
             removed=True, platform_name="XCP", raster_name="XCP_5ms", timestamp_utc=_TS
         )
         with _patch_svc("remove_raster", return_value=expected):
-            from sources.tools.measurement.management import measurement_raster_manage
+            from controldesk_mcp.tools.measurement.management import measurement_raster_manage
 
             result = await measurement_raster_manage(
                 MeasurementRasterManageInput(
@@ -383,7 +383,7 @@ class TestMeasurementRasterManage:
 
     @pytest.mark.asyncio
     async def test_raster_remove_missing_platform(self) -> None:
-        from sources.tools.measurement.management import measurement_raster_manage
+        from controldesk_mcp.tools.measurement.management import measurement_raster_manage
 
         result = await measurement_raster_manage(
             MeasurementRasterManageInput(
@@ -397,7 +397,7 @@ class TestMeasurementRasterManage:
 
     @pytest.mark.asyncio
     async def test_raster_remove_missing_raster_name(self) -> None:
-        from sources.tools.measurement.management import measurement_raster_manage
+        from controldesk_mcp.tools.measurement.management import measurement_raster_manage
 
         result = await measurement_raster_manage(
             MeasurementRasterManageInput(
@@ -425,7 +425,7 @@ class TestTriggerManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("create_trigger_rule", return_value=expected):
-            from sources.tools.measurement.management import trigger_manage
+            from controldesk_mcp.tools.measurement.management import trigger_manage
 
             result = await trigger_manage(
                 TriggerManageInput(
@@ -441,7 +441,7 @@ class TestTriggerManage:
 
     @pytest.mark.asyncio
     async def test_rule_create_missing_rule_name(self) -> None:
-        from sources.tools.measurement.management import trigger_manage
+        from controldesk_mcp.tools.measurement.management import trigger_manage
 
         result = await trigger_manage(
             TriggerManageInput(
@@ -456,7 +456,7 @@ class TestTriggerManage:
 
     @pytest.mark.asyncio
     async def test_rule_create_missing_expression(self) -> None:
-        from sources.tools.measurement.management import trigger_manage
+        from controldesk_mcp.tools.measurement.management import trigger_manage
 
         result = await trigger_manage(
             TriggerManageInput(
@@ -471,7 +471,7 @@ class TestTriggerManage:
 
     @pytest.mark.asyncio
     async def test_rule_create_missing_signal_mappings(self) -> None:
-        from sources.tools.measurement.management import trigger_manage
+        from controldesk_mcp.tools.measurement.management import trigger_manage
 
         result = await trigger_manage(
             TriggerManageInput(
@@ -488,7 +488,7 @@ class TestTriggerManage:
     async def test_rule_remove(self) -> None:
         expected = TriggerRuleRemoveResult(removed=True, rule_name="StartCond", timestamp_utc=_TS)
         with _patch_svc("remove_trigger_rule", return_value=expected):
-            from sources.tools.measurement.management import trigger_manage
+            from controldesk_mcp.tools.measurement.management import trigger_manage
 
             result = await trigger_manage(
                 TriggerManageInput(
@@ -502,7 +502,7 @@ class TestTriggerManage:
 
     @pytest.mark.asyncio
     async def test_rule_remove_missing_rule_name(self) -> None:
-        from sources.tools.measurement.management import trigger_manage
+        from controldesk_mcp.tools.measurement.management import trigger_manage
 
         result = await trigger_manage(TriggerManageInput(action=TriggerManageAction.rule_remove))
 
@@ -519,7 +519,7 @@ class TestTriggerManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("configure_time_limit_condition", return_value=expected):
-            from sources.tools.measurement.management import trigger_manage
+            from controldesk_mcp.tools.measurement.management import trigger_manage
 
             result = await trigger_manage(
                 TriggerManageInput(
@@ -534,7 +534,7 @@ class TestTriggerManage:
 
     @pytest.mark.asyncio
     async def test_condition_time_limit_missing_enabled(self) -> None:
-        from sources.tools.measurement.management import trigger_manage
+        from controldesk_mcp.tools.measurement.management import trigger_manage
 
         result = await trigger_manage(
             TriggerManageInput(
@@ -548,7 +548,7 @@ class TestTriggerManage:
 
     @pytest.mark.asyncio
     async def test_condition_time_limit_missing_time_limit(self) -> None:
-        from sources.tools.measurement.management import trigger_manage
+        from controldesk_mcp.tools.measurement.management import trigger_manage
 
         result = await trigger_manage(
             TriggerManageInput(
@@ -572,7 +572,7 @@ class TestTriggerManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("configure_trigger_based_condition", return_value=expected):
-            from sources.tools.measurement.management import trigger_manage
+            from controldesk_mcp.tools.measurement.management import trigger_manage
 
             result = await trigger_manage(
                 TriggerManageInput(
@@ -588,7 +588,7 @@ class TestTriggerManage:
 
     @pytest.mark.asyncio
     async def test_condition_trigger_based_missing_params(self) -> None:
-        from sources.tools.measurement.management import trigger_manage
+        from controldesk_mcp.tools.measurement.management import trigger_manage
 
         result = await trigger_manage(
             TriggerManageInput(action=TriggerManageAction.condition_trigger_based)
@@ -606,7 +606,7 @@ class TestRecordingManage:
     async def test_list_recordings(self) -> None:
         expected = MeasurementListRecordingsResult(total_count=1, recordings=[], has_more=False)
         with _patch_svc("list_recordings", return_value=expected):
-            from sources.tools.measurement.management import recording_manage
+            from controldesk_mcp.tools.measurement.management import recording_manage
 
             result = await recording_manage(
                 RecordingManageInput(action=RecordingManageAction.list_recordings)
@@ -623,7 +623,7 @@ class TestRecordingManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("export_recording", return_value=expected):
-            from sources.tools.measurement.management import recording_manage
+            from controldesk_mcp.tools.measurement.management import recording_manage
 
             result = await recording_manage(
                 RecordingManageInput(
@@ -638,7 +638,7 @@ class TestRecordingManage:
 
     @pytest.mark.asyncio
     async def test_export_recording_missing_index(self) -> None:
-        from sources.tools.measurement.management import recording_manage
+        from controldesk_mcp.tools.measurement.management import recording_manage
 
         result = await recording_manage(
             RecordingManageInput(
@@ -652,7 +652,7 @@ class TestRecordingManage:
 
     @pytest.mark.asyncio
     async def test_export_recording_missing_path(self) -> None:
-        from sources.tools.measurement.management import recording_manage
+        from controldesk_mcp.tools.measurement.management import recording_manage
 
         result = await recording_manage(
             RecordingManageInput(
@@ -666,7 +666,7 @@ class TestRecordingManage:
 
     @pytest.mark.asyncio
     async def test_export_recording_relative_path(self) -> None:
-        from sources.tools.measurement.management import recording_manage
+        from controldesk_mcp.tools.measurement.management import recording_manage
 
         result = await recording_manage(
             RecordingManageInput(
@@ -689,7 +689,7 @@ class TestRecordingManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("import_recording", return_value=expected):
-            from sources.tools.measurement.management import recording_manage
+            from controldesk_mcp.tools.measurement.management import recording_manage
 
             result = await recording_manage(
                 RecordingManageInput(
@@ -703,7 +703,7 @@ class TestRecordingManage:
 
     @pytest.mark.asyncio
     async def test_import_recording_missing_path(self) -> None:
-        from sources.tools.measurement.management import recording_manage
+        from controldesk_mcp.tools.measurement.management import recording_manage
 
         result = await recording_manage(
             RecordingManageInput(action=RecordingManageAction.import_recording)
@@ -714,7 +714,7 @@ class TestRecordingManage:
 
     @pytest.mark.asyncio
     async def test_import_recording_relative_path(self) -> None:
-        from sources.tools.measurement.management import recording_manage
+        from controldesk_mcp.tools.measurement.management import recording_manage
 
         result = await recording_manage(
             RecordingManageInput(
@@ -736,7 +736,7 @@ class TestRecordingManage:
             bookmark_timestamp=_TS,
         )
         with _patch_svc("add_bookmark", return_value=expected):
-            from sources.tools.measurement.management import recording_manage
+            from controldesk_mcp.tools.measurement.management import recording_manage
 
             result = await recording_manage(
                 RecordingManageInput(
@@ -750,7 +750,7 @@ class TestRecordingManage:
 
     @pytest.mark.asyncio
     async def test_bookmark_add_missing_title(self) -> None:
-        from sources.tools.measurement.management import recording_manage
+        from controldesk_mcp.tools.measurement.management import recording_manage
 
         result = await recording_manage(
             RecordingManageInput(action=RecordingManageAction.bookmark_add)
@@ -765,7 +765,7 @@ class TestRecordingManage:
             recording_index=0, total_bookmarks=2, bookmarks=[], has_more=False
         )
         with _patch_svc("list_bookmarks", return_value=expected):
-            from sources.tools.measurement.management import recording_manage
+            from controldesk_mcp.tools.measurement.management import recording_manage
 
             result = await recording_manage(
                 RecordingManageInput(
@@ -778,7 +778,7 @@ class TestRecordingManage:
 
     @pytest.mark.asyncio
     async def test_bookmark_list_missing_index(self) -> None:
-        from sources.tools.measurement.management import recording_manage
+        from controldesk_mcp.tools.measurement.management import recording_manage
 
         result = await recording_manage(
             RecordingManageInput(action=RecordingManageAction.bookmark_list)
@@ -793,7 +793,7 @@ class TestRecordingManage:
             removed=True, recording_index=0, bookmark_index=1, timestamp_utc=_TS
         )
         with _patch_svc("remove_bookmark", return_value=expected):
-            from sources.tools.measurement.management import recording_manage
+            from controldesk_mcp.tools.measurement.management import recording_manage
 
             result = await recording_manage(
                 RecordingManageInput(
@@ -808,7 +808,7 @@ class TestRecordingManage:
 
     @pytest.mark.asyncio
     async def test_bookmark_remove_missing_index(self) -> None:
-        from sources.tools.measurement.management import recording_manage
+        from controldesk_mcp.tools.measurement.management import recording_manage
 
         result = await recording_manage(
             RecordingManageInput(action=RecordingManageAction.bookmark_remove)
@@ -819,7 +819,7 @@ class TestRecordingManage:
 
     @pytest.mark.asyncio
     async def test_bookmark_remove_missing_bookmark_index(self) -> None:
-        from sources.tools.measurement.management import recording_manage
+        from controldesk_mcp.tools.measurement.management import recording_manage
 
         result = await recording_manage(
             RecordingManageInput(
@@ -840,7 +840,7 @@ class TestDataLoggerManage:
     async def test_create(self) -> None:
         expected = DataLoggerCreateResult(created=True, logger_name="CAN_Logger", timestamp_utc=_TS)
         with _patch_svc("create_data_logger", return_value=expected):
-            from sources.tools.measurement.management import data_logger_manage
+            from controldesk_mcp.tools.measurement.management import data_logger_manage
 
             result = await data_logger_manage(
                 DataLoggerManageInput(
@@ -854,7 +854,7 @@ class TestDataLoggerManage:
 
     @pytest.mark.asyncio
     async def test_create_missing_logger_name(self) -> None:
-        from sources.tools.measurement.management import data_logger_manage
+        from controldesk_mcp.tools.measurement.management import data_logger_manage
 
         result = await data_logger_manage(
             DataLoggerManageInput(action=DataLoggerManageAction.create)
@@ -873,7 +873,7 @@ class TestDataLoggerManage:
             overwrite_existing=True,
         )
         with _patch_svc("configure_data_logger", return_value=expected):
-            from sources.tools.measurement.management import data_logger_manage
+            from controldesk_mcp.tools.measurement.management import data_logger_manage
 
             result = await data_logger_manage(
                 DataLoggerManageInput(
@@ -888,7 +888,7 @@ class TestDataLoggerManage:
 
     @pytest.mark.asyncio
     async def test_configure_missing_logger_name(self) -> None:
-        from sources.tools.measurement.management import data_logger_manage
+        from controldesk_mcp.tools.measurement.management import data_logger_manage
 
         result = await data_logger_manage(
             DataLoggerManageInput(
@@ -902,7 +902,7 @@ class TestDataLoggerManage:
 
     @pytest.mark.asyncio
     async def test_configure_missing_output_path(self) -> None:
-        from sources.tools.measurement.management import data_logger_manage
+        from controldesk_mcp.tools.measurement.management import data_logger_manage
 
         result = await data_logger_manage(
             DataLoggerManageInput(
@@ -918,7 +918,7 @@ class TestDataLoggerManage:
     async def test_start(self) -> None:
         expected = DataLoggerStartResult(started=True, logger_name="CAN_Logger", timestamp_utc=_TS)
         with _patch_svc("start_data_logger", return_value=expected):
-            from sources.tools.measurement.management import data_logger_manage
+            from controldesk_mcp.tools.measurement.management import data_logger_manage
 
             result = await data_logger_manage(
                 DataLoggerManageInput(
@@ -932,7 +932,7 @@ class TestDataLoggerManage:
 
     @pytest.mark.asyncio
     async def test_start_missing_logger_name(self) -> None:
-        from sources.tools.measurement.management import data_logger_manage
+        from controldesk_mcp.tools.measurement.management import data_logger_manage
 
         result = await data_logger_manage(
             DataLoggerManageInput(action=DataLoggerManageAction.start)
@@ -945,7 +945,7 @@ class TestDataLoggerManage:
     async def test_stop(self) -> None:
         expected = DataLoggerStopResult(stopped=True, logger_name="CAN_Logger", timestamp_utc=_TS)
         with _patch_svc("stop_data_logger", return_value=expected):
-            from sources.tools.measurement.management import data_logger_manage
+            from controldesk_mcp.tools.measurement.management import data_logger_manage
 
             result = await data_logger_manage(
                 DataLoggerManageInput(
@@ -959,7 +959,7 @@ class TestDataLoggerManage:
 
     @pytest.mark.asyncio
     async def test_stop_missing_logger_name(self) -> None:
-        from sources.tools.measurement.management import data_logger_manage
+        from controldesk_mcp.tools.measurement.management import data_logger_manage
 
         result = await data_logger_manage(DataLoggerManageInput(action=DataLoggerManageAction.stop))
 
@@ -970,7 +970,7 @@ class TestDataLoggerManage:
     async def test_list(self) -> None:
         expected = DataLoggerListResult(total_loggers=1, loggers=[], has_more=False)
         with _patch_svc("list_data_loggers", return_value=expected):
-            from sources.tools.measurement.management import data_logger_manage
+            from controldesk_mcp.tools.measurement.management import data_logger_manage
 
             result = await data_logger_manage(
                 DataLoggerManageInput(action=DataLoggerManageAction.list)
@@ -982,7 +982,7 @@ class TestDataLoggerManage:
     async def test_remove(self) -> None:
         expected = DataLoggerRemoveResult(removed=True, logger_name="CAN_Logger", timestamp_utc=_TS)
         with _patch_svc("remove_data_logger", return_value=expected):
-            from sources.tools.measurement.management import data_logger_manage
+            from controldesk_mcp.tools.measurement.management import data_logger_manage
 
             result = await data_logger_manage(
                 DataLoggerManageInput(
@@ -996,7 +996,7 @@ class TestDataLoggerManage:
 
     @pytest.mark.asyncio
     async def test_remove_missing_logger_name(self) -> None:
-        from sources.tools.measurement.management import data_logger_manage
+        from controldesk_mcp.tools.measurement.management import data_logger_manage
 
         result = await data_logger_manage(
             DataLoggerManageInput(action=DataLoggerManageAction.remove)
@@ -1012,7 +1012,7 @@ class TestDataLoggerManage:
 class TestMeasurementDiscover:
     @pytest.mark.asyncio
     async def test_returns_discover_result(self) -> None:
-        from sources.tools.measurement.management import measurement_discover
+        from controldesk_mcp.tools.measurement.management import measurement_discover
 
         result = await measurement_discover(AsyncMock())
 

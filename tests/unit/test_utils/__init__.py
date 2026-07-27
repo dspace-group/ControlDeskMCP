@@ -10,8 +10,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from sources.models.errors import ErrorEnvelope
-from sources.models.variable import (
+from controldesk_mcp.models.errors import ErrorEnvelope
+from controldesk_mcp.models.variable import (
     DataSetActivateReferencePageResult,
     DataSetActivateWorkingPageResult,
     DataSetManageAction,
@@ -51,7 +51,7 @@ _ERROR = ErrorEnvelope(error_code="E001", category="UNKNOWN", message="fail", re
 
 def _patch_svc(method: str, *, return_value):
     return patch(
-        f"sources.services.variable_service.{method}",
+        f"controldesk_mcp.services.variable_service.{method}",
         new_callable=AsyncMock,
         return_value=return_value,
     )
@@ -71,7 +71,7 @@ class TestVariableFind:
             is_writable=True,
         )
         with _patch_svc("find_variable", return_value=expected):
-            from sources.tools.variable_management.management import variable_find
+            from controldesk_mcp.tools.variable_management.management import variable_find
 
             result = await variable_find(VariableFindInput(identifier="f_Kp_1"))
 
@@ -82,7 +82,7 @@ class TestVariableFind:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("find_variable", return_value=_ERROR):
-            from sources.tools.variable_management.management import variable_find
+            from controldesk_mcp.tools.variable_management.management import variable_find
 
             result = await variable_find(VariableFindInput(identifier="missing"))
 
@@ -105,7 +105,7 @@ class TestVariableRead:
             timestamp_utc=_TS,
         )
         with _patch_svc("read_scalar_variable", return_value=expected):
-            from sources.tools.variable_management.management import variable_read
+            from controldesk_mcp.tools.variable_management.management import variable_read
 
             result = await variable_read(
                 VariableReadInput(read_type=VariableReadType.scalar, variable_name="f_Kp_1")
@@ -116,7 +116,7 @@ class TestVariableRead:
 
     @pytest.mark.asyncio
     async def test_scalar_missing_variable_name(self) -> None:
-        from sources.tools.variable_management.management import variable_read
+        from controldesk_mcp.tools.variable_management.management import variable_read
 
         result = await variable_read(VariableReadInput(read_type=VariableReadType.scalar))
 
@@ -134,7 +134,7 @@ class TestVariableRead:
             timestamp_utc=_TS,
         )
         with _patch_svc("read_curve_variable", return_value=expected):
-            from sources.tools.variable_management.management import variable_read
+            from controldesk_mcp.tools.variable_management.management import variable_read
 
             result = await variable_read(
                 VariableReadInput(read_type=VariableReadType.curve, variable_name="FuelCurve")
@@ -145,7 +145,7 @@ class TestVariableRead:
 
     @pytest.mark.asyncio
     async def test_curve_missing_variable_name(self) -> None:
-        from sources.tools.variable_management.management import variable_read
+        from controldesk_mcp.tools.variable_management.management import variable_read
 
         result = await variable_read(VariableReadInput(read_type=VariableReadType.curve))
 
@@ -164,7 +164,7 @@ class TestVariableRead:
             timestamp_utc=_TS,
         )
         with _patch_svc("read_map_variable", return_value=expected):
-            from sources.tools.variable_management.management import variable_read
+            from controldesk_mcp.tools.variable_management.management import variable_read
 
             result = await variable_read(
                 VariableReadInput(read_type=VariableReadType.map, variable_name="FuelMap")
@@ -175,7 +175,7 @@ class TestVariableRead:
 
     @pytest.mark.asyncio
     async def test_map_missing_variable_name(self) -> None:
-        from sources.tools.variable_management.management import variable_read
+        from controldesk_mcp.tools.variable_management.management import variable_read
 
         result = await variable_read(VariableReadInput(read_type=VariableReadType.map))
 
@@ -193,7 +193,7 @@ class TestVariableRead:
             timestamp_utc=_TS,
         )
         with _patch_svc("read_array_element", return_value=expected):
-            from sources.tools.variable_management.management import variable_read
+            from controldesk_mcp.tools.variable_management.management import variable_read
 
             result = await variable_read(
                 VariableReadInput(
@@ -207,7 +207,7 @@ class TestVariableRead:
 
     @pytest.mark.asyncio
     async def test_array_element_missing_element_path(self) -> None:
-        from sources.tools.variable_management.management import variable_read
+        from controldesk_mcp.tools.variable_management.management import variable_read
 
         result = await variable_read(VariableReadInput(read_type=VariableReadType.array_element))
 
@@ -223,7 +223,7 @@ class TestVariableRead:
             timestamp_utc=_TS,
         )
         with _patch_svc("read_string_variable", return_value=expected):
-            from sources.tools.variable_management.management import variable_read
+            from controldesk_mcp.tools.variable_management.management import variable_read
 
             result = await variable_read(
                 VariableReadInput(read_type=VariableReadType.string, variable_name="ECU_Label")
@@ -234,7 +234,7 @@ class TestVariableRead:
 
     @pytest.mark.asyncio
     async def test_string_missing_variable_name(self) -> None:
-        from sources.tools.variable_management.management import variable_read
+        from controldesk_mcp.tools.variable_management.management import variable_read
 
         result = await variable_read(VariableReadInput(read_type=VariableReadType.string))
 
@@ -244,7 +244,7 @@ class TestVariableRead:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("read_scalar_variable", return_value=_ERROR):
-            from sources.tools.variable_management.management import variable_read
+            from controldesk_mcp.tools.variable_management.management import variable_read
 
             result = await variable_read(
                 VariableReadInput(read_type=VariableReadType.scalar, variable_name="f_Kp_1")
@@ -269,7 +269,7 @@ class TestVariableWrite:
             timestamp_utc=_TS,
         )
         with _patch_svc("write_scalar_variable", return_value=expected):
-            from sources.tools.variable_management.management import variable_write
+            from controldesk_mcp.tools.variable_management.management import variable_write
 
             result = await variable_write(
                 VariableWriteInput(
@@ -285,7 +285,7 @@ class TestVariableWrite:
 
     @pytest.mark.asyncio
     async def test_scalar_missing_params(self) -> None:
-        from sources.tools.variable_management.management import variable_write
+        from controldesk_mcp.tools.variable_management.management import variable_write
 
         result = await variable_write(
             VariableWriteInput(action=VariableWriteAction.scalar, variable_name="f_Kp_1")
@@ -305,7 +305,7 @@ class TestVariableWrite:
             timestamp_utc=_TS,
         )
         with _patch_svc("write_array_element", return_value=expected):
-            from sources.tools.variable_management.management import variable_write
+            from controldesk_mcp.tools.variable_management.management import variable_write
 
             result = await variable_write(
                 VariableWriteInput(
@@ -320,7 +320,7 @@ class TestVariableWrite:
 
     @pytest.mark.asyncio
     async def test_array_element_missing_params(self) -> None:
-        from sources.tools.variable_management.management import variable_write
+        from controldesk_mcp.tools.variable_management.management import variable_write
 
         result = await variable_write(
             VariableWriteInput(action=VariableWriteAction.array_element, value=1.0)
@@ -338,7 +338,7 @@ class TestVariableWrite:
             timestamp_utc=_TS,
         )
         with _patch_svc("write_string_variable", return_value=expected):
-            from sources.tools.variable_management.management import variable_write
+            from controldesk_mcp.tools.variable_management.management import variable_write
 
             result = await variable_write(
                 VariableWriteInput(
@@ -353,7 +353,7 @@ class TestVariableWrite:
 
     @pytest.mark.asyncio
     async def test_string_missing_params(self) -> None:
-        from sources.tools.variable_management.management import variable_write
+        from controldesk_mcp.tools.variable_management.management import variable_write
 
         result = await variable_write(
             VariableWriteInput(action=VariableWriteAction.string, value="test")
@@ -373,7 +373,7 @@ class TestVariableWrite:
             timestamp_utc=_TS,
         )
         with _patch_svc("write_curve_variable", return_value=expected):
-            from sources.tools.variable_management.management import variable_write
+            from controldesk_mcp.tools.variable_management.management import variable_write
 
             result = await variable_write(
                 VariableWriteInput(
@@ -388,7 +388,7 @@ class TestVariableWrite:
 
     @pytest.mark.asyncio
     async def test_curve_missing_params(self) -> None:
-        from sources.tools.variable_management.management import variable_write
+        from controldesk_mcp.tools.variable_management.management import variable_write
 
         result = await variable_write(
             VariableWriteInput(action=VariableWriteAction.curve, variable_name="FuelCurve")
@@ -408,7 +408,7 @@ class TestVariableWrite:
             timestamp_utc=_TS,
         )
         with _patch_svc("write_map_variable", return_value=expected):
-            from sources.tools.variable_management.management import variable_write
+            from controldesk_mcp.tools.variable_management.management import variable_write
 
             result = await variable_write(
                 VariableWriteInput(
@@ -423,7 +423,7 @@ class TestVariableWrite:
 
     @pytest.mark.asyncio
     async def test_map_missing_params(self) -> None:
-        from sources.tools.variable_management.management import variable_write
+        from controldesk_mcp.tools.variable_management.management import variable_write
 
         result = await variable_write(
             VariableWriteInput(action=VariableWriteAction.map, variable_name="FuelMap")
@@ -435,7 +435,7 @@ class TestVariableWrite:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("write_scalar_variable", return_value=_ERROR):
-            from sources.tools.variable_management.management import variable_write
+            from controldesk_mcp.tools.variable_management.management import variable_write
 
             result = await variable_write(
                 VariableWriteInput(
@@ -459,7 +459,7 @@ class TestVariableList:
             by_type={"Parameter": [{"name": "f_Kp_1"}], "Measurement": [{"name": "control_out"}]},
         )
         with _patch_svc("list_all_variables", return_value=expected):
-            from sources.tools.variable_management.management import variable_list
+            from controldesk_mcp.tools.variable_management.management import variable_list
 
             result = await variable_list(VariableListInput(action=VariableListAction.list_all))
 
@@ -477,7 +477,7 @@ class TestVariableList:
             ],
         )
         with _patch_svc("list_array_elements", return_value=expected):
-            from sources.tools.variable_management.management import variable_list
+            from controldesk_mcp.tools.variable_management.management import variable_list
 
             result = await variable_list(
                 VariableListInput(
@@ -491,7 +491,7 @@ class TestVariableList:
 
     @pytest.mark.asyncio
     async def test_list_array_elements_missing_variable_name(self) -> None:
-        from sources.tools.variable_management.management import variable_list
+        from controldesk_mcp.tools.variable_management.management import variable_list
 
         result = await variable_list(
             VariableListInput(action=VariableListAction.list_array_elements)
@@ -508,7 +508,7 @@ class TestVariableList:
             variables=[{"name": "fuel_pressure_target", "type": "Parameter"}],
         )
         with _patch_svc("list_group_variables", return_value=expected):
-            from sources.tools.variable_management.management import variable_list
+            from controldesk_mcp.tools.variable_management.management import variable_list
 
             result = await variable_list(
                 VariableListInput(
@@ -523,7 +523,7 @@ class TestVariableList:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("list_all_variables", return_value=_ERROR):
-            from sources.tools.variable_management.management import variable_list
+            from controldesk_mcp.tools.variable_management.management import variable_list
 
             result = await variable_list(VariableListInput(action=VariableListAction.list_all))
 
@@ -538,7 +538,7 @@ class TestDataSetManage:
     async def test_activate_working_page_calls_service(self) -> None:
         expected = DataSetActivateWorkingPageResult(activated=True, data_set="WorkingDataSet")
         with _patch_svc("activate_working_page", return_value=expected):
-            from sources.tools.variable_management.management import data_set_manage
+            from controldesk_mcp.tools.variable_management.management import data_set_manage
 
             result = await data_set_manage(
                 DataSetManageInput(action=DataSetManageAction.activate_working_page)
@@ -552,7 +552,7 @@ class TestDataSetManage:
     async def test_activate_reference_page_calls_service(self) -> None:
         expected = DataSetActivateReferencePageResult(activated=True, data_set="ReferenceDataSet")
         with _patch_svc("activate_reference_page", return_value=expected):
-            from sources.tools.variable_management.management import data_set_manage
+            from controldesk_mcp.tools.variable_management.management import data_set_manage
 
             result = await data_set_manage(
                 DataSetManageInput(action=DataSetManageAction.activate_reference_page)
@@ -564,7 +564,7 @@ class TestDataSetManage:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("activate_working_page", return_value=_ERROR):
-            from sources.tools.variable_management.management import data_set_manage
+            from controldesk_mcp.tools.variable_management.management import data_set_manage
 
             result = await data_set_manage(
                 DataSetManageInput(action=DataSetManageAction.activate_working_page)
@@ -585,7 +585,7 @@ class TestVariableDescriptionManage:
             variable_descriptions=[{"name": "myecu", "is_active": True}],
         )
         with _patch_svc("list_variable_descriptions", return_value=expected):
-            from sources.tools.variable_management.management import variable_description_manage
+            from controldesk_mcp.tools.variable_management.management import variable_description_manage
 
             result = await variable_description_manage(
                 VariableDescriptionManageInput(
@@ -605,7 +605,7 @@ class TestVariableDescriptionManage:
             variable_description_name="myecu_v2",
         )
         with _patch_svc("activate_variable_description", return_value=expected):
-            from sources.tools.variable_management.management import variable_description_manage
+            from controldesk_mcp.tools.variable_management.management import variable_description_manage
 
             result = await variable_description_manage(
                 VariableDescriptionManageInput(
@@ -628,7 +628,7 @@ class TestVariableDescriptionManage:
             timestamp_utc=_TS,
         )
         with _patch_svc("remove_variable_description", return_value=expected):
-            from sources.tools.variable_management.management import variable_description_manage
+            from controldesk_mcp.tools.variable_management.management import variable_description_manage
 
             result = await variable_description_manage(
                 VariableDescriptionManageInput(
@@ -643,7 +643,7 @@ class TestVariableDescriptionManage:
 
     @pytest.mark.asyncio
     async def test_missing_platform_name_returns_error(self) -> None:
-        from sources.tools.variable_management.management import variable_description_manage
+        from controldesk_mcp.tools.variable_management.management import variable_description_manage
 
         result = await variable_description_manage(
             VariableDescriptionManageInput(
@@ -657,7 +657,7 @@ class TestVariableDescriptionManage:
 
     @pytest.mark.asyncio
     async def test_missing_description_name_returns_error(self) -> None:
-        from sources.tools.variable_management.management import variable_description_manage
+        from controldesk_mcp.tools.variable_management.management import variable_description_manage
 
         result = await variable_description_manage(
             VariableDescriptionManageInput(
@@ -673,7 +673,7 @@ class TestVariableDescriptionManage:
     @pytest.mark.asyncio
     async def test_returns_error_envelope(self) -> None:
         with _patch_svc("list_variable_descriptions", return_value=_ERROR):
-            from sources.tools.variable_management.management import variable_description_manage
+            from controldesk_mcp.tools.variable_management.management import variable_description_manage
 
             result = await variable_description_manage(
                 VariableDescriptionManageInput(
@@ -691,7 +691,7 @@ class TestVariableDescriptionManage:
 class TestVariableDiscover:
     @pytest.mark.asyncio
     async def test_returns_discover_result(self) -> None:
-        from sources.tools.variable_management.management import variable_discover
+        from controldesk_mcp.tools.variable_management.management import variable_discover
 
         result = await variable_discover(AsyncMock())
 
@@ -701,7 +701,7 @@ class TestVariableDiscover:
 
     @pytest.mark.asyncio
     async def test_discover_has_variable_list_tool(self) -> None:
-        from sources.tools.variable_management.management import variable_discover
+        from controldesk_mcp.tools.variable_management.management import variable_discover
 
         result = await variable_discover(AsyncMock())
 
@@ -710,7 +710,7 @@ class TestVariableDiscover:
 
     @pytest.mark.asyncio
     async def test_discover_has_data_set_manage_tool(self) -> None:
-        from sources.tools.variable_management.management import variable_discover
+        from controldesk_mcp.tools.variable_management.management import variable_discover
 
         result = await variable_discover(AsyncMock())
 
@@ -719,7 +719,7 @@ class TestVariableDiscover:
 
     @pytest.mark.asyncio
     async def test_discover_has_variable_description_manage_tool(self) -> None:
-        from sources.tools.variable_management.management import variable_discover
+        from controldesk_mcp.tools.variable_management.management import variable_discover
 
         result = await variable_discover(AsyncMock())
 
@@ -728,7 +728,7 @@ class TestVariableDiscover:
 
     @pytest.mark.asyncio
     async def test_variable_list_actions(self) -> None:
-        from sources.tools.variable_management.management import variable_discover
+        from controldesk_mcp.tools.variable_management.management import variable_discover
 
         result = await variable_discover(AsyncMock())
 
@@ -739,7 +739,7 @@ class TestVariableDiscover:
 
     @pytest.mark.asyncio
     async def test_data_set_manage_actions(self) -> None:
-        from sources.tools.variable_management.management import variable_discover
+        from controldesk_mcp.tools.variable_management.management import variable_discover
 
         result = await variable_discover(AsyncMock())
 
@@ -749,7 +749,7 @@ class TestVariableDiscover:
 
     @pytest.mark.asyncio
     async def test_variable_description_manage_actions(self) -> None:
-        from sources.tools.variable_management.management import variable_discover
+        from controldesk_mcp.tools.variable_management.management import variable_discover
 
         result = await variable_discover(AsyncMock())
 

@@ -1,4 +1,4 @@
-"""Unit tests for sources.services.bus_monitor_service.
+"""Unit tests for controldesk_mcp.services.bus_monitor_service.
 
 Tests mock com_bridge.dispatch; no real COM is invoked.
 """
@@ -9,9 +9,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-import sources.com_bridge as bridge
-from sources.com_bridge.errors import BridgeConnectionError, BridgeOperationError
-from sources.models.bus_monitor import (
+import controldesk_mcp.com_bridge as bridge
+from controldesk_mcp.com_bridge.errors import BridgeConnectionError, BridgeOperationError
+from controldesk_mcp.models.bus_monitor import (
     BusMonitorClearAllInput,
     BusMonitorCreateInput,
     BusMonitorListInput,
@@ -25,7 +25,7 @@ from sources.models.bus_monitor import (
 @pytest.fixture(autouse=True)
 def _reset_bridge():
     bridge._connection = None
-    import sources.com_bridge.sta_thread as _sta
+    import controldesk_mcp.com_bridge.sta_thread as _sta
 
     _sta._sta_thread = None
     yield
@@ -34,7 +34,7 @@ def _reset_bridge():
 
 
 def _make_connected_bridge() -> MagicMock:
-    from sources.com_bridge.connection import ConnectionState
+    from controldesk_mcp.com_bridge.connection import ConnectionState
 
     conn = MagicMock()
     conn.state = ConnectionState.CONNECTED
@@ -54,11 +54,11 @@ class TestCreateMonitor:
         com_result = {"monitor_name": "CANMonitor", "system_index": 0, "bus_type": "CAN"}
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, com_result],
         ):
-            from sources.services.bus_monitor_service import create_monitor
+            from controldesk_mcp.services.bus_monitor_service import create_monitor
 
             result = await create_monitor(
                 BusMonitorCreateInput(
@@ -74,11 +74,11 @@ class TestCreateMonitor:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeConnectionError("disc"),
         ):
-            from sources.services.bus_monitor_service import create_monitor
+            from controldesk_mcp.services.bus_monitor_service import create_monitor
 
             result = await create_monitor(
                 BusMonitorCreateInput(
@@ -99,11 +99,11 @@ class TestStartMonitor:
         app_mock = conn.get_app.return_value
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, None],
         ):
-            from sources.services.bus_monitor_service import start_monitor
+            from controldesk_mcp.services.bus_monitor_service import start_monitor
 
             result = await start_monitor(
                 BusMonitorStartInput(
@@ -125,11 +125,11 @@ class TestListMonitors:
         app_mock = conn.get_app.return_value
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, [{"monitor_name": "CANMonitor"}]],
         ):
-            from sources.services.bus_monitor_service import list_monitors
+            from controldesk_mcp.services.bus_monitor_service import list_monitors
 
             result = await list_monitors(BusMonitorListInput(system_index=0, bus_type=BusType.CAN))
 
@@ -144,7 +144,7 @@ class TestClearAllMonitors:
     async def test_aborts_without_confirm(self) -> None:
         _make_connected_bridge()
 
-        from sources.services.bus_monitor_service import clear_all_monitors
+        from controldesk_mcp.services.bus_monitor_service import clear_all_monitors
 
         result = await clear_all_monitors(
             BusMonitorClearAllInput(confirm=False, system_index=0, bus_type=BusType.CAN)
@@ -162,11 +162,11 @@ class TestDryRunCreateMonitor:
         _make_connected_bridge()
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=BridgeOperationError("Monitor 'CANMonitor' not found."),
         ):
-            from sources.services.bus_monitor_service import dry_run_create_monitor
+            from controldesk_mcp.services.bus_monitor_service import dry_run_create_monitor
 
             result = await dry_run_create_monitor(
                 BusMonitorCreateInput(
@@ -189,11 +189,11 @@ class TestDryRunCreateMonitor:
         }
 
         with patch(
-            "sources.com_bridge.dispatch",
+            "controldesk_mcp.com_bridge.dispatch",
             new_callable=AsyncMock,
             side_effect=[app_mock, existing_state],
         ):
-            from sources.services.bus_monitor_service import dry_run_create_monitor
+            from controldesk_mcp.services.bus_monitor_service import dry_run_create_monitor
 
             result = await dry_run_create_monitor(
                 BusMonitorCreateInput(

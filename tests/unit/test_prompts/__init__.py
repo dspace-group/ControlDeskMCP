@@ -1,1 +1,1 @@
-# Unit tests for sources.prompts
+# Unit tests for controldesk_mcp.prompts
