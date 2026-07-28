@@ -95,6 +95,22 @@ def _get_type_string(instr: Any) -> str:
 # Returned by instrument_list_types; avoids COM library query when not needed.
 
 _INSTRUMENT_TYPE_CATALOG: list[dict[str, Any]] = [
+    {"type_string": "3-D Viewer", "category": "Data Displays", "signal_mode": "main_variable"},
+    {
+        "type_string": "AirspeedIndicator",
+        "category": "Data Displays",
+        "signal_mode": "main_variable",
+    },
+    {"type_string": "Altimeter", "category": "Data Displays", "signal_mode": "main_variable"},
+    {
+        "type_string": "ArtificialHorizon",
+        "category": "Data Displays",
+        "signal_mode": "main_variable",
+    },
+    {"type_string": "Diagnostics Instrument", "category": "Utility", "signal_mode": None},
+    {"type_string": "Fault Memory Instrument", "category": "Utility", "signal_mode": None},
+    {"type_string": "Index Plotter", "category": "Data Displays", "signal_mode": "plotter_signal"},
+    {"type_string": "MultiSwitch", "category": "Utility", "signal_mode": None},
     {"type_string": "Time Plotter", "category": "Data Displays", "signal_mode": "plotter_signal"},
     {"type_string": "XY Plotter", "category": "Data Displays", "signal_mode": "plotter_signal"},
     {"type_string": "Knob", "category": "Controls", "signal_mode": "main_variable"},
@@ -104,26 +120,26 @@ _INSTRUMENT_TYPE_CATALOG: list[dict[str, Any]] = [
     {"type_string": "Bar", "category": "Data Displays", "signal_mode": "main_variable"},
     {"type_string": "Animated Needle", "category": "Data Displays", "signal_mode": "main_variable"},
     {
-        "type_string": "Multi State Display",
+        "type_string": "Multistate Display",
         "category": "Data Displays",
         "signal_mode": "main_variable",
     },
-    {"type_string": "On/Off Button", "category": "Controls", "signal_mode": "main_variable"},
+    {"type_string": "OnOff Button", "category": "Controls", "signal_mode": "main_variable"},
     {"type_string": "Push Button", "category": "Controls", "signal_mode": "main_variable"},
     {"type_string": "Numeric Input", "category": "Controls", "signal_mode": "main_variable"},
     {"type_string": "Check Button", "category": "Controls", "signal_mode": "main_variable"},
     {"type_string": "Radio Button", "category": "Controls", "signal_mode": "main_variable"},
-    {"type_string": "Selection Box", "category": "Controls", "signal_mode": "main_variable"},
+    {"type_string": "Selectionbox", "category": "Controls", "signal_mode": "main_variable"},
     {"type_string": "variable Array", "category": "Data Displays", "signal_mode": "array_row"},
     {"type_string": "Table Editor", "category": "Calibration", "signal_mode": "sub_instrument"},
     {"type_string": "Frame", "category": "Decorations", "signal_mode": None},
     {"type_string": "Static Text", "category": "Decorations", "signal_mode": None},
     {"type_string": "Browser", "category": "Utility", "signal_mode": None},
-    {"type_string": "Steering Controller", "category": "Controls", "signal_mode": "main_variable"},
+    {"type_string": "SteeringController", "category": "Controls", "signal_mode": "main_variable"},
 ]
 
 # Instrument types that use plotter signal connection mode
-_PLOTTER_TYPES = {"Time Plotter", "XY Plotter"}
+_PLOTTER_TYPES = {"Index Plotter", "Time Plotter", "XY Plotter"}
 # Instrument types that use array row connection mode
 _ARRAY_TYPES = {"variable Array"}
 # Instrument types that use sub-instrument connection mode
@@ -303,10 +319,10 @@ def instrument_remove(app: Any, instrument_name: str) -> dict[str, Any]:
     instruments = _get_instruments(app)
     instr = _get_instrument_item(instruments, instrument_name)
     try:
-        instr.Remove()
+        instr.Delete()
         return {"instrument_name": instrument_name}
     except Exception as exc:
-        raise map_com_error(exc, interface="IViInstrumentRoot", method="Remove") from exc
+        raise map_com_error(exc, interface="IViInstrumentRoot", method="Delete") from exc
 
 
 # ── instrument_get_info ────────────────────────────────────────────────────────

@@ -92,6 +92,44 @@ class TestInstrumentList:
 
 
 class TestInstrumentListTypes:
+    def test_com_catalog_matches_documented_supported_types(self) -> None:
+        from controldesk_mcp.com_bridge.domains.instrument_com import instrument_list_types
+
+        type_strings = {instrument_type["type_string"] for instrument_type in instrument_list_types()}
+
+        assert len(type_strings) == 29
+        assert {
+            "3-D Viewer",
+            "AirspeedIndicator",
+            "Altimeter",
+            "Animated Needle",
+            "ArtificialHorizon",
+            "Bar",
+            "Browser",
+            "Check Button",
+            "Diagnostics Instrument",
+            "Display",
+            "Fault Memory Instrument",
+            "Frame",
+            "Gauge",
+            "Index Plotter",
+            "Knob",
+            "Multistate Display",
+            "MultiSwitch",
+            "Numeric Input",
+            "OnOff Button",
+            "Push Button",
+            "Radio Button",
+            "Selectionbox",
+            "Slider",
+            "Static Text",
+            "SteeringController",
+            "Table Editor",
+            "Time Plotter",
+            "variable Array",
+            "XY Plotter",
+        } == type_strings
+
     @pytest.mark.asyncio
     async def test_returns_type_catalog(self) -> None:
         types = [
