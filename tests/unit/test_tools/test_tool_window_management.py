@@ -326,7 +326,7 @@ class TestToolWindowDiscover:
         assert isinstance(result, ToolWindowDiscoverResult)
         assert result["status"] == "ok"
         assert len(result["tools"]) == 1
-        assert result["tools"][0]["tool_name"] == "tool_window_query"
+        assert result["tools"][0]["tool_name"] == "controldesk_tool_window_query"
 
     @pytest.mark.asyncio
     async def test_discover_has_correct_actions(self) -> None:

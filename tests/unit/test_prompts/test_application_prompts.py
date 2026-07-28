@@ -19,37 +19,38 @@ class TestManageApplicationWindow:
     def test_includes_get_visibility_step(self) -> None:
         from controldesk_mcp.prompts.application_prompts import manage_application_window
 
-        assert "app_get_window_visibility" in _text(manage_application_window())
+        assert "controldesk_app_window_manage" in _text(manage_application_window())
+        assert "action='get_visibility'" in _text(manage_application_window())
 
     def test_includes_set_visible_step(self) -> None:
         from controldesk_mcp.prompts.application_prompts import manage_application_window
 
-        assert "app_set_window_visible" in _text(manage_application_window())
+        assert "action='set_visible'" in _text(manage_application_window())
 
     def test_includes_get_state_step(self) -> None:
         from controldesk_mcp.prompts.application_prompts import manage_application_window
 
-        assert "app_get_window_state" in _text(manage_application_window())
+        assert "action='get_state'" in _text(manage_application_window())
 
     def test_includes_set_window_state_step(self) -> None:
         from controldesk_mcp.prompts.application_prompts import manage_application_window
 
-        assert "app_set_window_state" in _text(manage_application_window())
+        assert "action='set_state'" in _text(manage_application_window())
 
     def test_includes_set_window_position_step(self) -> None:
         from controldesk_mcp.prompts.application_prompts import manage_application_window
 
-        assert "app_set_window_position" in _text(manage_application_window())
+        assert "action='set_position'" in _text(manage_application_window())
 
     def test_fullscreen_uses_set_fullscreen_tool(self) -> None:
         from controldesk_mcp.prompts.application_prompts import manage_application_window
 
-        assert "app_set_fullscreen" in _text(manage_application_window(fullscreen=True))
+        assert "action='set_fullscreen'" in _text(manage_application_window(fullscreen=True))
 
     def test_includes_quit_step(self) -> None:
         from controldesk_mcp.prompts.application_prompts import manage_application_window
 
-        assert "stop_controldesk" in _text(manage_application_window())
+        assert "controldesk_app_stop" in _text(manage_application_window())
 
     def test_window_state_in_prompt(self) -> None:
         from controldesk_mcp.prompts.application_prompts import manage_application_window

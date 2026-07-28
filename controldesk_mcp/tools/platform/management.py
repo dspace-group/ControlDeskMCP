@@ -102,7 +102,7 @@ from controldesk_mcp.utils.pagination import paginate
 
 
 @mcp.tool(
-    name="platform_connect",
+    name="controldesk_platform_connect",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Establishes the physical or virtual communication link between ControlDesk and "
@@ -131,7 +131,7 @@ async def platform_connect(params: PlatformConnectInput) -> PlatformConnectResul
 
 
 @mcp.tool(
-    name="platform_disconnect",
+    name="controldesk_platform_disconnect",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Releases the communication link between ControlDesk and a specific ECU/platform. "
@@ -152,7 +152,7 @@ async def platform_disconnect(
 
 
 @mcp.tool(
-    name="platform_manage",
+    name="controldesk_platform_manage",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Manages all platform configuration operations (mutating only). "
@@ -341,7 +341,7 @@ async def platform_manage(
 
 
 @mcp.tool(
-    name="platform_query",
+    name="controldesk_platform_query",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -421,7 +421,7 @@ async def platform_query(
 
 
 @mcp.tool(
-    name="platform_admin_manage",
+    name="controldesk_platform_admin_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -496,7 +496,7 @@ async def platform_admin_manage(
 
 
 @mcp.tool(
-    name="platform_hardware_manage",
+    name="controldesk_platform_hardware_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -587,7 +587,7 @@ async def platform_hardware_manage(
 
 
 @mcp.tool(
-    name="platform_discover",
+    name="controldesk_platform_discover",
     tool_category=MCPToolCategory.SEARCH,
     description=(
         "Returns a catalogue of all available platform operations "
@@ -607,7 +607,7 @@ async def platform_discover(ctx: Context) -> PlatformDiscoverResult:
     return PlatformDiscoverResult(
         tools=[
             ToolActionEntry(
-                tool_name="platform_query",
+                tool_name="controldesk_platform_query",
                 purpose=(
                     "Read-only queries: list platforms, get info, get connection state, "
                     "list interfaces, list types, list hardware types."
@@ -630,7 +630,7 @@ async def platform_discover(ctx: Context) -> PlatformDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="platform_admin_manage",
+                tool_name="controldesk_platform_admin_manage",
                 purpose=("Perform administrative operations on platforms: remove, rename, set_enabled."),
                 actions=["remove", "rename", "set_enabled"],
                 required_params_per_action={
@@ -640,7 +640,7 @@ async def platform_discover(ctx: Context) -> PlatformDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="platform_hardware_manage",
+                tool_name="controldesk_platform_hardware_manage",
                 purpose=(
                     "Manage hardware platform registry: register, clear, list, inspect, and refresh hardware platforms."
                 ),

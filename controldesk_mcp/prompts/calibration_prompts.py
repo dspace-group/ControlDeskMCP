@@ -5,12 +5,12 @@ Prompts registered:
   proposed_calibration_flow  — guided propose → review → apply/reject cycle
   manage_calibration_data_sets — switch between working and reference data-set pages
 
-All 11 calibration-domain tools are covered across these prompts:
-  Online calibration:    calibration_start, calibration_stop, calibration_refresh_parameters
-  Page management:       calibration_activate_working_page, calibration_activate_reference_page,
-                         data_set_activate_working_page, data_set_activate_reference_page
-  Proposed calibration:  proposed_calibration_start, proposed_calibration_stop,
-                         proposed_calibration_apply, proposed_calibration_cancel
+Calibration tools used across these prompts:
+    Lifecycle:    controldesk_calibration_start, controldesk_calibration_stop,
+                                controldesk_calibration_discover, controldesk_calibration_query
+    Page tools:   controldesk_calibration_page_manage,
+                                controldesk_variable_discover, controldesk_variable_data_set_manage
+    Proposals:    controldesk_proposed_calibration_manage
 
 Layer: MCP Prompt adapter — pure Python; no COM or service calls.
 """
@@ -44,21 +44,17 @@ def run_calibration_workflow(
                 f"**Parameters:**\n"
                 f"- Platform: {platform_name or '(use active/default platform)'}\n\n"
                 f"**Steps — execute in order:**\n\n"
-                f"1. Confirm the platform is connected: call `platform_get_connection_state`"
-                f"{platform_arg}. If not connected, call `platform_connect`{platform_arg} first.\n"
-                f"2. Call `calibration_start`{platform_arg} to enable online calibration mode.\n"
-                f"3. Call `calibration_activate_working_page`{platform_arg} to switch to the "
-                f"   working (RAM) copy of parameters — changes here are temporary.\n"
-                f"   For data-set parameters use `data_set_activate_working_page` instead.\n"
-                f"4. Call `calibration_refresh_parameters`{platform_arg} to sync the latest "
-                f"   ECU parameter values into ControlDesk.\n"
-                f"5. Adjust any required parameters using `variable_write_scalar` or "
-                f"   `variable_write_curve` / `variable_write_map` as appropriate.\n"
-                f"6. Verify changes by reading back each modified parameter.\n"
-                f"7. To persist changes: call `calibration_activate_reference_page`"
-                f"{platform_arg} to commit the working page to the reference page.\n"
-                f"   For data-set parameters: `data_set_activate_reference_page`.\n"
-                f"8. Call `calibration_stop`{platform_arg} to end the calibration session.\n"
+                f"1. Call `controldesk_platform_query` with action='get_connection_state'"
+                f"{platform_arg}. If not connected, call `controldesk_platform_connect`{platform_arg} first.\n"
+                f"2. Call `controldesk_calibration_start`{platform_arg} to enable online calibration mode.\n"
+                f"3. Call `controldesk_calibration_discover` to activate calibration page tools.\n"
+                f"4. Call `controldesk_calibration_page_manage` with action='copy_reference_to_working'"
+                f"{platform_arg} when a reference-page copy is required.\n"
+                f"5. Use `controldesk_variable_write` with the matching write_type to adjust parameters.\n"
+                f"6. Verify changes using `controldesk_variable_read` with the matching read_type.\n"
+                f"7. To persist changes, call `controldesk_calibration_page_manage` with "
+                f"   action='copy_working_to_reference'{platform_arg}.\n"
+                f"8. Call `controldesk_calibration_stop`{platform_arg} to end the calibration session.\n"
                 f"9. Report: parameters modified, final values, and calibration state."
             ),
         }
@@ -90,19 +86,19 @@ def proposed_calibration_flow(
                 f"**Parameters:**\n"
                 f"- Platform: {platform_name or '(use active/default platform)'}\n\n"
                 f"**Steps — execute in order:**\n\n"
-                f"1. Confirm the platform is connected: call `platform_get_connection_state`"
+                f"1. Confirm the platform is connected: call `controldesk_platform_query` with action='get_connection_state'"
                 f"{platform_arg}.\n"
-                f"2. Call `calibration_start`{platform_arg} to enable online calibration.\n"
-                f"3. Call `proposed_calibration_start`{platform_arg} to open a proposal "
+                f"2. Call `controldesk_calibration_start`{platform_arg} to enable online calibration.\n"
+                f"3. Call `controldesk_calibration_discover` to activate proposed-calibration tools.\n"
+                f"4. Call `controldesk_proposed_calibration_manage` with action='start' to open a proposal "
                 f"   session — parameter changes will be staged, not applied immediately.\n"
-                f"4. Write the proposed parameter values using `variable_write_scalar`, "
-                f"   `variable_write_curve`, or `variable_write_map`.\n"
-                f"5. Present the proposed changes to the user for review.\n"
-                f"6. If the user approves: call `proposed_calibration_apply`{platform_arg}.\n"
-                f"   If the user rejects: call `proposed_calibration_cancel`{platform_arg}.\n"
-                f"7. Call `proposed_calibration_stop`{platform_arg} to close the session.\n"
-                f"8. Call `calibration_stop`{platform_arg} to end the calibration session.\n"
-                f"9. Report: proposed changes, approval decision, and final parameter values."
+                f"5. Write proposed values with `controldesk_variable_write`.\n"
+                f"6. Present the proposed changes to the user for review.\n"
+                f"7. If approved, call `controldesk_proposed_calibration_manage` with action='apply'; "
+                f"otherwise use action='cancel'.\n"
+                f"8. Call `controldesk_proposed_calibration_manage` with action='stop'.\n"
+                f"9. Call `controldesk_calibration_stop`{platform_arg} to end the calibration session.\n"
+                f"10. Report: proposed changes, approval decision, and final parameter values."
             ),
         }
     ]
@@ -137,20 +133,13 @@ def manage_calibration_data_sets(
                 f"- **Working page**: RAM copy — editable, changes are temporary.\n"
                 f"- **Reference page**: Flash/ROM baseline — persisted values.\n\n"
                 f"**Steps — execute in order:**\n\n"
-                f"1. Call `calibration_start`{platform_arg} if calibration is not active.\n"
-                f"2. To switch to the editable working page:\n"
-                f"   - Standard parameters: `calibration_activate_working_page`"
-                f"{platform_arg}\n"
-                f"   - Data-set parameters: `data_set_activate_working_page`"
-                f"{platform_arg}\n"
-                f"3. Make the required parameter changes via variable write tools.\n"
-                f"4. To commit the working page changes back to the reference:\n"
-                f"   - Standard parameters: `calibration_activate_reference_page`"
-                f"{platform_arg}\n"
-                f"   - Data-set parameters: `data_set_activate_reference_page`"
-                f"{platform_arg}\n"
-                f"5. Call `calibration_refresh_parameters`{platform_arg} to re-sync "
-                f"   after page switches.\n"
+                f"1. Call `controldesk_calibration_start`{platform_arg} if calibration is not active.\n"
+                f"2. Call `controldesk_variable_discover` to activate data-set page tools.\n"
+                f"3. To activate the editable working page, call `controldesk_variable_data_set_manage` "
+                f"with action='activate_working_page'.\n"
+                f"4. Make the required parameter changes via `controldesk_variable_write`.\n"
+                f"5. To activate the reference page, call `controldesk_variable_data_set_manage` "
+                f"with action='activate_reference_page'.\n"
                 f"6. Report: current page state, parameters changed, and final values."
             ),
         }

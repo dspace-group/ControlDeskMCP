@@ -970,7 +970,7 @@ class TestPlatformDiscover:
         result = await platform_discover(AsyncMock())
 
         tool_names = [t["tool_name"] for t in result["tools"]]
-        assert "platform_admin_manage" in tool_names
+        assert "controldesk_platform_admin_manage" in tool_names
 
     @pytest.mark.asyncio
     async def test_discover_admin_manage_actions(self) -> None:
@@ -978,7 +978,7 @@ class TestPlatformDiscover:
 
         result = await platform_discover(AsyncMock())
 
-        admin_tool = next(t for t in result["tools"] if t["tool_name"] == "platform_admin_manage")
+        admin_tool = next(t for t in result["tools"] if t["tool_name"] == "controldesk_platform_admin_manage")
         assert "remove" in admin_tool["actions"]
         assert "rename" in admin_tool["actions"]
         assert "set_enabled" in admin_tool["actions"]
@@ -990,7 +990,7 @@ class TestPlatformDiscover:
         result = await platform_discover(AsyncMock())
 
         tool_names = [t["tool_name"] for t in result["tools"]]
-        assert "platform_hardware_manage" in tool_names
+        assert "controldesk_platform_hardware_manage" in tool_names
 
     @pytest.mark.asyncio
     async def test_discover_hardware_manage_actions(self) -> None:
@@ -998,7 +998,7 @@ class TestPlatformDiscover:
 
         result = await platform_discover(AsyncMock())
 
-        hw_tool = next(t for t in result["tools"] if t["tool_name"] == "platform_hardware_manage")
+        hw_tool = next(t for t in result["tools"] if t["tool_name"] == "controldesk_platform_hardware_manage")
         assert "register_hardware" in hw_tool["actions"]
         assert "clear_registered" in hw_tool["actions"]
         assert "list_registered_hardware" in hw_tool["actions"]

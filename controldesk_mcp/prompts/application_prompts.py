@@ -3,14 +3,12 @@
 Prompts registered:
   manage_application_window — arrange the ControlDesk window for automated sessions
 
-All 8 application-domain tools are covered:
-  Lifecycle:         start_controldesk, stop_controldesk
-  Window management: app_get_window_state, app_get_window_visibility,
-                     app_set_window_visible, app_set_window_state,
-                     app_set_window_position, app_set_fullscreen
+Application-domain tools covered:
+  Lifecycle:         controldesk_app_start_or_attach, controldesk_app_stop
+    Window management: controldesk_app_window_manage
 
 Note: the cross-domain session startup prompt ``start_automation_session``
-(which also invokes ``start_controldesk``) lives in ``session_prompts.py``.
+(which also invokes ``controldesk_app_start_or_attach``) lives in ``session_prompts.py``.
 
 Layer: MCP Prompt adapter — pure Python; no COM or service calls.
 """
@@ -48,23 +46,26 @@ def manage_application_window(
                 f"- Window state: {window_state}\n"
                 f"- Fullscreen: {fullscreen}\n\n"
                 f"**Steps — execute in order:**\n\n"
-                f"1. Call `app_get_window_visibility` to check if ControlDesk is currently "
-                f"   visible on screen.\n"
-                f"2. If not visible: call `app_set_window_visible` with visible=True to "
-                f"   bring it to the foreground.\n"
-                f"3. Call `app_get_window_state` to inspect the current state "
-                f"   (normal, minimized, maximized).\n"
+                f"1. Call `controldesk_app_window_manage` with action='get_visibility' to check if "
+                f"   ControlDesk is visible on screen.\n"
+                f"2. If not visible: call `controldesk_app_window_manage` with action='set_visible' "
+                f"   and visible=True to bring it to the foreground.\n"
+                f"3. Call `controldesk_app_window_manage` with action='get_state' to inspect the "
+                f"   current state (normal, minimized, maximized).\n"
                 f"4. "
                 + (
-                    "Call `app_set_fullscreen` with enabled=True to maximize ControlDesk to full screen."
+                    "Call `controldesk_app_window_manage` with action='set_fullscreen' and enabled=True."
                     if fullscreen
-                    else f"Call `app_set_window_state` with state='{window_state}' to adjust the window. {state_hint}"
+                    else (
+                        "Call `controldesk_app_window_manage` with action='set_state' and "
+                        f"window_state='{window_state}' to adjust the window. {state_hint}"
+                    )
                 )
                 + "\n"
-                "5. If exact placement is required: call `app_set_window_position` with "
-                "   x, y, width, and height to position ControlDesk precisely.\n"
-                "6. Call `app_get_window_state` again to confirm the final state.\n"
-                "7. To close ControlDesk when done: call `stop_controldesk`.\n"
+                "5. If exact placement is required: call `controldesk_app_window_manage` with "
+                "   action='set_position', left, top, width, and height.\n"
+                "6. Call `controldesk_app_window_manage` with action='get_state' again to confirm the final state.\n"
+                "7. To close ControlDesk when done: call `controldesk_app_stop`.\n"
                 "8. Report: window visibility, state, and position after configuration."
             ),
         }

@@ -13,7 +13,7 @@ Tools implemented (domain: layout management):
       layout_io_manage — Export/import layouts and connection files
 
 COM entry point: app.LayoutManagement (IXaLayoutManagement)
-Prerequisite: start_controldesk must have been called; experiment must be open.
+Prerequisite: controldesk_app_start_or_attach must have been called; experiment must be open.
 Layer: MCP Tool (thin adapter) — owns @mcp.tool annotations only.
 All orchestration is delegated to controldesk_mcp.services.layout_service.
 """
@@ -60,14 +60,14 @@ from controldesk_mcp.utils.pagination import paginate
 
 
 @mcp.tool(
-    name="layout_list",
+    name="controldesk_layout_list",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Enumerates all layouts in the currently open ControlDesk experiment. "
         "Returns name, file path, open state, active state, and editing mode for each layout. "
         "Use this as the first step to discover which layouts exist and their exact names. "
         "Layout names returned are the exact strings to pass to layout_manage and layout_io_manage. "
-        "Prerequisite: start_controldesk must have been called and an experiment must be open."
+        "Prerequisite: controldesk_app_start_or_attach must have been called and an experiment must be open."
     ),
     annotations=AnnotationInfo(read_only=True),
     meta=MetaInfo(ToolDomain.LAYOUT, ToolGroup.LAYOUT_MANAGEMENT),
@@ -83,7 +83,7 @@ async def layout_list(params: LayoutListInput) -> LayoutListResult | ErrorEnvelo
 
 
 @mcp.tool(
-    name="layout_query",
+    name="controldesk_layout_query",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Read-only queries for ControlDesk layouts (readOnlyHint=true). "
@@ -109,7 +109,7 @@ async def layout_query(params: LayoutQueryInput) -> LayoutGetInfoResult | ErrorE
 
 
 @mcp.tool(
-    name="layout_manage",
+    name="controldesk_layout_manage",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Manages the lifecycle and configuration of ControlDesk layouts (mutating operations only). "
@@ -125,7 +125,7 @@ async def layout_query(params: LayoutQueryInput) -> LayoutGetInfoResult | ErrorE
         "Use layout_query to get layout metadata. "
         "Use layout_list to discover available layout names. "
         "Use layout_discover to access export/import operations. "
-        "Prerequisite: start_controldesk must have been called."
+        "Prerequisite: controldesk_app_start_or_attach must have been called."
     ),
     annotations=AnnotationInfo(read_only=False, destructive=True, idempotent=False),
     meta=MetaInfo(ToolDomain.LAYOUT, ToolGroup.LAYOUT_MANAGEMENT),
@@ -198,7 +198,7 @@ async def layout_manage(
 
 
 @mcp.tool(
-    name="layout_io_manage",
+    name="controldesk_layout_io_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -275,7 +275,7 @@ async def layout_io_manage(
 
 
 @mcp.tool(
-    name="layout_discover",
+    name="controldesk_layout_discover",
     tool_category=MCPToolCategory.SEARCH,
     description=(
         "Returns a catalogue of all available layout operations "
@@ -294,7 +294,7 @@ async def layout_discover(ctx: Context) -> LayoutDiscoverResult:
     return LayoutDiscoverResult(
         tools=[
             ToolActionEntry(
-                tool_name="layout_io_manage",
+                tool_name="controldesk_layout_io_manage",
                 purpose=("Export/import layouts (.lax) and signal connection files (.cdx) for the active experiment."),
                 actions=["export", "import", "import_connection_file", "export_connection_file"],
                 required_params_per_action={

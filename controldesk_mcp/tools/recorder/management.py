@@ -72,7 +72,7 @@ from controldesk_mcp.utils.pagination import paginate
 
 
 @mcp.tool(
-    name="recorder_main_start",
+    name="controldesk_recorder_main_start",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Starts the main recorder. The recorder begins writing sampled signals to the "
@@ -101,7 +101,7 @@ async def recorder_main_start(
 
 
 @mcp.tool(
-    name="recorder_main_stop",
+    name="controldesk_recorder_main_stop",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Stops the main recorder. Any open output MF4 file is finalized and closed. "
@@ -126,7 +126,7 @@ async def recorder_main_stop(
 
 
 @mcp.tool(
-    name="recorder_main_manage",
+    name="controldesk_recorder_main_manage",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Manages recorder configuration and trigger (mutating only). "
@@ -181,7 +181,7 @@ async def recorder_main_manage(
 
 
 @mcp.tool(
-    name="recorder_query",
+    name="controldesk_recorder_query",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -201,7 +201,7 @@ async def recorder_query(params: RecorderQueryInput) -> RecorderMainGetStateResu
 
 
 @mcp.tool(
-    name="recorder_signal_manage",
+    name="controldesk_recorder_signal_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -261,7 +261,7 @@ async def recorder_signal_manage(
 
 
 @mcp.tool(
-    name="recorder_config_manage",
+    name="controldesk_recorder_config_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -307,7 +307,7 @@ async def recorder_config_manage(
 
 
 @mcp.tool(
-    name="recorder_discover",
+    name="controldesk_recorder_discover",
     tool_category=MCPToolCategory.SEARCH,
     description=(
         "Returns a catalogue of all available recorder operations "
@@ -326,13 +326,13 @@ async def recorder_discover(ctx: Context) -> RecorderDiscoverResult:
     return RecorderDiscoverResult(
         tools=[
             ToolActionEntry(
-                tool_name="recorder_query",
+                tool_name="controldesk_recorder_query",
                 purpose="Read-only query for current recorder state (Idling/WaitingForTrigger/Running).",
                 actions=["get_state"],
                 required_params_per_action={"get_state": []},
             ),
             ToolActionEntry(
-                tool_name="recorder_signal_manage",
+                tool_name="controldesk_recorder_signal_manage",
                 purpose=(
                     "Add or remove signals from the recorder signal list, or list all currently assigned signals."
                 ),
@@ -344,7 +344,7 @@ async def recorder_discover(ctx: Context) -> RecorderDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="recorder_config_manage",
+                tool_name="controldesk_recorder_config_manage",
                 purpose=(
                     "Export recorder configuration to file or import signals "
                     "from a previously exported configuration file."

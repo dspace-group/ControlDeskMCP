@@ -20,14 +20,15 @@ class TestConfigureBusLogging:
         from controldesk_mcp.prompts.bus_prompts import configure_bus_logging
 
         text = _text(configure_bus_logging())
-        assert "bus_logger_create" in text
-        assert "bus_logger_start" in text
-        assert "bus_logger_stop" in text
+        assert "controldesk_bus_logger_create" in text
+        assert "controldesk_bus_logger_manage" in text
+        assert "action='start'" in text
+        assert "action='stop'" in text
 
     def test_includes_list_step(self) -> None:
         from controldesk_mcp.prompts.bus_prompts import configure_bus_logging
 
-        assert "bus_logger_list" in _text(configure_bus_logging())
+        assert "controldesk_bus_logger_query" in _text(configure_bus_logging())
 
     def test_logger_name_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.bus_prompts import configure_bus_logging
@@ -57,10 +58,9 @@ class TestRunBusMonitor:
         from controldesk_mcp.prompts.bus_prompts import run_bus_monitor
 
         text = _text(run_bus_monitor())
-        assert "bus_monitor_create" in text
-        assert "bus_monitor_start" in text
-        assert "bus_monitor_stop" in text
-        assert "bus_monitor_save_data" in text
+        assert "controldesk_bus_monitor_create" in text
+        assert "controldesk_bus_monitor_manage" in text
+        assert "controldesk_bus_monitor_save" in text
 
     def test_monitor_name_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.bus_prompts import run_bus_monitor
@@ -85,10 +85,9 @@ class TestReplayBusData:
         from controldesk_mcp.prompts.bus_prompts import replay_bus_data
 
         text = _text(replay_bus_data())
-        assert "bus_replay_create" in text
-        assert "bus_replay_configure" in text
-        assert "bus_replay_start" in text
-        assert "bus_replay_stop" in text
+        assert "controldesk_bus_replay_create" in text
+        assert "controldesk_bus_replay_configure" in text
+        assert "controldesk_bus_replay_manage" in text
 
     def test_replay_name_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.bus_prompts import replay_bus_data
@@ -119,10 +118,9 @@ class TestManageBusFilters:
 
         text = _text(manage_bus_filters())
         for tool in (
-            "bus_filter_create",
-            "bus_filter_configure",
-            "bus_filter_start",
-            "bus_filter_stop",
+            "controldesk_bus_filter_create",
+            "controldesk_bus_filter_configure",
+            "controldesk_bus_filter_manage",
         ):
             assert tool in text
 
@@ -130,8 +128,8 @@ class TestManageBusFilters:
         from controldesk_mcp.prompts.bus_prompts import manage_bus_filters
 
         text = _text(manage_bus_filters())
-        assert "bus_filter_list" in text
-        assert "bus_filter_remove" in text
+        assert "action='list'" in text
+        assert "action='remove'" in text
 
     def test_filter_name_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.bus_prompts import manage_bus_filters

@@ -24,31 +24,35 @@ def _make_tool(name: str, description: str = "", meta: dict | None = None) -> Ma
 
 
 _SAMPLE_TOOLS = [
-    _make_tool("start_controldesk", "Start or attach ControlDesk"),
-    _make_tool("stop_controldesk", "Quit ControlDesk"),
-    _make_tool("measurement_start", "Start measurement"),
-    _make_tool("measurement_stop", "Stop measurement"),
-    _make_tool("measurement_raster_add", "Add a raster"),
-    _make_tool("platform_connect", "Connect a platform"),
-    _make_tool("platform_list", "List platforms"),
-    _make_tool("variable_read_scalar", "Read a scalar"),
-    _make_tool("bus_logger_start", "Start bus logger"),
-    _make_tool("bus_filter_create", "Create bus filter"),
-    _make_tool("bus_replay_start", "Start bus replay"),
-    _make_tool("experiment_create", "Create experiment"),
-    _make_tool("project_create", "Create project"),
+    _make_tool("controldesk_app_start_or_attach", "Start or attach ControlDesk", {"domain": "application", "group": "lifecycle"}),
+    _make_tool("controldesk_app_stop", "Quit ControlDesk", {"domain": "application", "group": "lifecycle"}),
+    _make_tool("controldesk_measurement_start", "Start measurement", {"domain": "measurement", "group": "recording"}),
+    _make_tool("controldesk_measurement_stop", "Stop measurement", {"domain": "measurement", "group": "recording"}),
+    _make_tool("controldesk_measurement_raster_manage", "Manage rasters", {"domain": "measurement", "group": "raster_management"}),
+    _make_tool("controldesk_platform_connect", "Connect a platform", {"domain": "platform", "group": "connectivity"}),
+    _make_tool("controldesk_platform_query", "Query platforms", {"domain": "platform", "group": "configuration"}),
+    _make_tool("controldesk_variable_read", "Read a variable", {"domain": "variable", "group": "read"}),
+    _make_tool("controldesk_bus_logger_manage", "Manage bus logger", {"domain": "bus_logging", "group": "logger_management"}),
+    _make_tool("controldesk_bus_filter_create", "Create bus filter", {"domain": "bus_logging", "group": "filter_management"}),
+    _make_tool("controldesk_bus_replay_manage", "Manage bus replay", {"domain": "bus_replay", "group": "replay_management"}),
+    _make_tool("controldesk_project_experiment_manage", "Manage experiment", {"domain": "project", "group": "experiment_management"}),
+    _make_tool("controldesk_project_manage", "Manage project", {"domain": "project", "group": "project_management"}),
     _make_tool("health", "Health check"),
 ]
 
 _TAGGED_TOOLS = [
     _make_tool(
-        "experiment_create",
+        "controldesk_project_experiment_manage",
         "Create experiment",
         meta={"domain": "project", "group": "experiment_management"},
     ),
-    _make_tool("project_root_add", "Add project root", meta={"domain": "project", "group": "project_roots"}),
     _make_tool(
-        "measurement_start",
+        "controldesk_project_root_manage",
+        "Manage project roots",
+        meta={"domain": "project", "group": "project_roots"},
+    ),
+    _make_tool(
+        "controldesk_measurement_start",
         "Start measurement",
         meta={"domain": "measurement", "group": "recording"},
     ),
@@ -129,27 +133,27 @@ class TestGetDomainTools:
     def test_application_domain_returns_app_tools(self) -> None:
         data = self._call("application")
         names = [t["name"] for t in data["tools"]]
-        assert "start_controldesk" in names
-        assert "stop_controldesk" in names
+        assert "controldesk_app_start_or_attach" in names
+        assert "controldesk_app_stop" in names
 
     def test_application_domain_excludes_other_tools(self) -> None:
         data = self._call("application")
         names = [t["name"] for t in data["tools"]]
-        assert "measurement_start" not in names
-        assert "platform_connect" not in names
+        assert "controldesk_measurement_start" not in names
+        assert "controldesk_platform_connect" not in names
 
     def test_measurement_domain_returns_measurement_tools(self) -> None:
         data = self._call("measurement")
         names = [t["name"] for t in data["tools"]]
-        assert "measurement_start" in names
-        assert "measurement_stop" in names
-        assert "measurement_raster_add" in names
+        assert "controldesk_measurement_start" in names
+        assert "controldesk_measurement_stop" in names
+        assert "controldesk_measurement_raster_manage" in names
 
     def test_platform_domain_returns_platform_tools(self) -> None:
         data = self._call("platform")
         names = [t["name"] for t in data["tools"]]
-        assert "platform_connect" in names
-        assert "platform_list" in names
+        assert "controldesk_platform_connect" in names
+        assert "controldesk_platform_query" in names
 
     def test_unknown_domain_returns_empty_list(self) -> None:
         data = self._call("nonexistent_domain")
@@ -173,25 +177,40 @@ class TestGetDomainTools:
     def test_bus_logging_includes_filter_tools(self) -> None:
         data = self._call("bus_logging")
         names = [t["name"] for t in data["tools"]]
-        assert "bus_filter_create" in names
-        assert "bus_logger_start" in names
+        assert "controldesk_bus_filter_create" in names
+        assert "controldesk_bus_logger_manage" in names
+
+    def test_bus_logging_includes_discovery_tools_by_metadata(self) -> None:
+        tools = [
+            _make_tool(
+                "controldesk_bus_logging_discover",
+                "Discover bus logging tools",
+                {"domain": "bus_logging", "group": "logger_management"},
+            )
+        ]
+        with patch("controldesk_mcp.resources.domain_resources.mcp._tool_manager.list_tools", return_value=tools):
+            from controldesk_mcp.resources.domain_resources import get_domain_tools
+
+            data = json.loads(get_domain_tools("bus_logging"))
+
+        assert data["tools"][0]["name"] == "controldesk_bus_logging_discover"
 
     def test_bus_replay_does_not_include_filter_tools(self) -> None:
         data = self._call("bus_replay")
         names = [t["name"] for t in data["tools"]]
-        assert "bus_filter_create" not in names
-        assert "bus_replay_start" in names
+        assert "controldesk_bus_filter_create" not in names
+        assert "controldesk_bus_replay_manage" in names
 
     def test_experiment_domain_returns_experiment_tools(self) -> None:
         data = self._call("experiment")
         names = [t["name"] for t in data["tools"]]
-        assert "experiment_create" in names
+        assert "controldesk_project_experiment_manage" in names
 
     def test_project_domain_excludes_experiment_tools(self) -> None:
         data = self._call("project")
         names = [t["name"] for t in data["tools"]]
-        assert "project_create" in names
-        assert "experiment_create" not in names
+        assert "controldesk_project_manage" in names
+        assert "controldesk_project_experiment_manage" not in names
 
 
 # ── get_tool_group_hierarchy ──────────────────────────────────────────────────
@@ -224,7 +243,7 @@ class TestGetToolGroupHierarchy:
     def test_experiment_management_group_contains_experiment_create(self) -> None:
         data = self._call()
         tools = data["domains"]["project"]["experiment_management"]["tools"]
-        assert "experiment_create" in tools
+        assert "controldesk_project_experiment_manage" in tools
 
     def test_project_roots_group_present(self) -> None:
         data = self._call()
@@ -252,12 +271,12 @@ class TestGetGroupTools:
     def test_experiment_management_group_returns_correct_tools(self) -> None:
         data = self._call("project", "experiment_management")
         names = [t["name"] for t in data["tools"]]
-        assert "experiment_create" in names
+        assert "controldesk_project_experiment_manage" in names
 
     def test_project_roots_group_returns_correct_tools(self) -> None:
         data = self._call("project", "project_roots")
         names = [t["name"] for t in data["tools"]]
-        assert "project_root_add" in names
+        assert "controldesk_project_root_manage" in names
 
     def test_unknown_group_returns_empty_with_hint(self) -> None:
         data = self._call("project", "nonexistent_group")

@@ -99,7 +99,7 @@ from controldesk_mcp.utils.pagination import paginate
 
 
 @mcp.tool(
-    name="measurement_start",
+    name="controldesk_measurement_start",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Starts measurement on all connected platforms. The measurement process begins "
@@ -122,7 +122,7 @@ async def measurement_start(params: MeasurementStartInput) -> object:
 
 
 @mcp.tool(
-    name="measurement_stop",
+    name="controldesk_measurement_stop",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Stops measurement on all platforms. All recorders are stopped automatically. "
@@ -140,7 +140,7 @@ async def measurement_stop(params: MeasurementStopInput) -> object:
 
 
 @mcp.tool(
-    name="measurement_manage",
+    name="controldesk_measurement_manage",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Manages core measurement configuration and signal operations (mutating only). "
@@ -221,7 +221,7 @@ async def measurement_manage(params: MeasurementManageInput) -> object:
 
 
 @mcp.tool(
-    name="measurement_query",
+    name="controldesk_measurement_query",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -256,7 +256,7 @@ async def measurement_query(params: MeasurementQueryInput) -> object:
 
 
 @mcp.tool(
-    name="measurement_raster_manage",
+    name="controldesk_measurement_raster_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -331,7 +331,7 @@ async def measurement_raster_manage(params: MeasurementRasterManageInput) -> obj
 
 
 @mcp.tool(
-    name="trigger_manage",
+    name="controldesk_measurement_trigger_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -447,7 +447,7 @@ async def trigger_manage(params: TriggerManageInput) -> object:
 
 
 @mcp.tool(
-    name="recording_manage",
+    name="controldesk_measurement_recording_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -586,7 +586,7 @@ async def recording_manage(params: RecordingManageInput) -> object:
 
 
 @mcp.tool(
-    name="data_logger_manage",
+    name="controldesk_measurement_data_logger_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -684,7 +684,7 @@ async def data_logger_manage(params: DataLoggerManageInput) -> object:
 
 
 @mcp.tool(
-    name="measurement_discover",
+    name="controldesk_measurement_discover",
     tool_category=MCPToolCategory.SEARCH,
     description=(
         "Returns a catalogue of all available measurement operations "
@@ -703,7 +703,7 @@ async def measurement_discover(ctx: Context) -> MeasurementDiscoverResult:
     return MeasurementDiscoverResult(
         tools=[
             ToolActionEntry(
-                tool_name="measurement_query",
+                tool_name="controldesk_measurement_query",
                 purpose="Read-only queries: get measurement state, get configuration, or list configured signals.",
                 actions=["get_state", "get_configuration", "list_signals"],
                 required_params_per_action={
@@ -713,7 +713,7 @@ async def measurement_discover(ctx: Context) -> MeasurementDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="measurement_raster_manage",
+                tool_name="controldesk_measurement_raster_manage",
                 purpose=(
                     "Manage measurement rasters (sampling intervals): "
                     "add, list, or remove rasters for platform signal acquisition."
@@ -726,7 +726,7 @@ async def measurement_discover(ctx: Context) -> MeasurementDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="trigger_manage",
+                tool_name="controldesk_measurement_trigger_manage",
                 purpose=(
                     "Manage trigger rules and recorder start/stop conditions: "
                     "create/remove rules, configure time-limit or trigger-based conditions."
@@ -745,7 +745,7 @@ async def measurement_discover(ctx: Context) -> MeasurementDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="recording_manage",
+                tool_name="controldesk_measurement_recording_manage",
                 purpose=(
                     "Manage recordings in the data pool and measurement bookmarks: "
                     "list/export/import recordings, add/list/remove bookmarks."
@@ -768,7 +768,7 @@ async def measurement_discover(ctx: Context) -> MeasurementDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="data_logger_manage",
+                tool_name="controldesk_measurement_data_logger_manage",
                 purpose=("Manage data logger lifecycle: create, configure, start, stop, list, or remove data loggers."),
                 actions=["create", "configure", "start", "stop", "list", "remove"],
                 required_params_per_action={

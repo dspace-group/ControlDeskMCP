@@ -49,41 +49,43 @@ def _get_domain_group_catalog() -> dict[str, dict[str, list[str]]]:
     return catalog
 
 
-# ── Domain → tool-name prefix mapping ────────────────────────────────────────
-# Used for fast prefix-based filtering before meta tags are applied.
-# Note: experiment is now a distinct queryable domain (group under project).
+# ── Resource domain → metadata filter mapping ────────────────────────────────
+# Tool metadata is the ownership source of truth. The experiment catalog is a
+# customer-facing view over the experiment-management group in the project domain.
 
-_DOMAIN_PREFIXES: dict[str, list[str]] = {
-    "application": ["app_", "start_controldesk", "stop_controldesk"],
-    "bus_logging": ["bus_logger_", "bus_filter_"],
-    "bus_monitor": ["bus_monitor_"],
-    "bus_replay": ["bus_replay_"],
-    "calibration": ["calibration_", "proposed_calibration_", "data_set_"],
-    "experiment": ["experiment_"],
-    "instrument": ["instrument_"],
-    "layout": ["layout_"],
-    "measurement": ["measurement_", "data_logger_", "trigger_"],
-    "platform": ["platform_"],
-    "project": ["project_"],
-    "recorder": ["recorder_main_"],
-    "tool_window": ["tool_window_"],
-    "variable": ["variable_"],
+_DOMAIN_FILTERS: dict[str, tuple[str, frozenset[str] | None, frozenset[str]]] = {
+    "application": ("application", None, frozenset()),
+    "bus_logging": ("bus_logging", None, frozenset()),
+    "bus_monitor": ("bus_monitor", None, frozenset()),
+    "bus_replay": ("bus_replay", None, frozenset()),
+    "calibration": ("calibration", None, frozenset()),
+    "experiment": ("project", frozenset({"experiment_management"}), frozenset()),
+    "instrument": ("instrument", None, frozenset()),
+    "layout": ("layout", None, frozenset()),
+    "measurement": ("measurement", None, frozenset()),
+    "platform": ("platform", None, frozenset()),
+    "project": ("project", None, frozenset({"experiment_management"})),
+    "recorder": ("recorder", None, frozenset()),
+    "tool_window": ("tool_window", None, frozenset()),
+    "variable": ("variable", None, frozenset()),
 }
 
-# Sorted list of known domain names for discovery
-_KNOWN_DOMAINS: list[str] = sorted(_DOMAIN_PREFIXES.keys())
+_KNOWN_DOMAINS: list[str] = sorted(_DOMAIN_FILTERS.keys())
 
 
 def _tools_for_domain(domain: str) -> list[dict]:
     """Return tool dicts for a given domain, or [] if domain is unknown."""
-    prefixes = _DOMAIN_PREFIXES.get(domain, [])
-    if not prefixes:
+    domain_filter = _DOMAIN_FILTERS.get(domain)
+    if domain_filter is None:
         return []
+    target_domain, included_groups, excluded_groups = domain_filter
     all_tools = mcp._tool_manager.list_tools()
     matched = [
         {"name": t.name, "description": t.description or ""}
         for t in all_tools
-        if any(t.name.startswith(p) for p in prefixes)
+        if (meta := t.meta or {}).get("domain") == target_domain
+        and (included_groups is None or meta.get("group") in included_groups)
+        and meta.get("group") not in excluded_groups
     ]
     matched.sort(key=lambda t: t["name"])
     return matched

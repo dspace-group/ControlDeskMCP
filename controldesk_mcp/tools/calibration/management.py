@@ -81,7 +81,7 @@ from controldesk_mcp.services import calibration_service
 
 
 @mcp.tool(
-    name="calibration_start",
+    name="controldesk_calibration_start",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Starts online calibration on all platforms in the active experiment simultaneously. "
@@ -110,7 +110,7 @@ async def calibration_start(
 
 
 @mcp.tool(
-    name="calibration_stop",
+    name="controldesk_calibration_stop",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Stops online calibration on all platforms in the active experiment. "
@@ -131,7 +131,7 @@ async def calibration_stop(params: CalibrationStopInput) -> CalibrationStopResul
 
 
 @mcp.tool(
-    name="calibration_manage",
+    name="controldesk_calibration_manage",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Manages calibration page operations (mutating only). "
@@ -173,7 +173,7 @@ async def calibration_manage(
 
 
 @mcp.tool(
-    name="calibration_query",
+    name="controldesk_calibration_query",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -196,7 +196,7 @@ async def calibration_query(
 
 
 @mcp.tool(
-    name="proposed_calibration_manage",
+    name="controldesk_proposed_calibration_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -240,7 +240,7 @@ async def proposed_calibration_manage(
 
 
 @mcp.tool(
-    name="calibration_page_manage",
+    name="controldesk_calibration_page_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -285,7 +285,7 @@ async def calibration_page_manage(
 
 
 @mcp.tool(
-    name="calibration_discover",
+    name="controldesk_calibration_discover",
     tool_category=MCPToolCategory.SEARCH,
     description=(
         "Returns a catalogue of all available calibration operations "
@@ -304,13 +304,13 @@ async def calibration_discover(ctx: Context) -> CalibrationDiscoverResult:
     return CalibrationDiscoverResult(
         tools=[
             ToolActionEntry(
-                tool_name="calibration_query",
+                tool_name="controldesk_calibration_query",
                 purpose="Read-only query for current calibration state (Started/Stopped) and proposed session state.",
                 actions=["get_state"],
                 required_params_per_action={"get_state": []},
             ),
             ToolActionEntry(
-                tool_name="proposed_calibration_manage",
+                tool_name="controldesk_proposed_calibration_manage",
                 purpose=(
                     "Manage proposed calibration session lifecycle: start, stop, apply, or cancel a proposed session."
                 ),
@@ -323,7 +323,7 @@ async def calibration_discover(ctx: Context) -> CalibrationDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="calibration_page_manage",
+                tool_name="controldesk_calibration_page_manage",
                 purpose=(
                     "Copy ECU calibration pages: working-to-reference or reference-to-working (requires platform_name)."
                 ),

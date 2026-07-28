@@ -1,0 +1,330 @@
+{
+  "prompts": [
+    {
+      "name": "manage_application_window",
+      "description": "Guided workflow for controlling the ControlDesk application window: check visibility, show/hide, resize, reposition, and set fullscreen. Use before running automated workflows to ensure ControlDesk is visible and correctly positioned on screen. Accepts optional position and state parameters.",
+      "arguments": [
+        {
+          "name": "window_state",
+          "required": false
+        },
+        {
+          "name": "fullscreen",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "configure_bus_logging",
+      "description": "Step-by-step guide for setting up ControlDesk bus logging: create a logger, configure it, activate, start capturing, and stop. Covers logger lifecycle including clear-all and remove operations. Accepts optional logger name and database path for context.",
+      "arguments": [
+        {
+          "name": "logger_name",
+          "required": false
+        },
+        {
+          "name": "database_path",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "run_bus_monitor",
+      "description": "Guided workflow for creating a ControlDesk bus monitor, starting live capture, and saving the captured data to a file. Covers monitor lifecycle including clear-all and remove operations. Accepts optional monitor name and output file path.",
+      "arguments": [
+        {
+          "name": "monitor_name",
+          "required": false
+        },
+        {
+          "name": "output_path",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "replay_bus_data",
+      "description": "Guided workflow for replaying previously recorded bus data in ControlDesk: create a replay session, configure the source file, and play back. Covers replay lifecycle including clear-all and remove operations. Accepts optional replay name and source file path.",
+      "arguments": [
+        {
+          "name": "replay_name",
+          "required": false
+        },
+        {
+          "name": "source_path",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "manage_bus_filters",
+      "description": "Guided workflow for creating and managing ControlDesk bus message filters: create a filter, configure which frames to include/exclude, start filtering, and clean up. Filters are used in combination with bus loggers to selectively capture frames.",
+      "arguments": [
+        {
+          "name": "filter_name",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "run_calibration_workflow",
+      "description": "Step-by-step guide for running a ControlDesk online calibration session: start calibration, switch pages, refresh parameters, and stop. Accepts an optional platform name to scope the workflow.",
+      "arguments": [
+        {
+          "name": "platform_name",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "proposed_calibration_flow",
+      "description": "Guided workflow for the ControlDesk Proposed Calibration feature: start the proposal session, let the model suggest changes, then apply or cancel. Use when coordinating AI-suggested parameter updates with human review.",
+      "arguments": [
+        {
+          "name": "platform_name",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "manage_calibration_data_sets",
+      "description": "Guided workflow for switching between working and reference data-set pages in ControlDesk calibration. Data sets hold ECU parameter values; the working page is editable while the reference page holds the last committed baseline.",
+      "arguments": [
+        {
+          "name": "platform_name",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "manage_instrument_workflow",
+      "description": "Guided workflow for managing instruments on a ControlDesk layout: enumerate instruments and types, add, configure, move, arrange, and connect/disconnect signals. Accepts optional layout and instrument name parameters.",
+      "arguments": [
+        {
+          "name": "layout_name",
+          "required": false
+        },
+        {
+          "name": "instrument_name",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "manage_layout_workflow",
+      "description": "Guided workflow for managing ControlDesk layouts: enumerate layouts, create, open, configure, save, close, activate, and perform I/O operations (export/import layouts and connection files). Accepts an optional layout name to target a specific layout.",
+      "arguments": [
+        {
+          "name": "layout_name",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "run_measurement_workflow",
+      "description": "End-to-end workflow for configuring and running a ControlDesk measurement recording: raster setup, signal configuration, buffer tuning, start, stop, and export. Accepts optional raster name, sample time, signal list, and recording name.",
+      "arguments": [
+        {
+          "name": "raster_name",
+          "required": false
+        },
+        {
+          "name": "sample_time_ms",
+          "required": false
+        },
+        {
+          "name": "signals",
+          "required": false
+        },
+        {
+          "name": "recording_name",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "add_measurement_bookmark",
+      "description": "Guided workflow for annotating a running measurement recording with a bookmark. Bookmarks mark key events (e.g., test start, fault injection) in the recording so they can be identified during post-processing. Accepts an optional bookmark label.",
+      "arguments": [
+        {
+          "name": "label",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "manage_data_loggers",
+      "description": "Guided workflow for creating and managing ControlDesk data loggers: create a named logger, configure its output file, start/stop logging, list all loggers, and remove when done. Data loggers capture signals to external files independently of the main measurement recording.",
+      "arguments": [
+        {
+          "name": "logger_name",
+          "required": false
+        },
+        {
+          "name": "output_file",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "configure_measurement_triggers",
+      "description": "Guided workflow for configuring ControlDesk measurement triggers: create trigger rules with time-limit or signal-based conditions to automatically start or stop recordings. Accepts optional signal path for trigger-based conditions.",
+      "arguments": [
+        {
+          "name": "signal_path",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "manage_project_workflow",
+      "description": "Step-by-step guide for creating or opening a ControlDesk project, adding a platform, and setting up an experiment. Accepts optional project path to distinguish new vs. existing projects.",
+      "arguments": [
+        {
+          "name": "project_path",
+          "required": false
+        },
+        {
+          "name": "project_name",
+          "required": false
+        },
+        {
+          "name": "platform_name",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "export_experiment",
+      "description": "Guided workflow for exporting a ControlDesk experiment to a zip archive: select the experiment, export it, and verify the output file. Accepts optional experiment name and output path.",
+      "arguments": [
+        {
+          "name": "experiment_name",
+          "required": false
+        },
+        {
+          "name": "output_path",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "manage_project_roots",
+      "description": "Guided workflow for managing ControlDesk project root folders: register new root folders, set the active root, list all roots, and remove roots that are no longer needed. Project roots are file-system folders that ControlDesk searches for projects.",
+      "arguments": [
+        {
+          "name": "root_path",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "manage_experiments",
+      "description": "Guided workflow for the full experiment lifecycle in a ControlDesk project: create, rename, clone (save-as), import, and remove experiments. Use this when the project is already open and you need to manage its experiments.",
+      "arguments": [
+        {
+          "name": "experiment_name",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "run_recorder_main_workflow",
+      "description": "End-to-end workflow for using the ControlDesk main recorder: configure the recorder, add signals to record, start, pause/resume, and stop recording. The main recorder is the primary data-capture component for signal recording in ControlDesk. Accepts optional signal path and output file.",
+      "arguments": [
+        {
+          "name": "signal_path",
+          "required": false
+        },
+        {
+          "name": "output_file",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "start_automation_session",
+      "description": "Step-by-step guide for setting up a full ControlDesk automation session: verify server, start the application, open a project, connect a platform, and confirm the environment is ready. Use at the beginning of any automation workflow.",
+      "arguments": [
+        {
+          "name": "project_path",
+          "required": false
+        },
+        {
+          "name": "platform_name",
+          "required": false
+        },
+        {
+          "name": "controldesk_version",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "diagnose_connection",
+      "description": "Diagnostic guide for troubleshooting ControlDesk COM / connection failures. Use when tools return BridgeError, RPC errors, or unexpected disconnections. Accepts an optional error message and the failing tool name for context.",
+      "arguments": [
+        {
+          "name": "error_message",
+          "required": false
+        },
+        {
+          "name": "tool_name",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "manage_tool_windows",
+      "description": "Guided workflow for managing ControlDesk tool windows: list available windows, show or hide a specific window, configure its docking position, and close when done. Useful for arranging the ControlDesk UI before running automated tests. Accepts an optional window name to target a specific tool window.",
+      "arguments": [
+        {
+          "name": "window_name",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "read_write_variables",
+      "description": "Guided workflow for reading and writing ControlDesk variables: find, inspect, read, optionally write, and verify. Covers scalars, arrays, curves, maps, and strings. Useful for testing calibration values, signal manipulation, and variable access.",
+      "arguments": [
+        {
+          "name": "variable_path",
+          "required": false
+        },
+        {
+          "name": "write_value",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "discover_variables",
+      "description": "Guided workflow for discovering and inspecting ControlDesk variables: search by pattern, list all variables, browse group contents, and inspect array elements. Use this to explore what variables are available before reading or writing.",
+      "arguments": [
+        {
+          "name": "search_pattern",
+          "required": false
+        },
+        {
+          "name": "group_path",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "manage_variable_descriptions",
+      "description": "Guided workflow for managing ControlDesk variable description files (A2L/DCM): list loaded descriptions, activate a specific file, and remove unused ones. Variable descriptions must be loaded before variables become accessible.",
+      "arguments": [
+        {
+          "name": "description_file",
+          "required": false
+        },
+        {
+          "name": "platform_name",
+          "required": false
+        }
+      ]
+    }
+  ]
+}

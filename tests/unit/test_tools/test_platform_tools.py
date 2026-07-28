@@ -699,7 +699,7 @@ class TestPlatformDiscover:
 
         result = await platform_discover(AsyncMock())
 
-        hw_tool = next(t for t in result["tools"] if t["tool_name"] == "platform_hardware_manage")
+        hw_tool = next(t for t in result["tools"] if t["tool_name"] == "controldesk_platform_hardware_manage")
         actions = hw_tool["actions"]
         assert "register_hardware" in actions
         assert "clear_registered" in actions

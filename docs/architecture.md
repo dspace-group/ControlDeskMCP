@@ -657,7 +657,7 @@ async def variable_read_scalar(params: VariableReadScalarInput) -> str:
             "error_code": "COM_DISCONNECTED",
             "category": "CONNECTION",
             "retryable": true,
-            "recovery_hint": "Call app_start_or_attach to re-establish the COM connection."
+            "recovery_hint": "Call controldesk_app_start_or_attach to re-establish the COM connection."
         },
         "isError": true
     }

@@ -69,7 +69,7 @@ from controldesk_mcp.utils.pagination import paginate
 
 
 @mcp.tool(
-    name="bus_replay_create",
+    name="controldesk_bus_replay_create",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Creates a new bus replay on a specified physical bus access. "
@@ -94,7 +94,7 @@ async def bus_replay_create(
 
 
 @mcp.tool(
-    name="bus_replay_configure",
+    name="controldesk_bus_replay_configure",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Configures all replay settings including source log file path, replay mode "
@@ -116,7 +116,7 @@ async def bus_replay_configure(
 
 
 @mcp.tool(
-    name="bus_replay_manage",
+    name="controldesk_bus_replay_manage",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Manages bus replay lifecycle operations (mutating only). "
@@ -175,7 +175,7 @@ async def bus_replay_manage(
 
 
 @mcp.tool(
-    name="bus_replay_query",
+    name="controldesk_bus_replay_query",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -232,7 +232,7 @@ async def bus_replay_query(
 
 
 @mcp.tool(
-    name="bus_replay_admin_manage",
+    name="controldesk_bus_replay_admin_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -344,7 +344,7 @@ async def bus_replay_admin_manage(
 
 
 @mcp.tool(
-    name="bus_replay_discover",
+    name="controldesk_bus_replay_discover",
     tool_category=MCPToolCategory.SEARCH,
     description=(
         "Returns a catalogue of all available bus replay operations "
@@ -363,7 +363,7 @@ async def bus_replay_discover(ctx: Context) -> BusReplayDiscoverResult:
     return BusReplayDiscoverResult(
         tools=[
             BusReplayToolActionEntry(
-                tool_name="bus_replay_query",
+                tool_name="controldesk_bus_replay_query",
                 purpose="Read-only queries: get replay state (Running/Stopped) or list all replays on a bus access.",
                 actions=["get_state", "list"],
                 required_params_per_action={
@@ -372,7 +372,7 @@ async def bus_replay_discover(ctx: Context) -> BusReplayDiscoverResult:
                 },
             ),
             BusReplayToolActionEntry(
-                tool_name="bus_replay_admin_manage",
+                tool_name="controldesk_bus_replay_admin_manage",
                 purpose=("Perform administrative operations on bus replays: remove, clear_all, set_activated, rename."),
                 actions=["remove", "clear_all", "set_activated", "rename"],
                 required_params_per_action={

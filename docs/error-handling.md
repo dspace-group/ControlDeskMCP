@@ -153,11 +153,11 @@ HALF-OPEN --[probe fails]-----------> OPEN
 | `window_seconds` | 60 | Rolling window for counting failures |
 | `cooldown_seconds` | 30 | Time in OPEN state before probing |
 
-**Interfaces covered:** `app_start_or_attach`, `platform_connect`, `experiment_load_and_activate`.  
+**Interfaces covered:** `controldesk_app_start_or_attach`, `controldesk_platform_connect`, `experiment_load_and_activate`.
 All other interfaces rely on COM Guard retry only.
 
 **Error code produced:** `CIRCUIT_OPEN`  
-**Recovery hint:** `"Wait 30 s and retry, or call app_start_or_attach to reset the connection."`
+**Recovery hint:** `"Wait 30 s and retry, or call controldesk_app_start_or_attach to reset the connection."`
 
 ---
 
@@ -342,15 +342,15 @@ CdError                          # base: retryable=False
 |---|---|---|:---:|---|
 | `CD_BAD_INPUT` | `INPUT_VALIDATION` | — | No | Fix the tool call arguments |
 | `CD_NO_EXPERIMENT` | `PRECONDITION` | — | No | Call `experiment_load_and_activate` |
-| `CD_PLATFORM_DISCONNECTED` | `PRECONDITION` | — | No | Call `platform_connect` |
+| `CD_PLATFORM_DISCONNECTED` | `PRECONDITION` | — | No | Call `controldesk_platform_connect` |
 | `CD_MEASUREMENT_ACTIVE` | `PRECONDITION` | — | No | Stop measurement first |
-| `CD_CALIBRATION_NOT_STARTED` | `PRECONDITION` | — | No | Call `calibration_start` |
+| `CD_CALIBRATION_NOT_STARTED` | `PRECONDITION` | — | No | Call `controldesk_calibration_start` |
 | `CD_WRONG_BITNESS` | `PRECONDITION` | — | No | Use 64-bit Python |
-| `CIRCUIT_OPEN` | `CIRCUIT` | — | Yes | Wait cool-down; call `app_start_or_attach` |
+| `CIRCUIT_OPEN` | `CIRCUIT` | — | Yes | Wait cool-down; call `controldesk_app_start_or_attach` |
 | `COM_TIMEOUT` | `TIMEOUT` | — | Yes | Dismiss dialog; set `DisplayStatusInformation=False` |
 | `COM_UI_BLOCKING` | `UI_BLOCKING` | `0x80010001` | Yes | Dismiss dialog; set `DisplayStatusInformation=False` |
-| `COM_DISCONNECTED` | `CONNECTION` | `0x80010108` | Yes | Call `app_start_or_attach` |
-| `COM_SERVER_STOPPING` | `CONNECTION` | `0x80004007` | Yes | Wait and call `app_start_or_attach` |
+| `COM_DISCONNECTED` | `CONNECTION` | `0x80010108` | Yes | Call `controldesk_app_start_or_attach` |
+| `COM_SERVER_STOPPING` | `CONNECTION` | `0x80004007` | Yes | Wait and call `controldesk_app_start_or_attach` |
 | `COM_WRONG_THREAD` | `CONNECTION` | `0x8001010E` | No | STA executor not initialised — server config error |
 | `CD_VERSION_MISMATCH` | `VERSION` | `0x80020003`, `0x80020006` | No | Verify ControlDesk version matches ProgID |
 | `CD_OPERATION_FAILED` | `OPERATION` | `0x80004005`, `0x80020009` | No | Check ControlDesk Messages pane; use `correlation_id` |
@@ -385,12 +385,12 @@ CdError                          # base: retryable=False
 
 ## End-to-End Example
 
-**Tool:** `measurement_start`  
+**Tool:** `controldesk_measurement_start`
 **Scenario:** LLM calls the tool, but ControlDesk has a modal dialog open that blocks the COM thread.
 
 ### Request
 ```json
-{ "tool": "measurement_start", "arguments": { "timeout_ms": 8000 } }
+{ "tool": "controldesk_measurement_start", "arguments": { "timeout_ms": 8000 } }
 ```
 
 ### Flow
@@ -444,7 +444,7 @@ CdError                          # base: retryable=False
 }
 ```
 
-**Agent next action:** Reads `retryable=true` + `recovery_hint`. Calls `set_display_status_information(enabled=False)`, then retries `measurement_start`.
+**Agent next action:** Reads `retryable=true` + `recovery_hint`. Calls `set_display_status_information(enabled=False)`, then retries `controldesk_measurement_start`.
 
 ---
 

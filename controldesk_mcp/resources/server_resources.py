@@ -89,7 +89,7 @@ def get_tool_catalog() -> str:
         "Current COM bridge connection state: whether a ControlDesk instance is attached, "
         "its version, and the connection health. "
         "Reads in-memory bridge state only — makes no COM calls. "
-        "Refresh after calling start_controldesk or stop_controldesk."
+        "Refresh after calling controldesk_app_start_or_attach or controldesk_app_stop."
     ),
     mime_type="application/json",
     annotations={"readOnlyHint": True, "idempotentHint": False},
@@ -104,6 +104,6 @@ def get_connection_status() -> str:
             {
                 "connected": False,
                 "state": "NOT_STARTED",
-                "message": ("COM bridge not started. Call start_controldesk to launch or attach to ControlDesk."),
+                "message": ("COM bridge not started. Call controldesk_app_start_or_attach to launch or attach to ControlDesk."),
             }
         )

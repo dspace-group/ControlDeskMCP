@@ -310,4 +310,4 @@ class TestInstrumentDiscover:
 
         assert isinstance(result, InstrumentDiscoverResult)
         assert len(result["tools"]) == 1
-        assert result["tools"][0]["tool_name"] == "instrument_signal_manage"
+        assert result["tools"][0]["tool_name"] == "controldesk_instrument_signal_manage"

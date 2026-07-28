@@ -71,7 +71,7 @@ def _to_dict(data):
 
 
 @mcp.tool(
-    name="start_controldesk",
+    name="controldesk_app_start_or_attach",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Starts a new ControlDesk instance or attaches to an existing running instance. "
@@ -112,7 +112,7 @@ async def start_controldesk(
 
 
 @mcp.tool(
-    name="stop_controldesk",
+    name="controldesk_app_stop",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Gracefully shuts down the ControlDesk application. "
@@ -146,7 +146,7 @@ async def stop_controldesk(
 
 
 @mcp.tool(
-    name="app_get_logs",
+    name="controldesk_app_get_logs",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Returns available ControlDesk application log file paths for diagnostics. "
@@ -174,7 +174,7 @@ async def app_get_logs(params: AppGetLogsInput) -> AppGetLogsResult | ErrorEnvel
 
 
 @mcp.tool(
-    name="app_window_manage",
+    name="controldesk_app_window_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -290,7 +290,7 @@ async def app_window_manage(
 
 
 @mcp.tool(
-    name="app_discover",
+    name="controldesk_app_discover",
     tool_category=MCPToolCategory.SEARCH,
     description=(
         "Returns a catalogue of all available application management operations "
@@ -309,7 +309,7 @@ async def app_discover(ctx: Context) -> AppDiscoverResult:
     return AppDiscoverResult(
         tools=[
             ToolActionEntry(
-                tool_name="app_window_manage",
+                tool_name="controldesk_app_window_manage",
                 purpose="Manage ControlDesk main window: visibility, state, position, fullscreen.",
                 actions=[
                     "set_visible",

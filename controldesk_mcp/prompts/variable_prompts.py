@@ -5,15 +5,11 @@ Prompts registered:
   discover_variables         — search, list, and inspect variables and groups
   manage_variable_descriptions — load, activate, and remove variable description files
 
-All 18 variable-domain tools are covered across these prompts:
-  Discovery:              variable_find, variable_get_info, variable_list_all,
-                          variable_list_array_elements, variable_list_group_variables
-  Read:                   variable_read_scalar, variable_read_array_element,
-                          variable_read_curve, variable_read_map, variable_read_string
-  Write:                  variable_write_scalar, variable_write_array_element,
-                          variable_write_curve, variable_write_map, variable_write_string
-  Variable descriptions:  variable_description_activate, variable_description_list,
-                          variable_description_remove
+Variable tools used across these prompts:
+    Core:       controldesk_variable_find, controldesk_variable_read,
+                            controldesk_variable_write
+    Lazy tools: controldesk_variable_discover, controldesk_variable_list,
+                            controldesk_variable_description_manage
 
 Layer: MCP Prompt adapter — pure Python; no COM or service calls.
 """
@@ -42,13 +38,10 @@ def read_write_variables(
     find_step = (
         f"   The target variable path is `{variable_path}` — skip the search step."
         if variable_path
-        else "   Call `variable_find` with a search pattern to locate the variable, "
-        "or use `variable_list_all` to browse all available variables."
+        else "   Call `controldesk_variable_find` with a search pattern to locate the variable."
     )
     write_step = (
-        f"4. Write value `{write_value}` using the appropriate write tool "
-        f"   (`variable_write_scalar`, `variable_write_array_element`, "
-        f"   `variable_write_curve`, `variable_write_map`, or `variable_write_string`), "
+        f"4. Write value `{write_value}` with `controldesk_variable_write` using the matching write_type, "
         f"   then read back immediately to verify the change was applied."
         if write_value
         else "4. No write value specified — perform a read-only inspection."
@@ -64,14 +57,8 @@ def read_write_variables(
                 f"- Write value: {write_value or '(read-only)'}\n\n"
                 f"**Steps — execute in order:**\n\n"
                 f"1. {find_step}\n"
-                f"2. Call `variable_get_info` to inspect the variable's type, unit, min, max, "
-                f"   and current value. Report this information.\n"
-                f"3. Call the correct read tool based on the variable type:\n"
-                f"   - Scalar: `variable_read_scalar`\n"
-                f"   - Array element: `variable_read_array_element`\n"
-                f"   - Curve (1D map): `variable_read_curve`\n"
-                f"   - Map (2D): `variable_read_map`\n"
-                f"   - String: `variable_read_string`\n"
+                f"2. Call `controldesk_variable_read` with the matching read_type to inspect the value.\n"
+                f"3. Use the same variable path with `controldesk_variable_write` only when a write is required.\n"
                 f"{write_step}\n"
                 f"5. Summarise: variable path, type, current value, and write result "
                 f"(if applicable)."
@@ -98,16 +85,14 @@ def discover_variables(
 ) -> list[dict]:
     """Generate a variable discovery workflow prompt."""
     search_step = (
-        f"   Call `variable_find` with pattern='{search_pattern}' to locate matching variables."
+        f"   Call `controldesk_variable_find` with pattern='{search_pattern}' to locate matching variables."
         if search_pattern
-        else "   Call `variable_list_all` to get the complete list of available variables. "
-        "Optionally use `variable_find` with a pattern to narrow the search."
+        else "   Call `controldesk_variable_find` with a pattern to narrow the search."
     )
     group_step = (
-        f"3. Call `variable_list_group_variables` for group '{group_path}' to list all    variables within that group."
+        f"3. Call `controldesk_variable_list` with action='list_group_variables' for group '{group_path}'."
         if group_path
-        else "3. Call `variable_list_group_variables` on a group path to enumerate its "
-        "   members (useful for structured/hierarchical variable trees)."
+        else "3. Call `controldesk_variable_list` with action='list_all' to enumerate available variables."
     )
 
     return [
@@ -119,12 +104,11 @@ def discover_variables(
                 f"- Search pattern: {search_pattern or '(list all)'}\n"
                 f"- Group path: {group_path or '(not specified)'}\n\n"
                 f"**Steps — execute in order:**\n\n"
-                f"1. {search_step}\n"
-                f"2. For any variable of interest, call `variable_get_info` to retrieve "
-                f"   its type, dimensions, unit, min, max, and current value.\n"
+                f"1. Call `controldesk_variable_discover` to activate variable-list tools.\n"
+                f"2. {search_step}\n"
+                f"3. For any variable of interest, call `controldesk_variable_read` with the matching read_type.\n"
                 f"{group_step}\n"
-                f"4. For array variables: call `variable_list_array_elements` to see all "
-                f"   indexed elements (e.g., array[0], array[1], ...).\n"
+                f"4. For arrays, call `controldesk_variable_list` with action='list_array_elements'.\n"
                 f"5. Report: list of variables found, their types, and any group structure "
                 f"   discovered."
             ),
@@ -160,17 +144,11 @@ def manage_variable_descriptions(
                 f"- Description file: {description_file or '(not specified)'}\n"
                 f"- Platform: {platform_name or '(use active platform)'}\n\n"
                 f"**Steps — execute in order:**\n\n"
-                f"1. Call `variable_description_list` to see all currently loaded "
-                f"   variable description files and their activation state.\n"
-                f"2. If a specific file should be active: call "
-                f"   `variable_description_activate`{file_arg}{platform_arg} to load and "
-                f"   activate the description file.\n"
-                f"   Alternatively, use `platform_add_variable_description` to associate "
-                f"   a description with a platform at registration time.\n"
-                f"3. Verify by calling `variable_list_all` — variables from the activated "
-                f"   description should appear.\n"
-                f"4. To remove a description that is no longer needed: call "
-                f"   `variable_description_remove`.\n"
+                f"1. Call `controldesk_variable_discover` to activate description-management tools.\n"
+                f"2. Call `controldesk_variable_description_manage` with action='list'{platform_arg}.\n"
+                f"3. If a description should be active, call `controldesk_variable_description_manage` "
+                f"   with action='activate'{file_arg}{platform_arg}.\n"
+                f"4. To remove one, call `controldesk_variable_description_manage` with action='remove'.\n"
                 f"5. Report: loaded description files, activation state, and variable count."
             ),
         }

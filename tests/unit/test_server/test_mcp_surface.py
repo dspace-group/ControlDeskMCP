@@ -8,63 +8,65 @@ Run without a live ControlDesk installation; no COM connection is made.
 
 from __future__ import annotations
 
+import re
+
 import pytest
 
 # ── Expected inventory (generated from the live server; update intentionally) ──
 
 EXPECTED_TOOLS: frozenset[str] = frozenset(
     {
-        "app_discover",
-        "app_get_logs",
-        "bus_logger_configure",
-        "bus_logger_create",
-        "bus_logger_manage",
-        "bus_logging_discover",
-        "bus_monitor_configure",
-        "bus_monitor_create",
-        "bus_monitor_discover",
-        "bus_monitor_manage",
-        "bus_replay_configure",
-        "bus_replay_create",
-        "bus_replay_discover",
-        "bus_replay_manage",
-        "calibration_discover",
-        "calibration_manage",
-        "calibration_start",
-        "calibration_stop",
-        "instrument_discover",
-        "instrument_list",
-        "instrument_manage",
-        "instrument_query",
-        "layout_discover",
-        "layout_list",
-        "layout_manage",
-        "layout_query",
-        "measurement_discover",
-        "measurement_manage",
-        "measurement_start",
-        "measurement_stop",
-        "platform_connect",
-        "platform_disconnect",
-        "platform_discover",
-        "platform_manage",
-        "project_discover",
-        "project_list_recent",
-        "project_open",
-        "recorder_discover",
-        "recorder_main_manage",
-        "recorder_main_start",
-        "recorder_main_stop",
-        "start_controldesk",
-        "stop_controldesk",
-        "tool_window_discover",
-        "tool_window_list",
-        "tool_window_manage",
-        "tool_window_show",
-        "variable_discover",
-        "variable_find",
-        "variable_read",
-        "variable_write",
+        "controldesk_app_discover",
+        "controldesk_app_get_logs",
+        "controldesk_app_start_or_attach",
+        "controldesk_app_stop",
+        "controldesk_bus_logger_configure",
+        "controldesk_bus_logger_create",
+        "controldesk_bus_logger_manage",
+        "controldesk_bus_logging_discover",
+        "controldesk_bus_monitor_configure",
+        "controldesk_bus_monitor_create",
+        "controldesk_bus_monitor_discover",
+        "controldesk_bus_monitor_manage",
+        "controldesk_bus_replay_configure",
+        "controldesk_bus_replay_create",
+        "controldesk_bus_replay_discover",
+        "controldesk_bus_replay_manage",
+        "controldesk_calibration_discover",
+        "controldesk_calibration_manage",
+        "controldesk_calibration_start",
+        "controldesk_calibration_stop",
+        "controldesk_instrument_discover",
+        "controldesk_instrument_list",
+        "controldesk_instrument_manage",
+        "controldesk_instrument_query",
+        "controldesk_layout_discover",
+        "controldesk_layout_list",
+        "controldesk_layout_manage",
+        "controldesk_layout_query",
+        "controldesk_measurement_discover",
+        "controldesk_measurement_manage",
+        "controldesk_measurement_start",
+        "controldesk_measurement_stop",
+        "controldesk_platform_connect",
+        "controldesk_platform_disconnect",
+        "controldesk_platform_discover",
+        "controldesk_platform_manage",
+        "controldesk_project_discover",
+        "controldesk_project_list_recent",
+        "controldesk_project_open",
+        "controldesk_recorder_discover",
+        "controldesk_recorder_main_manage",
+        "controldesk_recorder_main_start",
+        "controldesk_recorder_main_stop",
+        "controldesk_tool_window_discover",
+        "controldesk_tool_window_list",
+        "controldesk_tool_window_manage",
+        "controldesk_tool_window_show",
+        "controldesk_variable_discover",
+        "controldesk_variable_find",
+        "controldesk_variable_read",
+        "controldesk_variable_write",
     }
 )
 
@@ -137,6 +139,18 @@ def registered_mcp():
 
 
 class TestToolSurface:
+    def test_all_declared_tool_names_follow_the_canonical_grammar(self, registered_mcp) -> None:
+        immediate_names = {tool.name for tool in registered_mcp._tool_manager.list_tools()}
+        deferred_names = {
+            kwargs["name"]
+            for entries in registered_mcp._deferred_addon_tools.values()
+            for _, kwargs in entries
+        }
+        tool_names = immediate_names | deferred_names
+
+        assert len(tool_names) == 87
+        assert all(re.fullmatch(r"controldesk_[a-z][a-z0-9_]*_[a-z][a-z0-9_]*", name) for name in tool_names)
+
     def test_exact_tool_count(self, registered_mcp) -> None:
         tools = {t.name for t in registered_mcp._tool_manager.list_tools()}
         assert len(tools) == len(EXPECTED_TOOLS), (

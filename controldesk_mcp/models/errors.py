@@ -56,7 +56,7 @@ class ErrorEnvelope(DictModelMixin, BaseModel):
     recovery_hint: str = Field(
         default="",
         description="Actionable guidance for the LLM or user, e.g. "
-        "'Call start_controldesk to re-establish the COM connection.'",
+        "'Call controldesk_app_start_or_attach to re-establish the COM connection.'",
     )
     correlation_id: str = Field(
         default="",

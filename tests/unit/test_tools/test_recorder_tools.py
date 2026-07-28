@@ -450,7 +450,7 @@ class TestRecorderDiscover:
         result = await recorder_discover(AsyncMock())
 
         tool_names = [t["tool_name"] for t in result["tools"]]
-        assert "recorder_query" in tool_names
+        assert "controldesk_recorder_query" in tool_names
 
     @pytest.mark.asyncio
     async def test_discover_has_signal_manage_tool(self) -> None:
@@ -459,7 +459,7 @@ class TestRecorderDiscover:
         result = await recorder_discover(AsyncMock())
 
         tool_names = [t["tool_name"] for t in result["tools"]]
-        assert "recorder_signal_manage" in tool_names
+        assert "controldesk_recorder_signal_manage" in tool_names
 
     @pytest.mark.asyncio
     async def test_discover_has_config_manage_tool(self) -> None:
@@ -468,7 +468,7 @@ class TestRecorderDiscover:
         result = await recorder_discover(AsyncMock())
 
         tool_names = [t["tool_name"] for t in result["tools"]]
-        assert "recorder_config_manage" in tool_names
+        assert "controldesk_recorder_config_manage" in tool_names
 
     @pytest.mark.asyncio
     async def test_discover_signal_manage_actions(self) -> None:
@@ -476,7 +476,7 @@ class TestRecorderDiscover:
 
         result = await recorder_discover(AsyncMock())
 
-        signal_tool = next(t for t in result["tools"] if t["tool_name"] == "recorder_signal_manage")
+        signal_tool = next(t for t in result["tools"] if t["tool_name"] == "controldesk_recorder_signal_manage")
         assert "add_signal" in signal_tool["actions"]
         assert "remove_signal" in signal_tool["actions"]
         assert "list_signals" in signal_tool["actions"]
@@ -487,7 +487,7 @@ class TestRecorderDiscover:
 
         result = await recorder_discover(AsyncMock())
 
-        config_tool = next(t for t in result["tools"] if t["tool_name"] == "recorder_config_manage")
+        config_tool = next(t for t in result["tools"] if t["tool_name"] == "controldesk_recorder_config_manage")
         assert "export" in config_tool["actions"]
         assert "import_signals" in config_tool["actions"]
         assert config_tool["required_params_per_action"]["export"] == ["full_path"]
