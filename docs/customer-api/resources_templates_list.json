@@ -1,0 +1,20 @@
+{
+  "resourceTemplates": [
+    {
+      "name": "DomainToolCatalog",
+      "title": "Domain Tool Catalog",
+      "uriTemplate": "controldesk://tools/{domain}",
+      "description": "Tool catalog for a single domain. Replace {domain} with one of the names from controldesk://server/domains (e.g., controldesk://tools/measurement). Returns all tools whose names match the domain prefix, with descriptions. Always available — no ControlDesk connection required.",
+      "mimeType": "application/json",
+      "annotations": {}
+    },
+    {
+      "name": "GroupToolCatalog",
+      "title": "Group Tool Catalog",
+      "uriTemplate": "controldesk://tools/{domain}/{group}",
+      "description": "Tool catalog for a single domain sub-group. Replace {domain} and {group} with values from controldesk://server/tool-groups. Example: controldesk://tools/project/experiment_management returns all experiment_* tools. Always available — no ControlDesk connection required.",
+      "mimeType": "application/json",
+      "annotations": {}
+    }
+  ]
+}

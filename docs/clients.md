@@ -168,7 +168,7 @@ starts the MCP server automatically when a tool-enabled chat session begins.
 Connect to ControlDesk and list the available platforms.
 ```
 
-Copilot will call `app_start_or_attach` then `platform_discover` automatically.
+Copilot will call `controldesk_app_start_or_attach` then `controldesk_platform_discover` automatically.
 
 ### Restarting after a server code update
 
@@ -241,10 +241,10 @@ In the Claude Desktop app:
 ### Step 5 — Test with a prompt
 
 ```
-Use the controldesk health tool to check the server status.
+Read the `controldesk://server/info` resource to check the server status.
 ```
 
-Claude will call the `health` MCP tool and display the result.
+Claude will read the `controldesk://server/info` resource and display the result.
 
 ---
 
@@ -487,33 +487,33 @@ nssm status ControlDeskMCP
 
 ## Verify the Connection (all clients)
 
-After configuring any client, use the `health` tool to confirm the server is
-reachable and responding. The health tool never makes a COM call — it is safe
-to call even before ControlDesk is launched.
+After configuring any client, read the `controldesk://server/info` resource to
+confirm the server is reachable and responding. This resource never makes a COM
+call — it is safe to read even before ControlDesk is launched.
 
 ### What to call
 
-| Tool                  | Input                               | Expected output                                                |
+| Resource or tool      | Input                               | Expected output                                                |
 | --------------------- | ----------------------------------- | -------------------------------------------------------------- |
-| `health`              | _(none)_                            | `{"status": "ok", "version": "0.1.0", ...}`                    |
-| `app_start_or_attach` | `{"controldesk_version": "2026-A"}` | `{"status": "attached", ...}` or `{"status": "launched", ...}` |
-| `platform_discover`   | `{}`                                | JSON list of configured platforms                              |
+| `controldesk://server/info` | _(none)_                     | Server version and transport configuration                     |
+| `controldesk_app_start_or_attach` | `{"controldesk_version": "2026-A"}` | `{"status": "attached", ...}` or `{"status": "launched", ...}` |
+| `controldesk_platform_discover`   | `{}`                                | JSON list of configured platforms                              |
 
 ### In VS Code Copilot Chat
 
 ```
-Call the health tool on the ControlDesk MCP server.
+Read the `controldesk://server/info` resource from the ControlDesk MCP server.
 ```
 
 ### In Claude Desktop
 
 ```
-Use the controldesk health tool and show me the result.
+Read `controldesk://server/info` and show me the result.
 ```
 
 ### In MCP Inspector
 
-- Tools tab → `health` → Run Tool → check response
+- Resources tab → `controldesk://server/info` → Read Resource → check response
 
 ---
 
@@ -529,19 +529,19 @@ sequenceDiagram
     participant CD as dSPACE ControlDesk
 
     You->>Client: "Connect to ControlDesk 2026-A"
-    Client->>Server: app_start_or_attach({"controldesk_version": "2026-A"})
+    Client->>Server: controldesk_app_start_or_attach({"controldesk_version": "2026-A"})
     Server->>CD: COM: Dispatch("ControlDesk.Application")
     CD-->>Server: application handle
     Server-->>Client: {"status": "attached"}
 
     You->>Client: "Show available platforms"
-    Client->>Server: platform_discover({})
+    Client->>Server: controldesk_platform_discover({})
     Server->>CD: COM: Platforms collection
     CD-->>Server: platform list
     Server-->>Client: [{"name": "...", "state": "..."}]
 
     You->>Client: "Open the last used project"
-    Client->>Server: project_list_recent({})
+    Client->>Server: controldesk_project_list_recent({})
     Server->>CD: COM: RecentProjects
     CD-->>Server: recent project list
     Server-->>Client: [{"path": "C:\\...", "name": "..."}]
@@ -585,7 +585,7 @@ List the calibration objects available on the main platform.
 
 ````
 
-### `app_start_or_attach` returns an error about ControlDesk not found
+### `controldesk_app_start_or_attach` returns an error about ControlDesk not found
 
 - Confirm ControlDesk is installed: check `Start Menu` or the registry key
 `HKLM:\SOFTWARE\dSPACE\ControlDesk`.

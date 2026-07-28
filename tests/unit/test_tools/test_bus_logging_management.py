@@ -522,7 +522,7 @@ class TestBusLoggingDiscover:
         result = await bus_logging_discover(AsyncMock())
 
         tool_names = [t["tool_name"] for t in result["tools"]]
-        assert "bus_logger_query" in tool_names
+        assert "controldesk_bus_logger_query" in tool_names
 
     @pytest.mark.asyncio
     async def test_discover_has_admin_manage_tool(self) -> None:
@@ -531,7 +531,7 @@ class TestBusLoggingDiscover:
         result = await bus_logging_discover(AsyncMock())
 
         tool_names = [t["tool_name"] for t in result["tools"]]
-        assert "bus_logger_admin_manage" in tool_names
+        assert "controldesk_bus_logger_admin_manage" in tool_names
 
     @pytest.mark.asyncio
     async def test_discover_admin_manage_actions(self) -> None:
@@ -539,7 +539,7 @@ class TestBusLoggingDiscover:
 
         result = await bus_logging_discover(AsyncMock())
 
-        admin_tool = next(t for t in result["tools"] if t["tool_name"] == "bus_logger_admin_manage")
+        admin_tool = next(t for t in result["tools"] if t["tool_name"] == "controldesk_bus_logger_admin_manage")
         assert "remove" in admin_tool["actions"]
         assert "clear_all" in admin_tool["actions"]
         assert "set_activated" in admin_tool["actions"]

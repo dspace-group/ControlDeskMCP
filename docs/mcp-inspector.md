@@ -127,7 +127,7 @@ Registered via `controldesk_mcp/resources/server_resources.py` and `controldesk_
 1. Open the **Resources** tab in the browser UI.
 2. Click any resource URI to fetch it.
 3. For `controldesk://tools/{domain}`, expand "Resource Templates", enter a domain name, and click Fetch.
-4. `connection-status` reflects the bridge state live — re-fetch after calling `app_start_or_attach`.
+4. `connection-status` reflects the bridge state live — re-fetch after calling `controldesk_app_start_or_attach`.
 
 **Adding a new resource:**
 
@@ -235,12 +235,12 @@ sequenceDiagram
 | --------------------------------------- | --------------------------------------------------- | ----------------------------------------------------- |
 | `npx not found`                         | Node.js not installed                               | Install from https://nodejs.org                       |
 | Browser shows blank page                | Inspector still starting                            | Wait 3–5 s and refresh                                |
-| Tool returns `BridgeError`              | ControlDesk not running or not connected            | Start ControlDesk, call `app_start_or_attach` first   |
+| Tool returns `BridgeError`              | ControlDesk not running or not connected            | Start ControlDesk, call `controldesk_app_start_or_attach` first   |
 | Tool not visible in Inspector           | Tool not imported in `registry.py`                  | Add the import; restart Inspector                     |
 | Schema shows `{}` for a tool            | Pydantic model missing or wrong type                | Check `controldesk_mcp/models/<domain>.py`                    |
 | **Resources tab is empty**              | Resource modules not imported in `registry.py`      | Ensure `import controldesk_mcp.resources.<module>` is present |
 | **Prompts tab is empty**                | Prompt modules not imported in `registry.py`        | Ensure `import controldesk_mcp.prompts.<module>` is present   |
-| `connection-status` shows `NOT_STARTED` | Server started but `app_start_or_attach` not called | Call the tool in the Tools tab first                  |
+| `connection-status` shows `NOT_STARTED` | Server started but `controldesk_app_start_or_attach` not called | Call the tool in the Tools tab first                  |
 
 ---
 

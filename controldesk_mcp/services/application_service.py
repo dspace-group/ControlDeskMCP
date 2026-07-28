@@ -236,7 +236,7 @@ async def dry_run_start_or_attach(
                 )
             )
             return DryRunPreviewResult(
-                tool="start_controldesk",
+                tool="controldesk_app_start_or_attach",
                 action="start_or_attach",
                 target=version or running_version or "ControlDesk",
                 would_execute=True,
@@ -269,7 +269,7 @@ async def dry_run_start_or_attach(
             )
 
         return DryRunPreviewResult(
-            tool="start_controldesk",
+            tool="controldesk_app_start_or_attach",
             action="start_or_attach",
             target=version,
             would_execute=params.force_version_switch,
@@ -369,7 +369,7 @@ async def dry_run_quit_application(
     if isinstance(info_result, ErrorEnvelope):
         # No project open (or not connected) — quitting has nothing to save/discard.
         return DryRunPreviewResult(
-            tool="stop_controldesk",
+            tool="controldesk_app_stop",
             action="quit",
             target="ControlDesk",
             would_execute=True,
@@ -379,7 +379,7 @@ async def dry_run_quit_application(
     is_modified = info_result.is_modified
     would_lose_changes = is_modified and not params.save_all_projects
     return DryRunPreviewResult(
-        tool="stop_controldesk",
+        tool="controldesk_app_stop",
         action="quit",
         target=info_result.name,
         would_execute=True,
@@ -482,6 +482,6 @@ async def get_logs(params: AppGetLogsInput) -> AppGetLogsResult | ErrorEnvelope:
             retryable=False,
             recovery_hint=(
                 "Verify that the configured log folder exists and is readable, "
-                "or pass log_folder_override to app_get_logs."
+                "or pass log_folder_override to controldesk_app_get_logs."
             ),
         )

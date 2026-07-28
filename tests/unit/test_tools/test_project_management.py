@@ -670,11 +670,11 @@ class TestProjectDiscover:
 
         assert isinstance(result, ProjectDiscoverResult)
         tool_names = [t["tool_name"] for t in result["tools"]]
-        assert "project_root_manage" in tool_names
-        assert "project_manage" in tool_names
-        assert "project_backup_manage" in tool_names
-        assert "experiment_manage" in tool_names
-        assert "experiment_io_manage" in tool_names
+        assert "controldesk_project_root_manage" in tool_names
+        assert "controldesk_project_manage" in tool_names
+        assert "controldesk_project_backup_manage" in tool_names
+        assert "controldesk_project_experiment_manage" in tool_names
+        assert "controldesk_project_experiment_io_manage" in tool_names
 
     @pytest.mark.asyncio
     async def test_required_params_populated(self) -> None:
@@ -682,6 +682,6 @@ class TestProjectDiscover:
 
         result = await project_discover(AsyncMock())
 
-        root_entry = next(t for t in result["tools"] if t["tool_name"] == "project_root_manage")
+        root_entry = next(t for t in result["tools"] if t["tool_name"] == "controldesk_project_root_manage")
         assert root_entry["required_params_per_action"]["add"] == ["path"]
         assert root_entry["required_params_per_action"]["list"] == []

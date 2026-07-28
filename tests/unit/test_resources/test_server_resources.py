@@ -153,4 +153,4 @@ class TestGetConnectionStatus:
 
             result = json.loads(server_resources.get_connection_status())
 
-        assert "start_controldesk" in result["message"]
+        assert "controldesk_app_start_or_attach" in result["message"]

@@ -179,4 +179,4 @@ class TestLayoutDiscover:
 
         assert isinstance(result, LayoutDiscoverResult)
         assert len(result["tools"]) == 1
-        assert result["tools"][0]["tool_name"] == "layout_io_manage"
+        assert result["tools"][0]["tool_name"] == "controldesk_layout_io_manage"

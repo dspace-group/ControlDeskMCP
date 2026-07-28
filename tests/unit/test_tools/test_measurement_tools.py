@@ -980,11 +980,11 @@ class TestMeasurementDiscover:
         assert result["status"] == "ok"
         assert len(result["tools"]) == 5
         tool_names = [t["tool_name"] for t in result["tools"]]
-        assert "measurement_query" in tool_names
-        assert "measurement_raster_manage" in tool_names
-        assert "trigger_manage" in tool_names
-        assert "recording_manage" in tool_names
-        assert "data_logger_manage" in tool_names
+        assert "controldesk_measurement_query" in tool_names
+        assert "controldesk_measurement_raster_manage" in tool_names
+        assert "controldesk_measurement_trigger_manage" in tool_names
+        assert "controldesk_measurement_recording_manage" in tool_names
+        assert "controldesk_measurement_data_logger_manage" in tool_names
 
 
 # ── Input model instantiation ─────────────────────────────────────────────────

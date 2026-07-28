@@ -92,7 +92,7 @@ from controldesk_mcp.utils.pagination import paginate
 
 
 @mcp.tool(
-    name="variable_find",
+    name="controldesk_variable_find",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Locates a variable or signal by its name or fully qualified connection path in the "
@@ -120,7 +120,7 @@ async def variable_find(params: VariableFindInput) -> VariableFindResult | Error
 
 
 @mcp.tool(
-    name="variable_read",
+    name="controldesk_variable_read",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Reads the current value of a variable from the ECU. "
@@ -210,7 +210,7 @@ async def variable_read(
 
 
 @mcp.tool(
-    name="variable_write",
+    name="controldesk_variable_write",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Writes a new value to a variable on the ECU working page. "
@@ -354,7 +354,7 @@ async def variable_write(
 
 
 @mcp.tool(
-    name="variable_list",
+    name="controldesk_variable_list",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -414,7 +414,7 @@ async def variable_list(
 
 
 @mcp.tool(
-    name="data_set_manage",
+    name="controldesk_variable_data_set_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -443,7 +443,7 @@ async def data_set_manage(
 
 
 @mcp.tool(
-    name="variable_description_manage",
+    name="controldesk_variable_description_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -521,7 +521,7 @@ async def variable_description_manage(
 
 
 @mcp.tool(
-    name="variable_discover",
+    name="controldesk_variable_discover",
     tool_category=MCPToolCategory.SEARCH,
     description=(
         "Returns a catalogue of all available variable management operations "
@@ -542,7 +542,7 @@ async def variable_discover(ctx: Context) -> VariableDiscoverResult:
     return VariableDiscoverResult(
         tools=[
             ToolActionEntry(
-                tool_name="variable_list",
+                tool_name="controldesk_variable_list",
                 purpose=("List all variables by type, list array elements, or list variables within a group."),
                 actions=["list_all", "list_array_elements", "list_group_variables"],
                 required_params_per_action={
@@ -552,7 +552,7 @@ async def variable_discover(ctx: Context) -> VariableDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="data_set_manage",
+                tool_name="controldesk_variable_data_set_manage",
                 purpose=("Activate working (RAM) or reference (flash) memory page for calibration sessions."),
                 actions=["activate_working_page", "activate_reference_page"],
                 required_params_per_action={
@@ -561,7 +561,7 @@ async def variable_discover(ctx: Context) -> VariableDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="variable_description_manage",
+                tool_name="controldesk_variable_description_manage",
                 purpose=("List, activate, or remove variable descriptions (A2L calibration databases) for a platform."),
                 actions=["list", "activate", "remove"],
                 required_params_per_action={

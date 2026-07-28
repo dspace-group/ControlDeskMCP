@@ -32,21 +32,21 @@ class TestStartAutomationSession:
 
         text = _first_message_text(start_automation_session())
         assert "controldesk://server/info" in text
-        assert "start_controldesk" in text
+        assert "controldesk_app_start_or_attach" in text
 
     def test_project_path_included_when_provided(self) -> None:
         from controldesk_mcp.prompts.session_prompts import start_automation_session
 
         text = _first_message_text(start_automation_session(project_path="C:/Projects/demo.cdprj"))
         assert "C:/Projects/demo.cdprj" in text
-        assert "project_open" in text
+        assert "controldesk_project_open" in text
 
     def test_platform_name_included_when_provided(self) -> None:
         from controldesk_mcp.prompts.session_prompts import start_automation_session
 
         text = _first_message_text(start_automation_session(platform_name="DS1006"))
         assert "DS1006" in text
-        assert "platform_connect" in text
+        assert "controldesk_platform_connect" in text
 
     def test_version_included_when_provided(self) -> None:
         from controldesk_mcp.prompts.session_prompts import start_automation_session
@@ -101,8 +101,8 @@ class TestDiagnoseConnection:
         from controldesk_mcp.prompts.session_prompts import diagnose_connection
 
         text = _first_message_text(diagnose_connection())
-        assert "platform_list" in text
-        assert "platform_get_connection_state" in text
+        assert "controldesk_platform_query" in text
+        assert "get_connection_state" in text
 
 
 # ── run_measurement_workflow ──────────────────────────────────────────────────
@@ -144,9 +144,9 @@ class TestRunMeasurementWorkflow:
         from controldesk_mcp.prompts.measurement_prompts import run_measurement_workflow
 
         text = _first_message_text(run_measurement_workflow())
-        assert "measurement_start" in text
-        assert "measurement_stop" in text
-        assert "measurement_list_recordings" in text
+        assert "controldesk_measurement_start" in text
+        assert "controldesk_measurement_stop" in text
+        assert "controldesk_measurement_recording_manage" in text
 
 
 # ── read_write_variables ──────────────────────────────────────────────────────
@@ -178,17 +178,14 @@ class TestReadWriteVariables:
         text = _first_message_text(read_write_variables())
         assert "read-only" in text.lower()
 
-    def test_includes_variable_get_info_step(self) -> None:
+    def test_includes_canonical_variable_read_step(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import read_write_variables
 
         text = _first_message_text(read_write_variables())
-        assert "variable_get_info" in text
+        assert "controldesk_variable_read" in text
 
-    def test_includes_all_read_tool_variants(self) -> None:
+    def test_includes_canonical_variable_write_step(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import read_write_variables
 
         text = _first_message_text(read_write_variables())
-        assert "variable_read_scalar" in text
-        assert "variable_read_curve" in text
-        assert "variable_read_map" in text
-        assert "variable_read_string" in text
+        assert "controldesk_variable_write" in text

@@ -32,22 +32,16 @@ class TestReadWriteVariables:
 
         assert "read-only" in _text(read_write_variables()).lower()
 
-    def test_includes_variable_get_info_step(self) -> None:
+    def test_includes_canonical_variable_read_step(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import read_write_variables
 
-        assert "variable_get_info" in _text(read_write_variables())
+        assert "controldesk_variable_read" in _text(read_write_variables())
 
-    def test_includes_all_read_tool_variants(self) -> None:
+    def test_includes_canonical_variable_write_step(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import read_write_variables
 
         text = _text(read_write_variables())
-        for tool in (
-            "variable_read_scalar",
-            "variable_read_curve",
-            "variable_read_map",
-            "variable_read_string",
-        ):
-            assert tool in text
+        assert "controldesk_variable_write" in text
 
     def test_defaults_produce_valid_prompt(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import read_write_variables
@@ -67,22 +61,22 @@ class TestDiscoverVariables:
     def test_includes_list_all_step(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import discover_variables
 
-        assert "variable_list_all" in _text(discover_variables())
+        assert "controldesk_variable_list" in _text(discover_variables())
 
     def test_includes_find_step(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import discover_variables
 
-        assert "variable_find" in _text(discover_variables())
+        assert "controldesk_variable_find" in _text(discover_variables())
 
     def test_includes_list_group_variables(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import discover_variables
 
-        assert "variable_list_group_variables" in _text(discover_variables())
+        assert "list_group_variables" in _text(discover_variables(group_path="Engine"))
 
     def test_includes_list_array_elements(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import discover_variables
 
-        assert "variable_list_array_elements" in _text(discover_variables())
+        assert "list_array_elements" in _text(discover_variables())
 
     def test_search_pattern_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import discover_variables
@@ -106,17 +100,17 @@ class TestManageVariableDescriptions:
     def test_includes_list_step(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import manage_variable_descriptions
 
-        assert "variable_description_list" in _text(manage_variable_descriptions())
+        assert "controldesk_variable_description_manage" in _text(manage_variable_descriptions())
 
     def test_includes_activate_step(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import manage_variable_descriptions
 
-        assert "variable_description_activate" in _text(manage_variable_descriptions())
+        assert "action='activate'" in _text(manage_variable_descriptions())
 
     def test_includes_remove_step(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import manage_variable_descriptions
 
-        assert "variable_description_remove" in _text(manage_variable_descriptions())
+        assert "action='remove'" in _text(manage_variable_descriptions())
 
     def test_file_path_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.variable_prompts import manage_variable_descriptions

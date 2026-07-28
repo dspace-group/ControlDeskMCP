@@ -326,9 +326,9 @@ class TestCalibrationDiscover:
         assert result["status"] == "ok"
         assert len(result["tools"]) == 3
         tool_names = [t["tool_name"] for t in result["tools"]]
-        assert "calibration_query" in tool_names
-        assert "proposed_calibration_manage" in tool_names
-        assert "calibration_page_manage" in tool_names
+        assert "controldesk_calibration_query" in tool_names
+        assert "controldesk_proposed_calibration_manage" in tool_names
+        assert "controldesk_calibration_page_manage" in tool_names
 
 
 class TestCalibrationInputModels:

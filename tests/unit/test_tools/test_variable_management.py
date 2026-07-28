@@ -751,7 +751,7 @@ class TestVariableDiscover:
         result = await variable_discover(AsyncMock())
 
         tool_names = [t["tool_name"] for t in result["tools"]]
-        assert "variable_list" in tool_names
+        assert "controldesk_variable_list" in tool_names
 
     @pytest.mark.asyncio
     async def test_discover_has_data_set_manage_tool(self) -> None:
@@ -760,7 +760,7 @@ class TestVariableDiscover:
         result = await variable_discover(AsyncMock())
 
         tool_names = [t["tool_name"] for t in result["tools"]]
-        assert "data_set_manage" in tool_names
+        assert "controldesk_variable_data_set_manage" in tool_names
 
     @pytest.mark.asyncio
     async def test_discover_has_variable_description_manage_tool(self) -> None:
@@ -769,7 +769,7 @@ class TestVariableDiscover:
         result = await variable_discover(AsyncMock())
 
         tool_names = [t["tool_name"] for t in result["tools"]]
-        assert "variable_description_manage" in tool_names
+        assert "controldesk_variable_description_manage" in tool_names
 
     @pytest.mark.asyncio
     async def test_variable_list_actions(self) -> None:
@@ -777,7 +777,7 @@ class TestVariableDiscover:
 
         result = await variable_discover(AsyncMock())
 
-        variable_list_tool = next(t for t in result["tools"] if t["tool_name"] == "variable_list")
+        variable_list_tool = next(t for t in result["tools"] if t["tool_name"] == "controldesk_variable_list")
         assert "list_all" in variable_list_tool["actions"]
         assert "list_array_elements" in variable_list_tool["actions"]
         assert "list_group_variables" in variable_list_tool["actions"]
@@ -788,7 +788,7 @@ class TestVariableDiscover:
 
         result = await variable_discover(AsyncMock())
 
-        ds_tool = next(t for t in result["tools"] if t["tool_name"] == "data_set_manage")
+        ds_tool = next(t for t in result["tools"] if t["tool_name"] == "controldesk_variable_data_set_manage")
         assert "activate_working_page" in ds_tool["actions"]
         assert "activate_reference_page" in ds_tool["actions"]
 
@@ -798,7 +798,7 @@ class TestVariableDiscover:
 
         result = await variable_discover(AsyncMock())
 
-        vd_tool = next(t for t in result["tools"] if t["tool_name"] == "variable_description_manage")
+        vd_tool = next(t for t in result["tools"] if t["tool_name"] == "controldesk_variable_description_manage")
         assert "list" in vd_tool["actions"]
         assert "activate" in vd_tool["actions"]
         assert "remove" in vd_tool["actions"]

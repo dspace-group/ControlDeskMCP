@@ -20,20 +20,21 @@ class TestRunCalibrationWorkflow:
         from controldesk_mcp.prompts.calibration_prompts import run_calibration_workflow
 
         text = _text(run_calibration_workflow())
-        assert "calibration_start" in text
-        assert "calibration_stop" in text
+        assert "controldesk_calibration_start" in text
+        assert "controldesk_calibration_stop" in text
 
     def test_includes_page_switch_steps(self) -> None:
         from controldesk_mcp.prompts.calibration_prompts import run_calibration_workflow
 
         text = _text(run_calibration_workflow())
-        assert "calibration_activate_working_page" in text
-        assert "calibration_activate_reference_page" in text
+        assert "controldesk_calibration_page_manage" in text
+        assert "copy_reference_to_working" in text
+        assert "copy_working_to_reference" in text
 
-    def test_includes_refresh_step(self) -> None:
+    def test_includes_canonical_variable_write_step(self) -> None:
         from controldesk_mcp.prompts.calibration_prompts import run_calibration_workflow
 
-        assert "calibration_refresh_parameters" in _text(run_calibration_workflow())
+        assert "controldesk_variable_write" in _text(run_calibration_workflow())
 
     def test_platform_name_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.calibration_prompts import run_calibration_workflow
@@ -59,15 +60,16 @@ class TestProposedCalibrationFlow:
         from controldesk_mcp.prompts.calibration_prompts import proposed_calibration_flow
 
         text = _text(proposed_calibration_flow())
-        assert "proposed_calibration_start" in text
-        assert "proposed_calibration_stop" in text
+        assert "controldesk_proposed_calibration_manage" in text
+        assert "action='start'" in text
+        assert "action='stop'" in text
 
     def test_includes_apply_and_cancel_paths(self) -> None:
         from controldesk_mcp.prompts.calibration_prompts import proposed_calibration_flow
 
         text = _text(proposed_calibration_flow())
-        assert "proposed_calibration_apply" in text
-        assert "proposed_calibration_cancel" in text
+        assert "action='apply'" in text
+        assert "action='cancel'" in text
 
     def test_platform_arg_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.calibration_prompts import proposed_calibration_flow
@@ -92,22 +94,22 @@ class TestManageCalibrationDataSets:
     def test_includes_data_set_working_page(self) -> None:
         from controldesk_mcp.prompts.calibration_prompts import manage_calibration_data_sets
 
-        assert "data_set_activate_working_page" in _text(manage_calibration_data_sets())
+        assert "controldesk_variable_data_set_manage" in _text(manage_calibration_data_sets())
 
     def test_includes_data_set_reference_page(self) -> None:
         from controldesk_mcp.prompts.calibration_prompts import manage_calibration_data_sets
 
-        assert "data_set_activate_reference_page" in _text(manage_calibration_data_sets())
+        assert "action='activate_reference_page'" in _text(manage_calibration_data_sets())
 
     def test_includes_calibration_working_page(self) -> None:
         from controldesk_mcp.prompts.calibration_prompts import manage_calibration_data_sets
 
-        assert "calibration_activate_working_page" in _text(manage_calibration_data_sets())
+        assert "action='activate_working_page'" in _text(manage_calibration_data_sets())
 
     def test_includes_calibration_reference_page(self) -> None:
         from controldesk_mcp.prompts.calibration_prompts import manage_calibration_data_sets
 
-        assert "calibration_activate_reference_page" in _text(manage_calibration_data_sets())
+        assert "controldesk_variable_discover" in _text(manage_calibration_data_sets())
 
     def test_platform_name_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.calibration_prompts import manage_calibration_data_sets

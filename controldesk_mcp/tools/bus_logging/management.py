@@ -88,7 +88,7 @@ from controldesk_mcp.utils.pagination import paginate
 
 
 @mcp.tool(
-    name="bus_logger_create",
+    name="controldesk_bus_logger_create",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Creates a new bus logger on a specified physical bus access. "
@@ -114,7 +114,7 @@ async def bus_logger_create(
 
 
 @mcp.tool(
-    name="bus_logger_configure",
+    name="controldesk_bus_logger_configure",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Configures all logger settings including output file path, logging duration, "
@@ -139,7 +139,7 @@ async def bus_logger_configure(
 
 
 @mcp.tool(
-    name="bus_logger_manage",
+    name="controldesk_bus_logger_manage",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Manages bus logger lifecycle operations (mutating only). "
@@ -204,7 +204,7 @@ async def bus_logger_manage(
 
 
 @mcp.tool(
-    name="bus_logger_query",
+    name="controldesk_bus_logger_query",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -256,7 +256,7 @@ async def bus_logger_query(
 
 
 @mcp.tool(
-    name="bus_logger_admin_manage",
+    name="controldesk_bus_logger_admin_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -362,7 +362,7 @@ async def bus_logger_admin_manage(
 
 
 @mcp.tool(
-    name="bus_filter_create",
+    name="controldesk_bus_filter_create",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -383,7 +383,7 @@ async def bus_filter_create(params: BusFilterCreateInput) -> BusFilterCreateResu
 
 
 @mcp.tool(
-    name="bus_filter_configure",
+    name="controldesk_bus_filter_configure",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -405,7 +405,7 @@ async def bus_filter_configure(
 
 
 @mcp.tool(
-    name="bus_filter_manage",
+    name="controldesk_bus_filter_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -492,7 +492,7 @@ async def bus_filter_manage(
 
 
 @mcp.tool(
-    name="bus_logging_discover",
+    name="controldesk_bus_logging_discover",
     tool_category=MCPToolCategory.SEARCH,
     description=(
         "Returns a catalogue of all available bus logging operations "
@@ -512,7 +512,7 @@ async def bus_logging_discover(ctx: Context) -> BusLoggingDiscoverResult:
     return BusLoggingDiscoverResult(
         tools=[
             ToolActionEntry(
-                tool_name="bus_logger_query",
+                tool_name="controldesk_bus_logger_query",
                 purpose="Read-only queries: get logger state (Running/Stopped) or list all loggers on a bus access.",
                 actions=["get_state", "list"],
                 required_params_per_action={
@@ -521,7 +521,7 @@ async def bus_logging_discover(ctx: Context) -> BusLoggingDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="bus_logger_admin_manage",
+                tool_name="controldesk_bus_logger_admin_manage",
                 purpose=("Perform administrative operations on bus loggers: remove, clear_all, set_activated, rename."),
                 actions=["remove", "clear_all", "set_activated", "rename"],
                 required_params_per_action={
@@ -532,7 +532,7 @@ async def bus_logging_discover(ctx: Context) -> BusLoggingDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="bus_filter_create",
+                tool_name="controldesk_bus_filter_create",
                 purpose="Create a new message filter on a physical bus access.",
                 actions=["create"],
                 required_params_per_action={
@@ -540,7 +540,7 @@ async def bus_logging_discover(ctx: Context) -> BusLoggingDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="bus_filter_configure",
+                tool_name="controldesk_bus_filter_configure",
                 purpose="Configure filter rules (pass/block mode and message ID/mask criteria).",
                 actions=["configure"],
                 required_params_per_action={
@@ -548,7 +548,7 @@ async def bus_logging_discover(ctx: Context) -> BusLoggingDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="bus_filter_manage",
+                tool_name="controldesk_bus_filter_manage",
                 purpose="Manage bus filter lifecycle: start, stop, list, or remove filters.",
                 actions=["start", "stop", "list", "remove"],
                 required_params_per_action={

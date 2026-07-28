@@ -15,7 +15,7 @@ Tools implemented (domain: tool window management):
     tool_window_discover — Returns a catalogue of all lazy add-on tools and their actions
 
 COM entry point: app.MainWindow.Windows (IXaWindows collection)
-Prerequisite: start_controldesk must have been called; main window must be visible
+Prerequisite: controldesk_app_start_or_attach must have been called; main window must be visible
               for panels to be rendered on screen.
 Layer: MCP Tool (thin adapter) — owns @mcp.tool annotations only.
 All orchestration is delegated to controldesk_mcp.services.tool_window_service.
@@ -63,7 +63,7 @@ from controldesk_mcp.utils.pagination import paginate
 
 
 @mcp.tool(
-    name="tool_window_list",
+    name="controldesk_tool_window_list",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Enumerates all tool windows (panels) available in the current ControlDesk instance. "
@@ -74,7 +74,7 @@ from controldesk_mcp.utils.pagination import paginate
         "Available panels depend on ControlDesk license and installed features. "
         "Window names returned are the exact strings to pass to tool_window_show, "
         "tool_window_manage, and tool_window_query. "
-        "Prerequisite: start_controldesk must have been called."
+        "Prerequisite: controldesk_app_start_or_attach must have been called."
     ),
     annotations=AnnotationInfo(read_only=True),
     meta=MetaInfo(ToolDomain.TOOL_WINDOW, ToolGroup.WINDOW_MANAGEMENT),
@@ -90,7 +90,7 @@ async def tool_window_list(params: ToolWindowListInput) -> ToolWindowListResult 
 
 
 @mcp.tool(
-    name="tool_window_show",
+    name="controldesk_tool_window_show",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Shows and activates a specific named tool window (panel). "
@@ -114,7 +114,7 @@ async def tool_window_show(params: ToolWindowShowInput) -> ToolWindowShowResult 
 
 
 @mcp.tool(
-    name="tool_window_manage",
+    name="controldesk_tool_window_manage",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Manages tool window state and docking (mutating operations only). "
@@ -177,7 +177,7 @@ async def tool_window_manage(
 
 
 @mcp.tool(
-    name="tool_window_query",
+    name="controldesk_tool_window_query",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -225,7 +225,7 @@ async def tool_window_query(
 
 
 @mcp.tool(
-    name="tool_window_discover",
+    name="controldesk_tool_window_discover",
     tool_category=MCPToolCategory.SEARCH,
     description=(
         "Returns a catalogue of all available tool window operations "
@@ -244,7 +244,7 @@ async def tool_window_discover(ctx: Context) -> ToolWindowDiscoverResult:
     return ToolWindowDiscoverResult(
         tools=[
             ToolActionEntry(
-                tool_name="tool_window_query",
+                tool_name="controldesk_tool_window_query",
                 purpose=(
                     "Read-only queries: get current dock state and visibility, "
                     "check whether a panel exists, or get its screen position and dimensions."

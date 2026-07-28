@@ -75,7 +75,7 @@ from controldesk_mcp.utils.pagination import paginate
 
 
 @mcp.tool(
-    name="bus_monitor_create",
+    name="controldesk_bus_monitor_create",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Creates a new bus monitor on a specified physical bus access. "
@@ -102,7 +102,7 @@ async def bus_monitor_create(
 
 
 @mcp.tool(
-    name="bus_monitor_configure",
+    name="controldesk_bus_monitor_configure",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Configures monitor display and buffering behavior. "
@@ -126,7 +126,7 @@ async def bus_monitor_configure(
 
 
 @mcp.tool(
-    name="bus_monitor_manage",
+    name="controldesk_bus_monitor_manage",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Manages bus monitor lifecycle operations (mutating only). "
@@ -248,7 +248,7 @@ async def bus_monitor_manage(
 
 
 @mcp.tool(
-    name="bus_monitor_query",
+    name="controldesk_bus_monitor_query",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -299,7 +299,7 @@ async def bus_monitor_query(
 
 
 @mcp.tool(
-    name="bus_monitor_save",
+    name="controldesk_bus_monitor_save",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -343,7 +343,7 @@ async def bus_monitor_save(
 
 
 @mcp.tool(
-    name="bus_monitor_load_data",
+    name="controldesk_bus_monitor_load_data",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -371,7 +371,7 @@ async def bus_monitor_load_data(
 
 
 @mcp.tool(
-    name="bus_monitor_discover",
+    name="controldesk_bus_monitor_discover",
     tool_category=MCPToolCategory.SEARCH,
     description=(
         "Returns a catalogue of all available bus monitor operations "
@@ -390,7 +390,7 @@ async def bus_monitor_discover(ctx: Context) -> BusMonitorDiscoverResult:
     return BusMonitorDiscoverResult(
         tools=[
             ToolActionEntry(
-                tool_name="bus_monitor_query",
+                tool_name="controldesk_bus_monitor_query",
                 purpose="Read-only queries: get monitor state (Running/Stopped) or list all monitors on a bus access.",
                 actions=["get_state", "list"],
                 required_params_per_action={
@@ -399,7 +399,7 @@ async def bus_monitor_discover(ctx: Context) -> BusMonitorDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="bus_monitor_save",
+                tool_name="controldesk_bus_monitor_save",
                 purpose=(
                     "Save the current monitor buffer contents to a log file on disk. "
                     "Optionally specify a time axis (Absolute, Relative, RecordingTime)."
@@ -410,7 +410,7 @@ async def bus_monitor_discover(ctx: Context) -> BusMonitorDiscoverResult:
                 },
             ),
             ToolActionEntry(
-                tool_name="bus_monitor_load_data",
+                tool_name="controldesk_bus_monitor_load_data",
                 purpose="Load a previously saved log file into the monitor buffer for offline viewing.",
                 actions=["load"],
                 required_params_per_action={

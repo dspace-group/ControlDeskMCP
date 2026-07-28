@@ -185,7 +185,7 @@ class BridgeCircuitOpenError(BridgeError):
         *,
         error_code: str = "CIRCUIT_OPEN",
         retryable: bool = True,
-        recovery_hint: str = ("Wait 30 s and retry, or call start_controldesk to reset the connection."),
+        recovery_hint: str = ("Wait 30 s and retry, or call controldesk_app_start_or_attach to reset the connection."),
         hresult: int | None = None,
     ) -> None:
         super().__init__(

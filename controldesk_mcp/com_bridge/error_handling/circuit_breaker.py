@@ -103,7 +103,7 @@ class CircuitBreaker:
                 raise BridgeCircuitOpenError(
                     f"Circuit OPEN for '{self.operation}' — cool-down expires in {remaining:.0f} s.",
                     recovery_hint=(
-                        f"Wait {remaining:.0f} s and retry, or call start_controldesk to reset the connection."
+                        f"Wait {remaining:.0f} s and retry, or call controldesk_app_start_or_attach to reset the connection."
                     ),
                 )
 
@@ -125,7 +125,7 @@ class CircuitBreaker:
 # ── Registry of guarded operations ────────────────────────────────────────────
 
 _breakers: dict[str, CircuitBreaker] = {
-    "start_controldesk": CircuitBreaker("start_controldesk"),
+    "controldesk_app_start_or_attach": CircuitBreaker("controldesk_app_start_or_attach"),
     "platform_connect": CircuitBreaker("platform_connect"),
     "experiment_load_and_activate": CircuitBreaker("experiment_load_and_activate"),
 }

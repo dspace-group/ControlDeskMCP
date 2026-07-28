@@ -106,7 +106,7 @@ from controldesk_mcp.utils.pagination import paginate
 
 
 @mcp.tool(
-    name="project_list_recent",
+    name="controldesk_project_list_recent",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Lists the most recently used projects across all registered project roots, "
@@ -139,7 +139,7 @@ async def project_list_recent(
 
 
 @mcp.tool(
-    name="project_open",
+    name="controldesk_project_open",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Opens an existing ControlDesk project by name from the active project root, "
@@ -168,7 +168,7 @@ async def project_open(params: ProjectOpenInput) -> ProjectOpenResult | ErrorEnv
 
 
 @mcp.tool(
-    name="project_root_manage",
+    name="controldesk_project_root_manage",
     tool_category=MCPToolCategory.ADD_ON,
     description=(
         "Manages project root folder operations. Set 'action' to specify what to do: "
@@ -224,7 +224,7 @@ async def project_root_manage(
 
 
 @mcp.tool(
-    name="project_manage",
+    name="controldesk_project_manage",
     tool_category=MCPToolCategory.ADD_ON,
     description=(
         "Manages core project lifecycle operations. Set 'action' to specify what to do: "
@@ -309,7 +309,7 @@ async def project_manage(
 
 
 @mcp.tool(
-    name="project_backup_manage",
+    name="controldesk_project_backup_manage",
     tool_category=MCPToolCategory.ADD_ON,
     description=(
         "Manages project backup and restore operations. Set 'action' to specify what to do: "
@@ -356,7 +356,7 @@ async def project_backup_manage(
 
 
 @mcp.tool(
-    name="experiment_manage",
+    name="controldesk_project_experiment_manage",
     tool_category=MCPToolCategory.ADD_ON,
     description=(
         "Manages core experiment lifecycle operations within the active project. "
@@ -427,7 +427,7 @@ async def experiment_manage(
 
 
 @mcp.tool(
-    name="experiment_io_manage",
+    name="controldesk_project_experiment_io_manage",
     tool_category=MCPToolCategory.ADD_ON,
     description=(
         "Manages experiment I/O and copy operations within the active project. "
@@ -498,7 +498,7 @@ async def experiment_io_manage(
 
 
 @mcp.tool(
-    name="project_discover",
+    name="controldesk_project_discover",
     tool_category=MCPToolCategory.SEARCH,
     description=(
         "Returns a catalogue of all project management tools that are not loaded by default. "
@@ -522,7 +522,7 @@ async def project_discover(ctx: Context) -> ProjectDiscoverResult | ErrorEnvelop
     return ProjectDiscoverResult(
         tools=[
             ToolActionEntry(
-                tool_name="project_root_manage",
+                tool_name="controldesk_project_root_manage",
                 purpose="Register, activate, list, or remove project root folders.",
                 actions=["add", "activate", "list", "remove"],
                 required_params_per_action={
@@ -533,7 +533,7 @@ async def project_discover(ctx: Context) -> ProjectDiscoverResult | ErrorEnvelop
                 },
             ),
             ToolActionEntry(
-                tool_name="project_manage",
+                tool_name="controldesk_project_manage",
                 purpose=(
                     "Core project lifecycle: create, save, close, remove, "
                     "check existence, get metadata, configure settings, list."
@@ -560,7 +560,7 @@ async def project_discover(ctx: Context) -> ProjectDiscoverResult | ErrorEnvelop
                 },
             ),
             ToolActionEntry(
-                tool_name="project_backup_manage",
+                tool_name="controldesk_project_backup_manage",
                 purpose="Backup the active project to a zip archive, or restore from one.",
                 actions=["backup", "restore"],
                 required_params_per_action={
@@ -569,7 +569,7 @@ async def project_discover(ctx: Context) -> ProjectDiscoverResult | ErrorEnvelop
                 },
             ),
             ToolActionEntry(
-                tool_name="experiment_manage",
+                tool_name="controldesk_project_experiment_manage",
                 purpose=("Core experiment lifecycle: create, activate, list, remove, get metadata."),
                 actions=["create", "activate", "list", "remove", "get_info"],
                 required_params_per_action={
@@ -581,7 +581,7 @@ async def project_discover(ctx: Context) -> ProjectDiscoverResult | ErrorEnvelop
                 },
             ),
             ToolActionEntry(
-                tool_name="experiment_io_manage",
+                tool_name="controldesk_project_experiment_io_manage",
                 purpose=("Experiment I/O and copy: export to .DSA, import from .DSA, rename, save as copy."),
                 actions=["export", "import", "rename", "save_as"],
                 required_params_per_action={

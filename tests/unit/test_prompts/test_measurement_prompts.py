@@ -41,9 +41,9 @@ class TestRunMeasurementWorkflow:
         from controldesk_mcp.prompts.measurement_prompts import run_measurement_workflow
 
         text = _text(run_measurement_workflow())
-        assert "measurement_start" in text
-        assert "measurement_stop" in text
-        assert "measurement_list_recordings" in text
+        assert "controldesk_measurement_start" in text
+        assert "controldesk_measurement_stop" in text
+        assert "controldesk_measurement_recording_manage" in text
 
     def test_recording_name_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.measurement_prompts import run_measurement_workflow
@@ -63,7 +63,7 @@ class TestAddMeasurementBookmark:
     def test_includes_bookmark_add_step(self) -> None:
         from controldesk_mcp.prompts.measurement_prompts import add_measurement_bookmark
 
-        assert "measurement_bookmark_add" in _text(add_measurement_bookmark())
+        assert "controldesk_measurement_recording_manage" in _text(add_measurement_bookmark())
 
     def test_label_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.measurement_prompts import add_measurement_bookmark
@@ -73,12 +73,12 @@ class TestAddMeasurementBookmark:
     def test_includes_bookmark_list_step(self) -> None:
         from controldesk_mcp.prompts.measurement_prompts import add_measurement_bookmark
 
-        assert "measurement_bookmark_list" in _text(add_measurement_bookmark())
+        assert "bookmark_list" in _text(add_measurement_bookmark())
 
     def test_includes_bookmark_remove_step(self) -> None:
         from controldesk_mcp.prompts.measurement_prompts import add_measurement_bookmark
 
-        assert "measurement_bookmark_remove" in _text(add_measurement_bookmark())
+        assert "bookmark_remove" in _text(add_measurement_bookmark())
 
     def test_defaults_produce_valid_prompt(self) -> None:
         from controldesk_mcp.prompts.measurement_prompts import add_measurement_bookmark
@@ -100,10 +100,11 @@ class TestManageDataLoggers:
 
         text = _text(manage_data_loggers())
         for tool in (
-            "data_logger_create",
-            "data_logger_configure",
-            "data_logger_start",
-            "data_logger_stop",
+            "controldesk_measurement_data_logger_manage",
+            "action='create'",
+            "action='configure'",
+            "action='start'",
+            "action='stop'",
         ):
             assert tool in text
 
@@ -111,8 +112,8 @@ class TestManageDataLoggers:
         from controldesk_mcp.prompts.measurement_prompts import manage_data_loggers
 
         text = _text(manage_data_loggers())
-        assert "data_logger_list" in text
-        assert "data_logger_remove" in text
+        assert "action='list'" in text
+        assert "action='remove'" in text
 
     def test_logger_name_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.measurement_prompts import manage_data_loggers
@@ -142,18 +143,19 @@ class TestConfigureMeasurementTriggers:
         from controldesk_mcp.prompts.measurement_prompts import configure_measurement_triggers
 
         text = _text(configure_measurement_triggers())
-        assert "trigger_rule_create" in text
-        assert "trigger_rule_remove" in text
+        assert "controldesk_measurement_trigger_manage" in text
+        assert "rule_create" in text
+        assert "rule_remove" in text
 
     def test_includes_time_limit_condition(self) -> None:
         from controldesk_mcp.prompts.measurement_prompts import configure_measurement_triggers
 
-        assert "trigger_condition_time_limit" in _text(configure_measurement_triggers())
+        assert "condition_time_limit" in _text(configure_measurement_triggers())
 
     def test_includes_trigger_based_condition(self) -> None:
         from controldesk_mcp.prompts.measurement_prompts import configure_measurement_triggers
 
-        assert "trigger_condition_trigger_based" in _text(configure_measurement_triggers())
+        assert "condition_trigger_based" in _text(configure_measurement_triggers())
 
     def test_signal_path_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.measurement_prompts import configure_measurement_triggers

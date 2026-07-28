@@ -40,7 +40,7 @@ _HRESULT_MAP: dict[int, tuple[str, type[BridgeError], bool, str]] = {
         "COM_DISCONNECTED",
         BridgeConnectionError,
         True,
-        "ControlDesk disconnected. Call start_controldesk to re-establish the connection.",
+        "ControlDesk disconnected. Call controldesk_app_start_or_attach to re-establish the connection.",
     ),
     0x8001010E: (
         "COM_WRONG_THREAD",
@@ -65,7 +65,7 @@ _HRESULT_MAP: dict[int, tuple[str, type[BridgeError], bool, str]] = {
         "COM_SERVER_STOPPING",
         BridgeConnectionError,
         True,
-        "ControlDesk is shutting down. Wait and call start_controldesk.",
+        "ControlDesk is shutting down. Wait and call controldesk_app_start_or_attach.",
     ),
     # ── IDispatch / Automation errors ─────────────────────────────────────────
     0x80020003: (
@@ -223,7 +223,7 @@ def map_com_error(
                 f"RPC connection error on {location}: {detail}",
                 error_code="COM_DISCONNECTED",
                 retryable=True,
-                recovery_hint="Call start_controldesk to re-establish the COM connection.",
+                recovery_hint="Call controldesk_app_start_or_attach to re-establish the COM connection.",
                 hresult=hresult,
             )
             result.correlation_id = correlation_id

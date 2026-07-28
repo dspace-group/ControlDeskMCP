@@ -106,6 +106,33 @@ function Invoke-InspectorExport {
         throw "Inspector export for '$Method' returned empty output."
     }
 
+    # Inspector may print warning banners before JSON payload. Extract the JSON block.
+    $firstObject = $outputText.IndexOf('{')
+    $firstArray = $outputText.IndexOf('[')
+    $jsonStart = -1
+    if ($firstObject -ge 0 -and $firstArray -ge 0) {
+        $jsonStart = [Math]::Min($firstObject, $firstArray)
+    }
+    elseif ($firstObject -ge 0) {
+        $jsonStart = $firstObject
+    }
+    elseif ($firstArray -ge 0) {
+        $jsonStart = $firstArray
+    }
+
+    if ($jsonStart -lt 0) {
+        throw "Inspector export for '$Method' did not include a JSON payload."
+    }
+
+    $startChar = $outputText[$jsonStart]
+    $endChar = if ($startChar -eq '[') { ']' } else { '}' }
+    $jsonEnd = $outputText.LastIndexOf($endChar)
+    if ($jsonEnd -lt $jsonStart) {
+        throw "Inspector export for '$Method' returned malformed JSON payload boundaries."
+    }
+
+    $outputText = $outputText.Substring($jsonStart, $jsonEnd - $jsonStart + 1)
+
     try {
         $null = $outputText | ConvertFrom-Json -ErrorAction Stop
     }

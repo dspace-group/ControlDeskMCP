@@ -24,7 +24,7 @@ class TestManageToolWindows:
     def test_includes_check_exists_step(self) -> None:
         from controldesk_mcp.prompts.tool_window_prompts import manage_tool_windows
 
-        assert "tool_window_check_exists" in _text(manage_tool_windows())
+        assert "controldesk_tool_window_query" in _text(manage_tool_windows())
 
     def test_includes_show_step(self) -> None:
         from controldesk_mcp.prompts.tool_window_prompts import manage_tool_windows
@@ -34,17 +34,17 @@ class TestManageToolWindows:
     def test_includes_get_state_step(self) -> None:
         from controldesk_mcp.prompts.tool_window_prompts import manage_tool_windows
 
-        assert "tool_window_get_state" in _text(manage_tool_windows())
+        assert "action='get_state'" in _text(manage_tool_windows())
 
     def test_includes_set_dock_state_step(self) -> None:
         from controldesk_mcp.prompts.tool_window_prompts import manage_tool_windows
 
-        assert "tool_window_set_dock_state" in _text(manage_tool_windows())
+        assert "controldesk_tool_window_manage" in _text(manage_tool_windows())
 
     def test_includes_close_step(self) -> None:
         from controldesk_mcp.prompts.tool_window_prompts import manage_tool_windows
 
-        assert "tool_window_close" in _text(manage_tool_windows())
+        assert "action='close'" in _text(manage_tool_windows())
 
     def test_window_name_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.tool_window_prompts import manage_tool_windows

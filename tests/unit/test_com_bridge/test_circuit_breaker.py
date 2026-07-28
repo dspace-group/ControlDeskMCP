@@ -116,7 +116,7 @@ class TestCircuitBreakerWindowPruning:
 
 class TestCircuitBreakerRegistry:
     def test_guarded_interfaces_exist(self) -> None:
-        assert get_breaker("start_controldesk") is not None
+        assert get_breaker("controldesk_app_start_or_attach") is not None
         assert get_breaker("platform_connect") is not None
         assert get_breaker("experiment_load_and_activate") is not None
 
@@ -124,5 +124,5 @@ class TestCircuitBreakerRegistry:
         assert get_breaker("some_unguarded_method") is None
 
     def test_registry_returns_circuit_breaker_instance(self) -> None:
-        breaker = get_breaker("start_controldesk")
+        breaker = get_breaker("controldesk_app_start_or_attach")
         assert isinstance(breaker, CircuitBreaker)

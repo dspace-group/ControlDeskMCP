@@ -21,21 +21,21 @@ class TestStartAutomationSession:
 
         text = _text(start_automation_session())
         assert "controldesk://server/info" in text
-        assert "start_controldesk" in text
+        assert "controldesk_app_start_or_attach" in text
 
     def test_project_path_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.session_prompts import start_automation_session
 
         text = _text(start_automation_session(project_path="C:/demo.cdprj"))
         assert "C:/demo.cdprj" in text
-        assert "project_open" in text
+        assert "controldesk_project_open" in text
 
     def test_platform_name_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.session_prompts import start_automation_session
 
         text = _text(start_automation_session(platform_name="DS1006"))
         assert "DS1006" in text
-        assert "platform_connect" in text
+        assert "controldesk_platform_connect" in text
 
     def test_version_in_prompt_when_provided(self) -> None:
         from controldesk_mcp.prompts.session_prompts import start_automation_session
@@ -84,5 +84,5 @@ class TestDiagnoseConnection:
         from controldesk_mcp.prompts.session_prompts import diagnose_connection
 
         text = _text(diagnose_connection())
-        assert "platform_list" in text
-        assert "platform_get_connection_state" in text
+        assert "controldesk_platform_query" in text
+        assert "get_connection_state" in text

@@ -14,7 +14,7 @@ Tools implemented (domain: instrument management):
       instrument_signal_manage — Connect or disconnect variables/signals to/from instruments
 
 COM entry point: app.LayoutManagement.ActiveLayout.Instruments (IViTopLevelInstruments)
-Prerequisite: start_controldesk must have been called; a layout must be active
+Prerequisite: controldesk_app_start_or_attach must have been called; a layout must be active
               (call layout_list + layout_manage(action='activate') first).
 Layer: MCP Tool (thin adapter) — owns @mcp.tool annotations only.
 All orchestration is delegated to controldesk_mcp.services.instrument_service.
@@ -60,7 +60,7 @@ from controldesk_mcp.utils.pagination import paginate
 
 
 @mcp.tool(
-    name="instrument_list",
+    name="controldesk_instrument_list",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Enumerates instruments on the active ControlDesk layout, or lists available "
@@ -72,7 +72,7 @@ from controldesk_mcp.utils.pagination import paginate
         "signal connection mode — useful before calling instrument_manage(action='add'). "
         "Instrument names returned are the exact strings to pass to instrument_manage and "
         "instrument_signal_manage. "
-        "Prerequisite: start_controldesk must have been called; a layout must be active "
+        "Prerequisite: controldesk_app_start_or_attach must have been called; a layout must be active "
         "(call layout_manage(action='activate') first)."
     ),
     annotations=AnnotationInfo(read_only=True),
@@ -94,7 +94,7 @@ async def instrument_list(
 
 
 @mcp.tool(
-    name="instrument_query",
+    name="controldesk_instrument_query",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Read-only queries for instruments on the active ControlDesk layout (readOnlyHint=true). "
@@ -122,7 +122,7 @@ async def instrument_query(
 
 
 @mcp.tool(
-    name="instrument_manage",
+    name="controldesk_instrument_manage",
     tool_category=MCPToolCategory.MAIN,
     description=(
         "Manages instruments on the active ControlDesk layout (mutating operations only). "
@@ -262,7 +262,7 @@ async def instrument_manage(
 
 
 @mcp.tool(
-    name="instrument_signal_manage",
+    name="controldesk_instrument_signal_manage",
     tool_category=MCPToolCategory.ADD_ON,
     lazy_loading=True,
     description=(
@@ -321,7 +321,7 @@ async def instrument_signal_manage(
 
 
 @mcp.tool(
-    name="instrument_discover",
+    name="controldesk_instrument_discover",
     tool_category=MCPToolCategory.SEARCH,
     description=(
         "Returns a catalogue of all available instrument operations "
@@ -340,7 +340,7 @@ async def instrument_discover(ctx: Context) -> InstrumentDiscoverResult:
     return InstrumentDiscoverResult(
         tools=[
             ToolActionEntry(
-                tool_name="instrument_signal_manage",
+                tool_name="controldesk_instrument_signal_manage",
                 purpose=(
                     "Connect or disconnect variables/signals to/from instruments "
                     "on the active layout. Supports all instrument types including "

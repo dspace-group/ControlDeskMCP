@@ -7,10 +7,10 @@ Prompts registered:
   manage_experiments      — full experiment lifecycle: create, rename, import, save-as, remove
 
 All 25 project-domain tools are covered across these prompts:
-  Project management: project_create, project_open, project_save, project_close,
+  Project management: project_create, controldesk_project_open, project_save, project_close,
                       project_remove, project_get_info, project_exists,
                       project_backup, project_open_from_backup, project_configure_settings,
-                      project_list, project_list_recent
+                      project_list, controldesk_project_list_recent
   Project roots:      project_root_add, project_root_activate, project_root_list,
                       project_root_remove
   Experiments:        experiment_create, experiment_activate, experiment_list,
@@ -46,7 +46,7 @@ def manage_project_workflow(
     platform_arg = f", platform_name='{platform_name}'" if platform_name else ""
 
     open_or_create = (
-        f"Call `project_open`{path_arg} to open the existing project."
+        f"Call `controldesk_project_open`{path_arg} to open the existing project."
         if project_path
         else f"Call `project_create`{name_arg} to create a new project."
     )
@@ -61,7 +61,7 @@ def manage_project_workflow(
                 f"- Project name: {project_name or '(required if creating new)'}\n"
                 f"- Platform: {platform_name or '(add manually if needed)'}\n\n"
                 f"**Steps — execute in order:**\n\n"
-                f"1. Call `project_list_recent` to see the most recently used projects "
+                f"1. Call `controldesk_project_list_recent` to see the most recently used projects "
                 f"   (sorted by last-modified timestamp, mirrors ControlDesk's Recent "
                 f"   section). Each entry includes root_path, name, full_path, "
                 f"   last_modified_utc, and experiments (experiment names on disk).\n"
@@ -78,7 +78,7 @@ def manage_project_workflow(
                 f"6. Optionally call `project_configure_settings` to set project-level "
                 f"   options (save path, backup settings, etc.).\n"
                 f"7. If a platform name was provided: call `platform_add`{platform_arg} "
-                f"   to register the platform, then call `platform_connect`{platform_arg}.\n"
+                f"   to register the platform, then call `controldesk_platform_connect`{platform_arg}.\n"
                 f"8. Call `experiment_list` to see existing experiments.\n"
                 f"9. If no suitable experiment exists: call `experiment_create` with an "
                 f"   appropriate name.\n"

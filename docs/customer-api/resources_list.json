@@ -1,0 +1,44 @@
+{
+  "resources": [
+    {
+      "name": "DomainList",
+      "title": "Tool Domain List",
+      "uri": "controldesk://server/domains",
+      "description": "List of all tool domains available on this server. Use a domain name with the resource template `controldesk://tools/{domain}` to get tools for a specific domain. Always available — no ControlDesk connection required.",
+      "mimeType": "application/json",
+      "annotations": {}
+    },
+    {
+      "name": "ToolGroupHierarchy",
+      "title": "Tool Group Hierarchy",
+      "uri": "controldesk://server/tool-groups",
+      "description": "Full domain → group → [tool names] hierarchy for all registered tools. Each tool carries domain and group metadata (set via meta field). Use this to understand how tools are organized into logical sub-groups within each domain. Always available — no ControlDesk connection required.",
+      "mimeType": "application/json",
+      "annotations": {}
+    },
+    {
+      "name": "ServerInfo",
+      "title": "Server Info",
+      "uri": "controldesk://server/info",
+      "description": "Server version, transport configuration, and COM timeout settings. Always available — no ControlDesk connection required. Use this to verify which server instance is running and its configuration.",
+      "mimeType": "application/json",
+      "annotations": {}
+    },
+    {
+      "name": "ToolCatalog",
+      "title": "Tool Catalog",
+      "uri": "controldesk://server/tool-catalog",
+      "description": "Full catalog of all registered MCP tools sorted alphabetically, with each tool's name and description. Always available — no ControlDesk connection required. Use this to discover available automation capabilities before calling tools.",
+      "mimeType": "application/json",
+      "annotations": {}
+    },
+    {
+      "name": "ConnectionStatus",
+      "title": "Connection Status",
+      "uri": "controldesk://server/connection-status",
+      "description": "Current COM bridge connection state: whether a ControlDesk instance is attached, its version, and the connection health. Reads in-memory bridge state only — makes no COM calls. Refresh after calling controldesk_app_start_or_attach or controldesk_app_stop.",
+      "mimeType": "application/json",
+      "annotations": {}
+    }
+  ]
+}

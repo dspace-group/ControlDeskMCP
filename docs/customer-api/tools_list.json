@@ -1,0 +1,3893 @@
+{
+  "tools": [
+    {
+      "name": "controldesk_app_start_or_attach",
+      "description": "Starts a new ControlDesk instance or attaches to an existing running instance. If ControlDesk is not running, this launches a new process. If already running, this returns a handle to the existing application without launching a second copy. This is the entry point for all ControlDesk automation. All other tools depend on a successful call to this tool first. WARNING: if force_version_switch=True and a different ControlDesk version is already running, this quits the running instance (discarding unsaved work) before starting the requested version. Dry-run: set dry_run=True to preview whether a forced version switch would be needed and whether the active project has unsaved changes, without quitting or launching anything.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/AppStartOrAttachInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "AppStartOrAttachInput": {
+            "description": "Input for start_controldesk.",
+            "properties": {
+              "controldesk_version": {
+                "default": "",
+                "description": "ControlDesk version to connect to in YYYY-L format (e.g. '2026-A'). Leave empty to auto-detect the latest installed version.",
+                "examples": [
+                  "2026-A",
+                  "2025-B",
+                  ""
+                ],
+                "title": "Controldesk Version",
+                "type": "string"
+              },
+              "make_visible": {
+                "default": true,
+                "description": "If True the main window becomes visible after attach. Set to False for headless/background automation.",
+                "examples": [
+                  true,
+                  false
+                ],
+                "title": "Make Visible",
+                "type": "boolean"
+              },
+              "initial_window_state": {
+                "$ref": "#/$defs/MainWindowState",
+                "default": "Normal",
+                "description": "Initial window display state after making it visible. One of: 'Normal', 'Maximized', 'Minimized', 'Hidden'.",
+                "examples": [
+                  "Normal",
+                  "Maximized"
+                ]
+              },
+              "force_version_switch": {
+                "default": false,
+                "description": "When True and a different ControlDesk version is already running, quit the running version and start the requested version. Only set to True after the user has explicitly confirmed the switch. Has no effect when controldesk_version is empty.",
+                "examples": [
+                  false,
+                  true
+                ],
+                "title": "Force Version Switch",
+                "type": "boolean"
+              },
+              "dry_run": {
+                "default": false,
+                "description": "When True, previews whether start_controldesk would need to quit a different running ControlDesk version and whether the active project has unsaved changes, without quitting or launching anything.",
+                "title": "Dry Run",
+                "type": "boolean"
+              }
+            },
+            "title": "AppStartOrAttachInput",
+            "type": "object"
+          },
+          "MainWindowState": {
+            "description": "ControlDesk main window display states.",
+            "enum": [
+              "Normal",
+              "Minimized",
+              "Maximized",
+              "Hidden"
+            ],
+            "title": "MainWindowState",
+            "type": "string"
+          }
+        },
+        "title": "start_controldeskArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "application",
+        "group": "lifecycle"
+      }
+    },
+    {
+      "name": "controldesk_app_stop",
+      "description": "Gracefully shuts down the ControlDesk application. All windows are closed, COM objects are released, and the ControlDesk process terminates. Optionally saves all open projects before shutting down. Dry-run: set dry_run=True to preview the shutdown — the tool checks whether the active project has unsaved changes and reports the impact of save_all_projects without quitting ControlDesk.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/AppQuitInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "AppQuitInput": {
+            "description": "Input for stop_controldesk.",
+            "properties": {
+              "save_all_projects": {
+                "default": true,
+                "description": "If True all modified projects are saved before quitting. If False unsaved changes are discarded.",
+                "examples": [
+                  true,
+                  false
+                ],
+                "title": "Save All Projects",
+                "type": "boolean"
+              },
+              "dry_run": {
+                "default": false,
+                "description": "When True, checks whether the active project has unsaved changes and returns a preview without quitting ControlDesk. Use this to preview the impact of save_all_projects=False before committing it.",
+                "title": "Dry Run",
+                "type": "boolean"
+              }
+            },
+            "title": "AppQuitInput",
+            "type": "object"
+          }
+        },
+        "title": "stop_controldeskArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "application",
+        "group": "lifecycle"
+      }
+    },
+    {
+      "name": "controldesk_app_get_logs",
+      "description": "Returns available ControlDesk application log file paths for diagnostics. Use this when a tool call failed, timed out, or ControlDesk crashed and you need to inspect what happened in ControlDesk logs. By default, this searches ControlDesk-compatible log folders under LOCALAPPDATA and returns files matching ControlDesk*.log.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/AppGetLogsInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "AppGetLogsInput": {
+            "description": "Input for app_get_logs.",
+            "properties": {
+              "newest_first": {
+                "default": true,
+                "description": "If True, return newer log files first based on last-write time.",
+                "examples": [
+                  true,
+                  false
+                ],
+                "title": "Newest First",
+                "type": "boolean"
+              },
+              "limit": {
+                "default": 50,
+                "description": "Maximum number of log files to return.",
+                "examples": [
+                  20,
+                  50,
+                  100
+                ],
+                "maximum": 500,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "log_folder_override": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Optional absolute folder path to search first. If omitted, ControlDesk-compatible default locations under LOCALAPPDATA are used.",
+                "examples": [
+                  "C:\\Users\\user\\AppData\\Local\\dSPACE\\ControlDesk\\Log"
+                ],
+                "title": "Log Folder Override"
+              }
+            },
+            "title": "AppGetLogsInput",
+            "type": "object"
+          }
+        },
+        "title": "app_get_logsArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "application",
+        "group": "lifecycle"
+      }
+    },
+    {
+      "name": "controldesk_app_discover",
+      "description": "Returns a catalogue of all available application management operations that are not loaded by default. Call this tool first when you need to manage the ControlDesk window (visibility, state, position, or full-screen). The catalogue lists each tool, its purpose, and the actions it supports.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "app_discoverArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "application",
+        "group": "lifecycle"
+      }
+    },
+    {
+      "name": "controldesk_bus_logger_create",
+      "description": "Creates a new bus logger on a specified physical bus access. The logger will capture all bus frames (CAN messages, LIN frames, FlexRay frames, or Ethernet packets) on that channel. After creation, configure the logger via bus_logger_configure before starting. Logger names must be unique within a physical bus access. Dry-run: set dry_run=True to preview the create — the tool checks whether a logger with that name already exists without creating anything.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/BusLoggerCreateInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "BusLoggerCreateInput": {
+            "description": "Input for bus_logger_create.",
+            "properties": {
+              "logger_name": {
+                "description": "Unique name for the logger (e.g. 'CANRecorder', 'RxLogger').",
+                "examples": [
+                  "CANRecorder",
+                  "RxLogger"
+                ],
+                "title": "Logger Name",
+                "type": "string"
+              },
+              "system_index": {
+                "description": "Zero-based index of the target system (e.g. 0 for transceiver, 1 for receiver).",
+                "examples": [
+                  0,
+                  1
+                ],
+                "title": "System Index",
+                "type": "integer"
+              },
+              "bus_type": {
+                "$ref": "#/$defs/BusType",
+                "description": "Bus protocol type: CAN, LIN, FlexRay, or Ethernet.",
+                "examples": [
+                  "CAN"
+                ]
+              },
+              "bus_platform_index": {
+                "default": 0,
+                "description": "Zero-based index of the bus platform on the system (e.g. 0).",
+                "examples": [
+                  0
+                ],
+                "title": "Bus Platform Index",
+                "type": "integer"
+              },
+              "physical_bus_access_index": {
+                "default": 0,
+                "description": "Zero-based index of the physical bus access channel (e.g. 0).",
+                "examples": [
+                  0
+                ],
+                "title": "Physical Bus Access Index",
+                "type": "integer"
+              },
+              "dry_run": {
+                "default": false,
+                "description": "When True, checks whether a logger with this name already exists on the target physical bus access and returns a preview without creating anything. Use this to preview a create before committing it.",
+                "title": "Dry Run",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "logger_name",
+              "system_index",
+              "bus_type"
+            ],
+            "title": "BusLoggerCreateInput",
+            "type": "object"
+          },
+          "BusType": {
+            "description": "Supported bus protocol types.",
+            "enum": [
+              "CAN",
+              "LIN",
+              "FlexRay",
+              "Ethernet"
+            ],
+            "title": "BusType",
+            "type": "string"
+          }
+        },
+        "title": "bus_logger_createArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "bus_logging",
+        "group": "logger_management"
+      }
+    },
+    {
+      "name": "controldesk_bus_logger_configure",
+      "description": "Configures all logger settings including output file path, logging duration, format options, and file rolling behavior. Must be called BEFORE bus_logger_start. The logger will write frames to the specified output file in either ASC (ASCII) or BLF (Binary Log Format). Configuration options include file path and overwrite, duration, format options (time axis, bus statistics, continuous ring logging), and file rolling (automatic rollover by time or size).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/BusLoggerConfigureInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "BusLoggerConfigureInput": {
+            "description": "Input for bus_logger_configure.",
+            "properties": {
+              "logger_name": {
+                "description": "Name of the logger to configure (as created via bus_logger_create).",
+                "examples": [
+                  "CANRecorder"
+                ],
+                "title": "Logger Name",
+                "type": "string"
+              },
+              "system_index": {
+                "description": "System index (must match the system where the logger was created).",
+                "examples": [
+                  1
+                ],
+                "title": "System Index",
+                "type": "integer"
+              },
+              "bus_type": {
+                "$ref": "#/$defs/BusType",
+                "description": "Bus type (must match the bus type where the logger was created).",
+                "examples": [
+                  "CAN"
+                ]
+              },
+              "log_file_full_path": {
+                "description": "Absolute file system path for the output log file (e.g. 'C:\\\\Logs\\\\can_recording.asc').",
+                "examples": [
+                  "C:\\Logs\\can_recording.asc"
+                ],
+                "title": "Log File Full Path",
+                "type": "string"
+              },
+              "overwrite_existing": {
+                "default": true,
+                "description": "Set to False to append to existing file (e.g. True).",
+                "examples": [
+                  true,
+                  false
+                ],
+                "title": "Overwrite Existing",
+                "type": "boolean"
+              },
+              "max_duration_seconds": {
+                "default": 0,
+                "description": "Max logging duration in seconds; 0 = unlimited (e.g. 30.0).",
+                "examples": [
+                  0,
+                  30
+                ],
+                "title": "Max Duration Seconds",
+                "type": "number"
+              },
+              "enable_bus_statistics": {
+                "default": false,
+                "description": "Include bus statistics frames in the log (e.g. False).",
+                "examples": [
+                  false,
+                  true
+                ],
+                "title": "Enable Bus Statistics",
+                "type": "boolean"
+              },
+              "continuous_ring_mode": {
+                "default": false,
+                "description": "Enable continuous ring logging; wraps when limit reached (e.g. False).",
+                "examples": [
+                  false,
+                  true
+                ],
+                "title": "Continuous Ring Mode",
+                "type": "boolean"
+              },
+              "file_rolling_enabled": {
+                "default": false,
+                "description": "Enable automatic file rolling (e.g. False).",
+                "examples": [
+                  false,
+                  true
+                ],
+                "title": "File Rolling Enabled",
+                "type": "boolean"
+              },
+              "file_rolling_type": {
+                "$ref": "#/$defs/FileRollingType",
+                "default": "Time",
+                "description": "Roll by elapsed time or file size (e.g. 'Time').",
+                "examples": [
+                  "Time",
+                  "Size"
+                ]
+              },
+              "file_rolling_interval_seconds": {
+                "default": 3600,
+                "description": "Time interval for rolling in seconds if file_rolling_type is Time (e.g. 3600.0).",
+                "examples": [
+                  3600
+                ],
+                "title": "File Rolling Interval Seconds",
+                "type": "number"
+              },
+              "time_axis_mode": {
+                "$ref": "#/$defs/TimeAxis",
+                "default": "Relative",
+                "description": "Time axis for ASC format: Absolute or Relative. Ignored for BLF (e.g. 'Relative').",
+                "examples": [
+                  "Relative",
+                  "Absolute"
+                ]
+              },
+              "bus_platform_index": {
+                "default": 0,
+                "description": "Bus platform index (e.g. 0).",
+                "examples": [
+                  0
+                ],
+                "title": "Bus Platform Index",
+                "type": "integer"
+              },
+              "physical_bus_access_index": {
+                "default": 0,
+                "description": "Physical bus access index (e.g. 0).",
+                "examples": [
+                  0
+                ],
+                "title": "Physical Bus Access Index",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "logger_name",
+              "system_index",
+              "bus_type",
+              "log_file_full_path"
+            ],
+            "title": "BusLoggerConfigureInput",
+            "type": "object"
+          },
+          "BusType": {
+            "description": "Supported bus protocol types.",
+            "enum": [
+              "CAN",
+              "LIN",
+              "FlexRay",
+              "Ethernet"
+            ],
+            "title": "BusType",
+            "type": "string"
+          },
+          "FileRollingType": {
+            "description": "File rolling trigger type.",
+            "enum": [
+              "Time",
+              "Size"
+            ],
+            "title": "FileRollingType",
+            "type": "string"
+          },
+          "TimeAxis": {
+            "description": "Time axis type for ASC log files.",
+            "enum": [
+              "Absolute",
+              "Relative"
+            ],
+            "title": "TimeAxis",
+            "type": "string"
+          }
+        },
+        "title": "bus_logger_configureArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "bus_logging",
+        "group": "logger_management"
+      }
+    },
+    {
+      "name": "controldesk_bus_logger_manage",
+      "description": "Manages bus logger lifecycle operations (mutating only). Set 'action' to specify what to do: 'start' — activate and start logging (requires logger_name). Do not call 'start' if the logger is already running — a repeated call returns an error and does not restart it; call 'stop' first. 'stop' — stop logging and deactivate, flushing buffered frames to disk (requires logger_name). Use bus_logging_discover to query state or list loggers (bus_logger_query) and for admin operations (remove, clear_all, set_activated, rename).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/BusLoggerManageInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "BusLoggerManageAction": {
+            "description": "Action for the consolidated bus_logger_manage tool (mutating only).",
+            "enum": [
+              "start",
+              "stop"
+            ],
+            "title": "BusLoggerManageAction",
+            "type": "string"
+          },
+          "BusLoggerManageInput": {
+            "description": "Input for bus_logger_manage (mutating actions only: start, stop).",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/BusLoggerManageAction",
+                "description": "Mutating action to perform on a bus logger. 'start' — activate and start logging (requires logger_name); 'stop' — stop logging and deactivate (requires logger_name).",
+                "examples": [
+                  "start",
+                  "stop"
+                ]
+              },
+              "system_index": {
+                "description": "System index (e.g. 1).",
+                "examples": [
+                  1
+                ],
+                "title": "System Index",
+                "type": "integer"
+              },
+              "bus_type": {
+                "$ref": "#/$defs/BusType",
+                "description": "Bus type (e.g. 'CAN').",
+                "examples": [
+                  "CAN"
+                ]
+              },
+              "logger_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Name of the logger. Required for: start, stop.",
+                "examples": [
+                  "CANRecorder"
+                ],
+                "title": "Logger Name"
+              },
+              "bus_platform_index": {
+                "default": 0,
+                "description": "Bus platform index.",
+                "examples": [
+                  0
+                ],
+                "title": "Bus Platform Index",
+                "type": "integer"
+              },
+              "physical_bus_access_index": {
+                "default": 0,
+                "description": "Physical bus access index.",
+                "examples": [
+                  0
+                ],
+                "title": "Physical Bus Access Index",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "action",
+              "system_index",
+              "bus_type"
+            ],
+            "title": "BusLoggerManageInput",
+            "type": "object"
+          },
+          "BusType": {
+            "description": "Supported bus protocol types.",
+            "enum": [
+              "CAN",
+              "LIN",
+              "FlexRay",
+              "Ethernet"
+            ],
+            "title": "BusType",
+            "type": "string"
+          }
+        },
+        "title": "bus_logger_manageArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "bus_logging",
+        "group": "logger_management"
+      }
+    },
+    {
+      "name": "controldesk_bus_logging_discover",
+      "description": "Returns a catalogue of all available bus logging operations that are not loaded by default. Call this tool first when you need to manage bus logger admin operations (remove, clear_all, set_activated, rename) or bus message filters. The catalogue lists each tool, its purpose, and the actions it supports.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "bus_logging_discoverArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "bus_logging",
+        "group": "logger_management"
+      }
+    },
+    {
+      "name": "controldesk_bus_monitor_create",
+      "description": "Creates a new bus monitor on a specified physical bus access. The monitor will capture and display all bus frames (CAN messages, LIN frames, FlexRay frames, or Ethernet packets) on that channel in real-time within the BusNavigator instrument. After creation, configure the monitor via bus_monitor_configure before starting. Monitor names must be unique within a physical bus access. Dry-run: set dry_run=True to preview the create — the tool checks whether a monitor with that name already exists without creating anything.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/BusMonitorCreateInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "BusMonitorCreateInput": {
+            "description": "Input for bus_monitor_create.",
+            "properties": {
+              "monitor_name": {
+                "description": "Unique name for the monitor (e.g. 'CANMonitor', 'RxDisplay'). Must not duplicate existing monitor names on this physical bus access.",
+                "examples": [
+                  "CANMonitor",
+                  "RxDisplay"
+                ],
+                "title": "Monitor Name",
+                "type": "string"
+              },
+              "system_index": {
+                "description": "Zero-based index of the target system (e.g. 0 = transceiver/sender, 1 = receiver).",
+                "examples": [
+                  0,
+                  1
+                ],
+                "title": "System Index",
+                "type": "integer"
+              },
+              "bus_type": {
+                "$ref": "#/$defs/BusType",
+                "description": "Bus protocol type: CAN, LIN, FlexRay, or Ethernet.",
+                "examples": [
+                  "CAN",
+                  "LIN"
+                ]
+              },
+              "bus_platform_index": {
+                "default": 0,
+                "description": "Zero-based index of the bus platform on the system (e.g. 0).",
+                "examples": [
+                  0
+                ],
+                "title": "Bus Platform Index",
+                "type": "integer"
+              },
+              "physical_bus_access_index": {
+                "default": 0,
+                "description": "Zero-based index of the physical bus access channel (e.g. 0).",
+                "examples": [
+                  0
+                ],
+                "title": "Physical Bus Access Index",
+                "type": "integer"
+              },
+              "dry_run": {
+                "default": false,
+                "description": "When True, checks whether a monitor with this name already exists on the target physical bus access and returns a preview without creating anything. Use this to preview a create before committing it.",
+                "title": "Dry Run",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "monitor_name",
+              "system_index",
+              "bus_type"
+            ],
+            "title": "BusMonitorCreateInput",
+            "type": "object"
+          },
+          "BusType": {
+            "description": "Supported bus protocol types for bus monitoring.",
+            "enum": [
+              "CAN",
+              "LIN",
+              "FlexRay",
+              "Ethernet"
+            ],
+            "title": "BusType",
+            "type": "string"
+          }
+        },
+        "title": "bus_monitor_createArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "bus_monitor",
+        "group": "monitor_management"
+      }
+    },
+    {
+      "name": "controldesk_bus_monitor_configure",
+      "description": "Configures monitor display and buffering behavior. Settings control how frames are captured, buffered, and refreshed in the BusNavigator UI. Must be called BEFORE bus_monitor_start. Configuration options include update rate (ms), buffer size (frames), buffer mode (FixedBuffer or RingBuffer), and J1939 PGN resolving (CAN only).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/BusMonitorConfigureInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "BufferMode": {
+            "description": "Buffer behavior when the monitor buffer is full.",
+            "enum": [
+              "FixedBuffer",
+              "RingBuffer"
+            ],
+            "title": "BufferMode",
+            "type": "string"
+          },
+          "BusMonitorConfigureInput": {
+            "description": "Input for bus_monitor_configure.",
+            "properties": {
+              "monitor_name": {
+                "description": "Name of the monitor to configure (as created via bus_monitor_create).",
+                "examples": [
+                  "CANMonitor"
+                ],
+                "title": "Monitor Name",
+                "type": "string"
+              },
+              "system_index": {
+                "description": "System index (must match the system where the monitor was created).",
+                "examples": [
+                  1
+                ],
+                "title": "System Index",
+                "type": "integer"
+              },
+              "bus_type": {
+                "$ref": "#/$defs/BusType",
+                "description": "Bus type (must match the bus type where the monitor was created).",
+                "examples": [
+                  "CAN"
+                ]
+              },
+              "update_rate_ms": {
+                "default": 100,
+                "description": "UI refresh rate in milliseconds (e.g. 100 = refresh every 100ms). Valid range: 10–5000 ms.",
+                "examples": [
+                  100,
+                  50
+                ],
+                "title": "Update Rate Ms",
+                "type": "integer"
+              },
+              "buffer_size_frames": {
+                "default": 10000,
+                "description": "Maximum number of frames to buffer in memory (e.g. 10000). Larger values use more memory but allow longer capture history.",
+                "examples": [
+                  10000,
+                  20000
+                ],
+                "title": "Buffer Size Frames",
+                "type": "integer"
+              },
+              "buffer_mode": {
+                "$ref": "#/$defs/BufferMode",
+                "default": "RingBuffer",
+                "description": "Behavior when buffer is full: 'FixedBuffer' (stop capturing) or 'RingBuffer' (overwrite oldest frames).",
+                "examples": [
+                  "RingBuffer",
+                  "FixedBuffer"
+                ]
+              },
+              "enable_j1939_pgn_resolving": {
+                "default": false,
+                "description": "Enable J1939 parameter group name resolving for CAN frames. Ignored for non-CAN buses.",
+                "examples": [
+                  false,
+                  true
+                ],
+                "title": "Enable J1939 Pgn Resolving",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "monitor_name",
+              "system_index",
+              "bus_type"
+            ],
+            "title": "BusMonitorConfigureInput",
+            "type": "object"
+          },
+          "BusType": {
+            "description": "Supported bus protocol types for bus monitoring.",
+            "enum": [
+              "CAN",
+              "LIN",
+              "FlexRay",
+              "Ethernet"
+            ],
+            "title": "BusType",
+            "type": "string"
+          }
+        },
+        "title": "bus_monitor_configureArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "bus_monitor",
+        "group": "monitor_management"
+      }
+    },
+    {
+      "name": "controldesk_bus_monitor_manage",
+      "description": "Manages bus monitor lifecycle operations (mutating only). Set 'action' to specify what to do: 'start' — activate and start monitoring (requires monitor_name). Do not call 'start' if the monitor is already running — a repeated call returns an error and does not restart it; call 'stop' first. 'stop' — stop monitoring, frames remain in buffer (requires monitor_name); 'remove' — remove a specific monitor (requires monitor_name; stop first); 'clear_all' — remove all monitors and their buffered data (requires confirm=True; destructive); 'rename' — rename an existing monitor (requires monitor_name and new_name). Use bus_monitor_discover to query state or list monitors (bus_monitor_query).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/BusMonitorManageInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "BusMonitorManageAction": {
+            "description": "Action for the consolidated bus_monitor_manage tool (mutating only).",
+            "enum": [
+              "start",
+              "stop",
+              "remove",
+              "clear_all",
+              "rename"
+            ],
+            "title": "BusMonitorManageAction",
+            "type": "string"
+          },
+          "BusMonitorManageInput": {
+            "description": "Input for bus_monitor_manage (mutating actions only).",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/BusMonitorManageAction",
+                "description": "Mutating action to perform on a bus monitor. 'start' — activate and start monitoring (requires monitor_name); 'stop' — stop monitoring (requires monitor_name); 'remove' — remove a specific monitor (requires monitor_name; stop first); 'clear_all' — remove all monitors from a physical bus access (requires confirm=True); 'rename' — rename an existing monitor (requires monitor_name and new_name). Use bus_monitor_query to query state or list monitors.",
+                "examples": [
+                  "start",
+                  "stop",
+                  "remove"
+                ]
+              },
+              "system_index": {
+                "description": "System index.",
+                "examples": [
+                  1
+                ],
+                "title": "System Index",
+                "type": "integer"
+              },
+              "bus_type": {
+                "$ref": "#/$defs/BusType",
+                "description": "Bus type (e.g. 'CAN').",
+                "examples": [
+                  "CAN"
+                ]
+              },
+              "monitor_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Name of the monitor. Required for: start, stop, remove, rename. Not required for: clear_all.",
+                "examples": [
+                  "CANMonitor"
+                ],
+                "title": "Monitor Name"
+              },
+              "bus_platform_index": {
+                "default": 0,
+                "description": "Bus platform index.",
+                "examples": [
+                  0
+                ],
+                "title": "Bus Platform Index",
+                "type": "integer"
+              },
+              "physical_bus_access_index": {
+                "default": 0,
+                "description": "Physical bus access index.",
+                "examples": [
+                  0
+                ],
+                "title": "Physical Bus Access Index",
+                "type": "integer"
+              },
+              "confirm": {
+                "default": false,
+                "description": "Required for action='clear_all'. Must be True to proceed.",
+                "examples": [
+                  true,
+                  false
+                ],
+                "title": "Confirm",
+                "type": "boolean"
+              },
+              "new_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Required for action='rename'. New unique name for the monitor.",
+                "examples": [
+                  "RxMonitor"
+                ],
+                "title": "New Name"
+              }
+            },
+            "required": [
+              "action",
+              "system_index",
+              "bus_type"
+            ],
+            "title": "BusMonitorManageInput",
+            "type": "object"
+          },
+          "BusType": {
+            "description": "Supported bus protocol types for bus monitoring.",
+            "enum": [
+              "CAN",
+              "LIN",
+              "FlexRay",
+              "Ethernet"
+            ],
+            "title": "BusType",
+            "type": "string"
+          }
+        },
+        "title": "bus_monitor_manageArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "bus_monitor",
+        "group": "monitor_management"
+      }
+    },
+    {
+      "name": "controldesk_bus_monitor_discover",
+      "description": "Returns a catalogue of all available bus monitor operations that are not loaded by default. Call this tool first when you need to save monitor buffer data to a file or load a log file into a monitor. The catalogue lists each tool, its purpose, and the actions it supports.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "bus_monitor_discoverArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "bus_monitor",
+        "group": "monitor_management"
+      }
+    },
+    {
+      "name": "controldesk_bus_replay_create",
+      "description": "Creates a new bus replay on a specified physical bus access. The replay will transmit previously recorded bus frames (from a log file) onto the bus. After creation, configure the replay via bus_replay_configure before starting. Replay names must be unique within a physical bus access. Dry-run: set dry_run=True to preview the create — the tool checks whether a replay with that name already exists without creating anything.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/BusReplayCreateInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "BusReplayCreateInput": {
+            "description": "Input for bus_replay_create.",
+            "properties": {
+              "replay_name": {
+                "description": "Unique name for the replay (e.g. 'CANReplay', 'ScenarioPlayback'). Must not duplicate existing replay names on this physical bus access.",
+                "examples": [
+                  "CANReplay",
+                  "ScenarioPlayback"
+                ],
+                "title": "Replay Name",
+                "type": "string"
+              },
+              "system_index": {
+                "description": "Zero-based index of the target system (0 = transceiver/sender, 1 = receiver, etc.). Typically 0 for transmission.",
+                "examples": [
+                  0,
+                  1
+                ],
+                "title": "System Index",
+                "type": "integer"
+              },
+              "bus_type": {
+                "$ref": "#/$defs/BusType",
+                "description": "Bus protocol type: CAN, LIN, FlexRay, or Ethernet.",
+                "examples": [
+                  "CAN"
+                ]
+              },
+              "bus_platform_index": {
+                "default": 0,
+                "description": "Zero-based index of the bus platform on the system (e.g. 0).",
+                "examples": [
+                  0
+                ],
+                "title": "Bus Platform Index",
+                "type": "integer"
+              },
+              "physical_bus_access_index": {
+                "default": 0,
+                "description": "Zero-based index of the physical bus access (channel) (e.g. 0).",
+                "examples": [
+                  0
+                ],
+                "title": "Physical Bus Access Index",
+                "type": "integer"
+              },
+              "dry_run": {
+                "default": false,
+                "description": "When True, checks whether a replay with this name already exists on the target physical bus access and returns a preview without creating anything. Use this to preview a create before committing it.",
+                "title": "Dry Run",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "replay_name",
+              "system_index",
+              "bus_type"
+            ],
+            "title": "BusReplayCreateInput",
+            "type": "object"
+          },
+          "BusType": {
+            "description": "Supported bus protocol types.",
+            "enum": [
+              "CAN",
+              "LIN",
+              "FlexRay",
+              "Ethernet"
+            ],
+            "title": "BusType",
+            "type": "string"
+          }
+        },
+        "title": "bus_replay_createArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "bus_replay",
+        "group": "replay_management"
+      }
+    },
+    {
+      "name": "controldesk_bus_replay_configure",
+      "description": "Configures all replay settings including source log file path, replay mode (Infinite/NumberOfPasses/Duration), and mode-specific parameters. Must be called BEFORE bus_replay_start. The replay will read frames from the specified log file (ASC or BLF format) and transmit them onto the bus according to the selected mode.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/BusReplayConfigureInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "BusReplayConfigureInput": {
+            "description": "Input for bus_replay_configure.",
+            "properties": {
+              "replay_name": {
+                "description": "Name of the replay to configure (as created via bus_replay_create).",
+                "examples": [
+                  "CANReplay"
+                ],
+                "title": "Replay Name",
+                "type": "string"
+              },
+              "system_index": {
+                "description": "System index (must match the system where the replay was created).",
+                "examples": [
+                  0
+                ],
+                "title": "System Index",
+                "type": "integer"
+              },
+              "bus_type": {
+                "$ref": "#/$defs/BusType",
+                "description": "Bus type (must match the bus type where the replay was created).",
+                "examples": [
+                  "CAN"
+                ]
+              },
+              "log_file_full_path": {
+                "description": "Absolute file system path to the source log file (e.g. 'C:\\\\Logs\\\\recorded.asc'). File must exist.",
+                "examples": [
+                  "C:\\Logs\\recorded.asc"
+                ],
+                "title": "Log File Full Path",
+                "type": "string"
+              },
+              "log_file_section": {
+                "default": 0,
+                "description": "Zero-based index of the log file section (for multi-section log files).",
+                "examples": [
+                  0
+                ],
+                "title": "Log File Section",
+                "type": "integer"
+              },
+              "replay_mode": {
+                "$ref": "#/$defs/ReplayMode",
+                "default": "Infinite",
+                "description": "Playback mode: 'Infinite' (loop forever), 'NumberOfPasses' (N repetitions), or 'Duration' (time-limited).",
+                "examples": [
+                  "Infinite",
+                  "NumberOfPasses",
+                  "Duration"
+                ]
+              },
+              "number_of_passes": {
+                "default": 1,
+                "description": "Number of times to replay (if replay_mode is 'NumberOfPasses'). Ignored otherwise.",
+                "examples": [
+                  1,
+                  3,
+                  100
+                ],
+                "title": "Number Of Passes",
+                "type": "integer"
+              },
+              "duration_seconds": {
+                "default": 0,
+                "description": "Duration in seconds (if replay_mode is 'Duration'). Ignored otherwise. 0.0 = unlimited.",
+                "examples": [
+                  0,
+                  30,
+                  60
+                ],
+                "title": "Duration Seconds",
+                "type": "number"
+              },
+              "start_monitor_on_replay": {
+                "default": false,
+                "description": "Set to True to automatically start an associated monitor when replay starts.",
+                "examples": [
+                  false,
+                  true
+                ],
+                "title": "Start Monitor On Replay",
+                "type": "boolean"
+              },
+              "bus_platform_index": {
+                "default": 0,
+                "description": "Bus platform index (e.g. 0).",
+                "examples": [
+                  0
+                ],
+                "title": "Bus Platform Index",
+                "type": "integer"
+              },
+              "physical_bus_access_index": {
+                "default": 0,
+                "description": "Physical bus access index (e.g. 0).",
+                "examples": [
+                  0
+                ],
+                "title": "Physical Bus Access Index",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "replay_name",
+              "system_index",
+              "bus_type",
+              "log_file_full_path"
+            ],
+            "title": "BusReplayConfigureInput",
+            "type": "object"
+          },
+          "BusType": {
+            "description": "Supported bus protocol types.",
+            "enum": [
+              "CAN",
+              "LIN",
+              "FlexRay",
+              "Ethernet"
+            ],
+            "title": "BusType",
+            "type": "string"
+          },
+          "ReplayMode": {
+            "description": "Replay playback mode.",
+            "enum": [
+              "Infinite",
+              "NumberOfPasses",
+              "Duration"
+            ],
+            "title": "ReplayMode",
+            "type": "string"
+          }
+        },
+        "title": "bus_replay_configureArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "bus_replay",
+        "group": "replay_management"
+      }
+    },
+    {
+      "name": "controldesk_bus_replay_manage",
+      "description": "Manages bus replay lifecycle operations (mutating only). Set 'action' to specify what to do: 'start' — activate and start replay (requires replay_name). Do not call 'start' if the replay is already running — a repeated call returns an error and does not restart it; call 'stop' first. 'stop' — stop and deactivate replay, ceasing frame transmission (requires replay_name). Use bus_replay_discover to query state or list replays (bus_replay_query) and for admin operations (remove, clear_all, set_activated, rename).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/BusReplayManageInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "BusReplayManageAction": {
+            "description": "Action for the consolidated bus_replay_manage tool (mutating only).",
+            "enum": [
+              "start",
+              "stop"
+            ],
+            "title": "BusReplayManageAction",
+            "type": "string"
+          },
+          "BusReplayManageInput": {
+            "description": "Input for bus_replay_manage (mutating actions only: start, stop).",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/BusReplayManageAction",
+                "description": "Mutating action to perform on a bus replay. 'start' — activate and start replay (requires replay_name); 'stop' — stop and deactivate replay (requires replay_name). Use bus_replay_query to query state or list replays. For admin operations use bus_replay_admin_manage.",
+                "examples": [
+                  "start",
+                  "stop"
+                ]
+              },
+              "system_index": {
+                "description": "System index (e.g. 0).",
+                "examples": [
+                  0
+                ],
+                "title": "System Index",
+                "type": "integer"
+              },
+              "bus_type": {
+                "$ref": "#/$defs/BusType",
+                "description": "Bus type (e.g. 'CAN').",
+                "examples": [
+                  "CAN"
+                ]
+              },
+              "replay_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Name of the replay. Required for: start, stop.",
+                "examples": [
+                  "CANReplay"
+                ],
+                "title": "Replay Name"
+              },
+              "bus_platform_index": {
+                "default": 0,
+                "description": "Bus platform index (e.g. 0).",
+                "examples": [
+                  0
+                ],
+                "title": "Bus Platform Index",
+                "type": "integer"
+              },
+              "physical_bus_access_index": {
+                "default": 0,
+                "description": "Physical bus access index (e.g. 0).",
+                "examples": [
+                  0
+                ],
+                "title": "Physical Bus Access Index",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "action",
+              "system_index",
+              "bus_type"
+            ],
+            "title": "BusReplayManageInput",
+            "type": "object"
+          },
+          "BusType": {
+            "description": "Supported bus protocol types.",
+            "enum": [
+              "CAN",
+              "LIN",
+              "FlexRay",
+              "Ethernet"
+            ],
+            "title": "BusType",
+            "type": "string"
+          }
+        },
+        "title": "bus_replay_manageArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "bus_replay",
+        "group": "replay_management"
+      }
+    },
+    {
+      "name": "controldesk_bus_replay_discover",
+      "description": "Returns a catalogue of all available bus replay operations that are not loaded by default. Call this tool first when you need to perform admin operations on bus replays (remove, clear_all, set_activated, rename). The catalogue lists each tool, its purpose, and the actions it supports.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "bus_replay_discoverArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "bus_replay",
+        "group": "replay_management"
+      }
+    },
+    {
+      "name": "controldesk_calibration_start",
+      "description": "Starts online calibration on all platforms in the active experiment simultaneously. Online calibration is the mode in which ControlDesk actively communicates with connected ECUs and enables live reading and writing of calibration parameters on the working page. This is a mandatory prerequisite before any variable read/write operation can be performed. Call platform_connect first to confirm at least one platform has connection state Connected. Do not call this tool if online calibration is already running — call calibration_stop first. Dry-run: set dry_run=True to preview the start — the tool checks whether online calibration is already running without starting it.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/CalibrationStartInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "CalibrationStartInput": {
+            "description": "Input for calibration_start.",
+            "properties": {
+              "dry_run": {
+                "default": false,
+                "description": "When True, checks whether online calibration is already running and returns a preview without starting it. Use this to preview a start before committing it.",
+                "title": "Dry Run",
+                "type": "boolean"
+              }
+            },
+            "title": "CalibrationStartInput",
+            "type": "object"
+          }
+        },
+        "title": "calibration_startArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "calibration",
+        "group": "online_calibration"
+      }
+    },
+    {
+      "name": "controldesk_calibration_stop",
+      "description": "Stops online calibration on all platforms in the active experiment. After this call, variable read/write operations are no longer possible until calibration_start is called again. Call this tool before platform_disconnect and before closing the project. It is safe to call even when measurement is still running — ControlDesk stops measurement automatically when calibration is stopped.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/CalibrationStopInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "CalibrationStopInput": {
+            "description": "Input for calibration_stop (no parameters required).",
+            "properties": {},
+            "title": "CalibrationStopInput",
+            "type": "object"
+          }
+        },
+        "title": "calibration_stopArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "calibration",
+        "group": "online_calibration"
+      }
+    },
+    {
+      "name": "controldesk_calibration_manage",
+      "description": "Manages calibration page operations (mutating only). Set 'action' to specify what to do: 'activate_reference_page' — switch all platforms to the ECU reference (flash) page (read-only baseline; calibration must be running); 'activate_working_page' — switch all platforms back to the ECU working (RAM) page to re-enable parameter writes (calibration must be running); 'refresh_parameters' — re-upload all ECU parameter values from the ECU to ControlDesk (calibration must be running; does not write to ECU). Use calibration_discover to query calibration state (calibration_query). Use calibration_start/stop to control online calibration.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/CalibrationManageInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "CalibrationManageAction": {
+            "description": "Actions for calibration_manage consolidated tool (mutating only).",
+            "enum": [
+              "activate_reference_page",
+              "activate_working_page",
+              "refresh_parameters"
+            ],
+            "title": "CalibrationManageAction",
+            "type": "string"
+          },
+          "CalibrationManageInput": {
+            "description": "Input for calibration_manage consolidated tool.",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/CalibrationManageAction",
+                "description": "Action to perform: activate_reference_page, activate_working_page, or refresh_parameters. For read-only state queries, use calibration_query instead.",
+                "examples": [
+                  "activate_working_page",
+                  "refresh_parameters"
+                ]
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "title": "CalibrationManageInput",
+            "type": "object"
+          }
+        },
+        "title": "calibration_manageArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "calibration",
+        "group": "online_calibration"
+      }
+    },
+    {
+      "name": "controldesk_calibration_discover",
+      "description": "Returns a catalogue of all available calibration operations that are not loaded by default. Call this tool first when you need to manage proposed calibration sessions or perform ECU page copy operations. The catalogue lists each tool, its purpose, and the actions it supports.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "calibration_discoverArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "calibration",
+        "group": "online_calibration"
+      }
+    },
+    {
+      "name": "controldesk_instrument_list",
+      "description": "Enumerates instruments on the active ControlDesk layout, or lists available instrument types from the instrument library. Default (list_types=False): returns name, type, position (x, y), size (width, height), and main_variable for each instrument on the active layout. With list_types=True: returns all available instrument type strings, their category (Controls, Data Displays, Calibration, Decorations, Utility), and signal connection mode — useful before calling instrument_manage(action='add'). Instrument names returned are the exact strings to pass to instrument_manage and instrument_signal_manage. Prerequisite: controldesk_app_start_or_attach must have been called; a layout must be active (call layout_manage(action='activate') first).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/InstrumentListInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "InstrumentListInput": {
+            "description": "Input for instrument_list.",
+            "properties": {
+              "offset": {
+                "default": 0,
+                "description": "Zero-based start index for pagination.",
+                "minimum": 0,
+                "title": "Offset",
+                "type": "integer"
+              },
+              "limit": {
+                "default": 50,
+                "description": "Maximum number of instruments to return.",
+                "maximum": 200,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "list_types": {
+                "default": false,
+                "description": "If True, returns available instrument types from the library instead of instruments placed on the active layout.",
+                "title": "List Types",
+                "type": "boolean"
+              }
+            },
+            "title": "InstrumentListInput",
+            "type": "object"
+          }
+        },
+        "title": "instrument_listArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "instrument",
+        "group": "instrument_management"
+      }
+    },
+    {
+      "name": "controldesk_instrument_query",
+      "description": "Read-only queries for instruments on the active ControlDesk layout (readOnlyHint=true). 'get_info' — retrieve detailed metadata including signal connections (requires instrument_name). Use instrument_list to discover available instrument names.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/InstrumentQueryInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "InstrumentQueryAction": {
+            "description": "Actions for instrument_query read-only tool.",
+            "enum": [
+              "get_info"
+            ],
+            "title": "InstrumentQueryAction",
+            "type": "string"
+          },
+          "InstrumentQueryInput": {
+            "description": "Input for instrument_query (read-only actions).",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/InstrumentQueryAction",
+                "default": "get_info"
+              },
+              "instrument_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Name of the instrument to query. Required for action='get_info'.",
+                "examples": [
+                  "SpeedKnob"
+                ],
+                "title": "Instrument Name"
+              }
+            },
+            "title": "InstrumentQueryInput",
+            "type": "object"
+          }
+        },
+        "title": "instrument_queryArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "instrument",
+        "group": "instrument_management"
+      }
+    },
+    {
+      "name": "controldesk_instrument_manage",
+      "description": "Manages instruments on the active ControlDesk layout (mutating operations only). Set 'action' to specify what to do: 'add' — add a new instrument (requires instrument_type and instrument_name; optional x, y, width, height; use instrument_list(list_types=True) for valid type strings; replay risk: calling 'add' again with the same instrument_name returns an error and does not create a second instrument); 'remove' — remove an instrument from the layout (requires instrument_name); 'move' — reposition or resize an instrument (requires instrument_name; optional x, y, width, height); 'configure' — set display properties such as caption, back_color, fore_color, show_border (requires instrument_name; all properties are optional); 'arrange' — align, distribute, group or ungroup instruments (requires instrument_names list and arrange_action: align_top, align_bottom, align_left, align_right, center_horizontally, center_vertically, space_evenly_horizontal, space_evenly_vertical, group, ungroup). Use instrument_query to retrieve instrument metadata. Use instrument_discover to access signal connect/disconnect operations. Prerequisite: a layout must be active (layout_manage(action='activate')).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/InstrumentManageInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "ArrangeAction": {
+            "description": "Arrangement actions for instrument_manage(action='arrange').",
+            "enum": [
+              "align_top",
+              "align_bottom",
+              "align_left",
+              "align_right",
+              "center_horizontally",
+              "center_vertically",
+              "space_evenly_horizontal",
+              "space_evenly_vertical",
+              "group",
+              "ungroup"
+            ],
+            "title": "ArrangeAction",
+            "type": "string"
+          },
+          "InstrumentManageAction": {
+            "description": "Actions for instrument_manage tool (mutating only).",
+            "enum": [
+              "add",
+              "remove",
+              "move",
+              "configure",
+              "arrange"
+            ],
+            "title": "InstrumentManageAction",
+            "type": "string"
+          },
+          "InstrumentManageInput": {
+            "description": "Input for instrument_manage — mutating operations only.",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/InstrumentManageAction",
+                "description": "Operation to perform: 'add' (requires instrument_type, instrument_name; optional x, y, width, height), 'remove' (requires instrument_name), 'move' (requires instrument_name; optional x, y, width, height), 'configure' (requires instrument_name; optional caption, back_color, fore_color, show_border), 'arrange' (requires instrument_names list and arrange_action)."
+              },
+              "instrument_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Name of the target instrument. Required for add, remove, move, configure. For read-only instrument info, use instrument_query instead.",
+                "examples": [
+                  "SpeedKnob",
+                  "ThrottlePlotter"
+                ],
+                "title": "Instrument Name"
+              },
+              "instrument_names": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "List of instrument names for action='arrange'.",
+                "examples": [
+                  [
+                    "SpeedKnob",
+                    "ThrottlePlotter"
+                  ]
+                ],
+                "title": "Instrument Names"
+              },
+              "instrument_type": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Instrument type string for action='add'. Use instrument_list(list_types=True) to get valid values. Examples: 'Time Plotter', 'Knob', 'Display', 'variable Array'.",
+                "title": "Instrument Type"
+              },
+              "x": {
+                "anyOf": [
+                  {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Left position in layout pixels.",
+                "title": "X"
+              },
+              "y": {
+                "anyOf": [
+                  {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Top position in layout pixels.",
+                "title": "Y"
+              },
+              "width": {
+                "anyOf": [
+                  {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Width in layout pixels.",
+                "title": "Width"
+              },
+              "height": {
+                "anyOf": [
+                  {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Height in layout pixels.",
+                "title": "Height"
+              },
+              "caption": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Caption text for action='configure'.",
+                "title": "Caption"
+              },
+              "back_color": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Background color in '#RRGGBB' hex format for action='configure'.",
+                "examples": [
+                  "#FFFFFF",
+                  "#000000"
+                ],
+                "title": "Back Color"
+              },
+              "fore_color": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Foreground color in '#RRGGBB' hex format for action='configure'.",
+                "examples": [
+                  "#000000",
+                  "#0000FF"
+                ],
+                "title": "Fore Color"
+              },
+              "show_border": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Border visibility for action='configure'.",
+                "title": "Show Border"
+              },
+              "arrange_action": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/ArrangeAction"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Arrangement sub-action for action='arrange'. Values: 'align_top', 'align_bottom', 'align_left', 'align_right', 'center_horizontally', 'center_vertically', 'space_evenly_horizontal', 'space_evenly_vertical', 'group', 'ungroup'."
+              },
+              "offset": {
+                "default": 0,
+                "description": "Reserved for future list pagination.",
+                "minimum": 0,
+                "title": "Offset",
+                "type": "integer"
+              },
+              "limit": {
+                "default": 50,
+                "description": "Reserved for future list pagination.",
+                "maximum": 200,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "title": "InstrumentManageInput",
+            "type": "object"
+          }
+        },
+        "title": "instrument_manageArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "instrument",
+        "group": "instrument_management"
+      }
+    },
+    {
+      "name": "controldesk_instrument_discover",
+      "description": "Returns a catalogue of all available instrument operations that are not loaded by default. Call this tool first when you need to connect or disconnect signals to instruments. The catalogue lists each tool, its purpose, and the actions it supports.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "instrument_discoverArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "instrument",
+        "group": "instrument_management"
+      }
+    },
+    {
+      "name": "controldesk_layout_list",
+      "description": "Enumerates all layouts in the currently open ControlDesk experiment. Returns name, file path, open state, active state, and editing mode for each layout. Use this as the first step to discover which layouts exist and their exact names. Layout names returned are the exact strings to pass to layout_manage and layout_io_manage. Prerequisite: controldesk_app_start_or_attach must have been called and an experiment must be open.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/LayoutListInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "LayoutListInput": {
+            "description": "Input for layout_list.",
+            "properties": {
+              "offset": {
+                "default": 0,
+                "description": "Zero-based start index for pagination.",
+                "minimum": 0,
+                "title": "Offset",
+                "type": "integer"
+              },
+              "limit": {
+                "default": 50,
+                "description": "Maximum number of layouts to return.",
+                "maximum": 200,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              }
+            },
+            "title": "LayoutListInput",
+            "type": "object"
+          }
+        },
+        "title": "layout_listArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "layout",
+        "group": "layout_management"
+      }
+    },
+    {
+      "name": "controldesk_layout_query",
+      "description": "Read-only queries for ControlDesk layouts (readOnlyHint=true). 'get_info' — retrieve metadata (name, file_path, is_open, is_active, editing_mode) for a layout (requires name). Use layout_list to discover available layout names.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/LayoutQueryInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "LayoutQueryAction": {
+            "description": "Actions for layout_query read-only tool.",
+            "enum": [
+              "get_info"
+            ],
+            "title": "LayoutQueryAction",
+            "type": "string"
+          },
+          "LayoutQueryInput": {
+            "description": "Input for layout_query (read-only actions).",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/LayoutQueryAction",
+                "default": "get_info"
+              },
+              "name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Layout name. Required for action='get_info'.",
+                "examples": [
+                  "ControlLayout"
+                ],
+                "title": "Name"
+              }
+            },
+            "title": "LayoutQueryInput",
+            "type": "object"
+          }
+        },
+        "title": "layout_queryArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "layout",
+        "group": "layout_management"
+      }
+    },
+    {
+      "name": "controldesk_layout_manage",
+      "description": "Manages the lifecycle and configuration of ControlDesk layouts (mutating operations only). Set 'action' to specify what to do: 'create' — create a new empty layout (requires name; replay risk: calling 'create' again with the same name returns an error and does not create a second layout); 'open' — open an existing layout and make it visible (requires name); 'save' — save a layout to its .cdl file (requires name); 'close' — close an open layout; save_before_close defaults to True (requires name); 'activate' — bring a layout to the foreground (requires name); 'configure' — set the editing mode of a layout (requires name and editing_mode: Design, Runtime, Hybrid). Use layout_query to get layout metadata. Use layout_list to discover available layout names. Use layout_discover to access export/import operations. Prerequisite: controldesk_app_start_or_attach must have been called.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/LayoutManageInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "LayoutEditingMode": {
+            "description": "Editing mode for a ControlDesk layout document.",
+            "enum": [
+              "Design",
+              "Runtime",
+              "Hybrid"
+            ],
+            "title": "LayoutEditingMode",
+            "type": "string"
+          },
+          "LayoutManageAction": {
+            "description": "Actions for layout_manage tool (mutating only).",
+            "enum": [
+              "create",
+              "open",
+              "save",
+              "close",
+              "activate",
+              "configure"
+            ],
+            "title": "LayoutManageAction",
+            "type": "string"
+          },
+          "LayoutManageInput": {
+            "description": "Input for layout_manage — mutating operations only.",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/LayoutManageAction",
+                "description": "Operation to perform: 'create' (requires name), 'open' (requires name), 'save' (requires name), 'close' (requires name; optional save_before_close), 'activate' (requires name), 'configure' (requires name and editing_mode)."
+              },
+              "name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Layout name. Required for all actions except none.",
+                "examples": [
+                  "ControlLayout",
+                  "DiagnosticsPanel"
+                ],
+                "title": "Name"
+              },
+              "save_before_close": {
+                "default": true,
+                "description": "For action='close': if True save before closing. Defaults to True.",
+                "title": "Save Before Close",
+                "type": "boolean"
+              },
+              "editing_mode": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/LayoutEditingMode"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "For action='configure': editing mode to set. Values: 'Design', 'Runtime', 'Hybrid'."
+              },
+              "offset": {
+                "default": 0,
+                "description": "Reserved for future list pagination.",
+                "minimum": 0,
+                "title": "Offset",
+                "type": "integer"
+              },
+              "limit": {
+                "default": 50,
+                "description": "Reserved for future list pagination.",
+                "maximum": 200,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "title": "LayoutManageInput",
+            "type": "object"
+          }
+        },
+        "title": "layout_manageArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "layout",
+        "group": "layout_management"
+      }
+    },
+    {
+      "name": "controldesk_layout_discover",
+      "description": "Returns a catalogue of all available layout operations that are not loaded by default. Call this tool first when you need to export or import layouts or connection files. The catalogue lists each tool, its purpose, and the actions it supports.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "layout_discoverArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "layout",
+        "group": "layout_management"
+      }
+    },
+    {
+      "name": "controldesk_measurement_start",
+      "description": "Starts measurement on all connected platforms. The measurement process begins sampling all configured signals at their specified raster rates into the measurement buffer. This must be called BEFORE recorder_main_start to ensure data is being buffered. Preconditions: online calibration must be running; at least one platform must be connected. Do not call if measurement is already running — calling again while active returns an error and does not restart or reset measurement.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/MeasurementStartInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "MeasurementStartInput": {
+            "description": "Input for measurement_start (no parameters required).",
+            "properties": {},
+            "title": "MeasurementStartInput",
+            "type": "object"
+          }
+        },
+        "title": "measurement_startArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "measurement",
+        "group": "recording"
+      }
+    },
+    {
+      "name": "controldesk_measurement_stop",
+      "description": "Stops measurement on all platforms. All recorders are stopped automatically. This should be called AFTER recorder_main_stop to allow final data to be written. Preconditions: measurement must be running (started via measurement_start).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/MeasurementStopInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "MeasurementStopInput": {
+            "description": "Input for measurement_stop (no parameters required).",
+            "properties": {},
+            "title": "MeasurementStopInput",
+            "type": "object"
+          }
+        },
+        "title": "measurement_stopArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "measurement",
+        "group": "recording"
+      }
+    },
+    {
+      "name": "controldesk_measurement_manage",
+      "description": "Manages core measurement configuration and signal operations (mutating only). Set 'action' to specify what to do: 'configure_buffer' — set buffer size and overflow warning (requires buffer_size_seconds); 'configure_settings' — set data pool path and auto-save behavior; 'signal_add' — add a variable signal (requires connection_path; replay risk: calling 'signal_add' again with the same connection_path may fail with a duplicate-signal error, so check measurement_query(action='list_signals') first); 'signal_remove' — remove a signal (requires connection_path). Use measurement_discover to query state/configuration/signals (measurement_query) and for raster management, trigger rules, recordings, bookmarks, and data loggers.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/MeasurementManageInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "AutoSaveFormat": {
+            "description": "Auto-save format for global measurement settings.",
+            "enum": [
+              "MF4",
+              "ASC"
+            ],
+            "title": "AutoSaveFormat",
+            "type": "string"
+          },
+          "MeasurementManageAction": {
+            "description": "Actions for measurement_manage consolidated tool (mutating only).",
+            "enum": [
+              "configure_buffer",
+              "configure_settings",
+              "signal_add",
+              "signal_remove"
+            ],
+            "title": "MeasurementManageAction",
+            "type": "string"
+          },
+          "MeasurementManageInput": {
+            "description": "Input for measurement_manage consolidated tool (mutating actions only).",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/MeasurementManageAction",
+                "description": "Mutating action to perform: configure_buffer, configure_settings, signal_add, or signal_remove.",
+                "examples": [
+                  "configure_buffer",
+                  "signal_add"
+                ]
+              },
+              "connection_path": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Signal connection path (for signal_add and signal_remove).",
+                "examples": [
+                  "XCP(5ms)://control_out"
+                ],
+                "title": "Connection Path"
+              },
+              "buffer_size_seconds": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Ring buffer size in seconds (for configure_buffer).",
+                "examples": [
+                  10,
+                  30
+                ],
+                "title": "Buffer Size Seconds"
+              },
+              "warning_enabled": {
+                "default": false,
+                "description": "Enable overflow warning (for configure_buffer).",
+                "title": "Warning Enabled",
+                "type": "boolean"
+              },
+              "warning_time_seconds": {
+                "default": 3,
+                "description": "Warning threshold in seconds (for configure_buffer).",
+                "title": "Warning Time Seconds",
+                "type": "number"
+              },
+              "data_pool_path": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Absolute data pool directory path (for configure_settings).",
+                "examples": [
+                  "C:\\MeasurementData"
+                ],
+                "title": "Data Pool Path"
+              },
+              "auto_save_enabled": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Enable auto-save on measurement stop (for configure_settings).",
+                "title": "Auto Save Enabled"
+              },
+              "auto_save_format": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/AutoSaveFormat"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Auto-save file format (for configure_settings).",
+                "examples": [
+                  "MF4",
+                  "ASC"
+                ]
+              },
+              "limit": {
+                "default": 200,
+                "description": "Pagination limit.",
+                "maximum": 1000,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "offset": {
+                "default": 0,
+                "description": "Pagination offset.",
+                "minimum": 0,
+                "title": "Offset",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "title": "MeasurementManageInput",
+            "type": "object"
+          }
+        },
+        "title": "measurement_manageArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "measurement",
+        "group": "recording"
+      }
+    },
+    {
+      "name": "controldesk_measurement_discover",
+      "description": "Returns a catalogue of all available measurement operations that are not loaded by default. Call this tool first when you need to manage trigger rules, recording files, bookmarks, or data loggers. The catalogue lists each tool, its purpose, and the actions it supports.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "measurement_discoverArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "measurement",
+        "group": "recording"
+      }
+    },
+    {
+      "name": "controldesk_platform_connect",
+      "description": "Establishes the physical or virtual communication link between ControlDesk and a specific ECU/platform in the active experiment. This is the final setup step before online calibration can begin. Prerequisites by platform type: CAN platforms (XCPonCAN, CCP): platform_manage(action='select_interface_manual') or platform_manage(action='configure', can_interface=...) MUST be called first. CANMonitoring/LINMonitoring/FlexRayMonitoring: AutomaticAssignment=True by default (physical CAN only); for virtual CAN call platform_manage(action='configure', can_interface='Virtual') BEFORE connecting. Hardware platforms (SCALEXIO, DS1202, DS1203, DS1403, MABX): variable description must be loaded and hardware powered; VEOS: process must be running (default IP 127.0.0.1) and variable description loaded; XCPonEthernet: configure adapter via platform_manage(action='configure_transport') first. After connect, call platform_manage(action='get_connection_state') to verify.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/PlatformConnectInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "PlatformConnectInput": {
+            "description": "Input for platform_connect.",
+            "properties": {
+              "platform_name": {
+                "description": "Name of the platform to connect (e.g., 'XCP', 'SCALEXIO_1'). Platform must be in Disconnected state. For CAN platforms, platform_select_interface_manual must have been called first.",
+                "examples": [
+                  "XCP",
+                  "SCALEXIO_1"
+                ],
+                "title": "Platform Name",
+                "type": "string"
+              }
+            },
+            "required": [
+              "platform_name"
+            ],
+            "title": "PlatformConnectInput",
+            "type": "object"
+          }
+        },
+        "title": "platform_connectArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "platform",
+        "group": "connectivity"
+      }
+    },
+    {
+      "name": "controldesk_platform_disconnect",
+      "description": "Releases the communication link between ControlDesk and a specific ECU/platform. Must be called after calibration_stop — disconnecting while calibration is running will cause data loss. Disconnecting an already-disconnected platform is a safe no-op (idempotent).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/PlatformDisconnectInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "PlatformDisconnectInput": {
+            "description": "Input for platform_disconnect.",
+            "properties": {
+              "platform_name": {
+                "description": "Name of the platform to disconnect (e.g., 'XCP', 'SCALEXIO_1'). Always call calibration_stop before disconnecting.",
+                "examples": [
+                  "XCP",
+                  "SCALEXIO_1"
+                ],
+                "title": "Platform Name",
+                "type": "string"
+              }
+            },
+            "required": [
+              "platform_name"
+            ],
+            "title": "PlatformDisconnectInput",
+            "type": "object"
+          }
+        },
+        "title": "platform_disconnectArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "platform",
+        "group": "connectivity"
+      }
+    },
+    {
+      "name": "controldesk_platform_manage",
+      "description": "Manages all platform configuration operations (mutating only). Set 'action' to specify what to do: 'add' — add a new platform (requires platform_type; replay risk: repeating 'add' with the same platform_type is not guaranteed safe and can create a duplicate platform entry or fail, so check platform_query(action='list') first); 'activate_registered' — attach registered hardware to experiment (requires unique_name); 'configure' — set CAN interface or hardware assignment (requires platform_name + fields); 'configure_calibration_behavior' — set startup page behavior (requires platform_name + calibration_behavior + initial_page); 'configure_transport' — CAN baud rate or Ethernet adapter settings (requires platform_name); 'set_api_version' — set automation API version (requires version); 'select_interface_manual' — select CAN vendor/interface/channel (requires platform_name + vendor_name + interface_name + channel_index); 'add_variable_description' — load A2L/SDF/DBC/LDF variable description (requires platform_name + file_path). Use platform_discover to query platforms, list types, and list interfaces (platform_query). For admin operations (remove, rename, set_enabled) use platform_admin_manage. For hardware registry operations use platform_hardware_manage.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/PlatformManageInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "AutomationAPIVersion": {
+            "description": "Platform automation API version.",
+            "enum": [
+              "APIVersion1",
+              "APIVersion2"
+            ],
+            "title": "AutomationAPIVersion",
+            "type": "string"
+          },
+          "EthernetProtocol": {
+            "description": "Ethernet transport protocol for XCPonEthernet platforms.",
+            "enum": [
+              "UDP",
+              "TCP"
+            ],
+            "title": "EthernetProtocol",
+            "type": "string"
+          },
+          "InitialPageType": {
+            "description": "Initial memory page type for calibration.\n\nValues match the COM ``InitialPageType`` enumeration exactly.\nSource: ControlDesk Automation API PDF p.1465-1466 (2026-A).",
+            "enum": [
+              "ECUDefined",
+              "WorkingPage",
+              "ReferencePage",
+              "ToolDefined"
+            ],
+            "title": "InitialPageType",
+            "type": "string"
+          },
+          "PlatformManageAction": {
+            "description": "Mutating actions for platform_manage tool (state-changing only).",
+            "enum": [
+              "add",
+              "activate_registered",
+              "configure",
+              "configure_calibration_behavior",
+              "configure_transport",
+              "set_api_version",
+              "select_interface_manual",
+              "add_variable_description"
+            ],
+            "title": "PlatformManageAction",
+            "type": "string"
+          },
+          "PlatformManageInput": {
+            "description": "Consolidated input for platform_manage (mutating actions only).",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/PlatformManageAction"
+              },
+              "platform_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Platform Name"
+              },
+              "platform_type": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/PlatformType"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "unique_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Unique Name"
+              },
+              "can_interface": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Can Interface"
+              },
+              "ip_address": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Ip Address"
+              },
+              "mac_address": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Mac Address"
+              },
+              "board_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Board Name"
+              },
+              "assignment_mode": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Assignment Mode"
+              },
+              "calibration_behavior": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Calibration Behavior"
+              },
+              "initial_page": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/InitialPageType"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "ethernet_protocol": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/EthernetProtocol"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "automatic_adapter": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Automatic Adapter"
+              },
+              "adapter_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Adapter Name"
+              },
+              "baud_rate": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Baud Rate"
+              },
+              "version": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/AutomationAPIVersion"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              },
+              "vendor_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Vendor Name"
+              },
+              "interface_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Interface Name"
+              },
+              "channel_index": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Channel Index"
+              },
+              "file_path": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "File Path"
+              },
+              "offset": {
+                "default": 0,
+                "minimum": 0,
+                "title": "Offset",
+                "type": "integer"
+              },
+              "limit": {
+                "default": 200,
+                "maximum": 1000,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "title": "PlatformManageInput",
+            "type": "object"
+          },
+          "PlatformType": {
+            "description": "Supported ControlDesk platform types.\n\nValues match the COM ``PlatformType`` enumeration exactly.\nSource: ControlDesk Automation API PDF p.1981 (2026-A).\n\nCategory mapping (ControlDesk UI \"Add Platform\" dialog)\n--------------------------------------------------------\nDevice > Bus Devices:\n    CANMonitoring, EthernetMonitoring, LINMonitoring, FlexRayMonitoring\n\nDevice > GPS Device:\n    GNSS\n\nDevice > Diagnostics:\n    Diagnostic2\n\nDevice > Measurement & Calibration:\n    XCPonCAN, XCPonEthernet, CCP, GSI2\n\nPlatforms (hardware, require registration or direct add):\n    SCALEXIO, DS1202, DS1203, DS1403, MABX, DS1104, VEOS, XILAPIMAPort",
+            "enum": [
+              "CANMonitoring",
+              "EthernetMonitoring",
+              "LINMonitoring",
+              "FlexRayMonitoring",
+              "GNSS",
+              "Diagnostic2",
+              "XCPonCAN",
+              "XCPonEthernet",
+              "CCP",
+              "GSI2",
+              "SCALEXIO",
+              "DS1202",
+              "DS1203",
+              "DS1403",
+              "MABX",
+              "DS1104",
+              "VEOS",
+              "XILAPIMAPort"
+            ],
+            "title": "PlatformType",
+            "type": "string"
+          }
+        },
+        "title": "platform_manageArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "platform",
+        "group": "configuration"
+      }
+    },
+    {
+      "name": "controldesk_platform_discover",
+      "description": "Returns a catalogue of all available platform operations that are not loaded by default. Call this tool first when you need to perform admin operations on platforms (remove, rename, set_enabled) or hardware registry operations (register, clear, refresh). The catalogue lists each tool, its purpose, and the actions it supports.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "platform_discoverArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "platform",
+        "group": "configuration"
+      }
+    },
+    {
+      "name": "controldesk_project_list_recent",
+      "description": "Lists the most recently used projects across all registered project roots, ordered by last-modified timestamp (most recent first). Mirrors ControlDesk's 'Recent' section: use this to pick a project to open without knowing its exact name in advance. Each entry includes root_path, name, full_path, last_modified_utc (ISO-8601 UTC timestamp of the project file), and experiments (list of experiment names discovered from the project directory on disk). Use the 'limit' parameter to control how many projects are returned (default 10). No prerequisite — safe to call as soon as ControlDesk is running. IMPORTANT: To create, save, close, remove, configure, or back up a project, or to create/manage experiments, call project_discover first — it activates project_manage, project_backup_manage, experiment_manage, and experiment_io_manage tools.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/ProjectListRecentInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "ProjectListRecentInput": {
+            "description": "Input for project_list_recent.",
+            "properties": {
+              "limit": {
+                "default": 10,
+                "description": "Maximum number of projects to return, ordered by most recently used first. Mirrors the count shown in ControlDesk's Recent section.",
+                "examples": [
+                  10,
+                  5,
+                  20
+                ],
+                "maximum": 100,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "offset": {
+                "default": 0,
+                "description": "Zero-based offset for pagination.",
+                "minimum": 0,
+                "title": "Offset",
+                "type": "integer"
+              }
+            },
+            "title": "ProjectListRecentInput",
+            "type": "object"
+          }
+        },
+        "title": "project_list_recentArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "project",
+        "group": "project_management"
+      }
+    },
+    {
+      "name": "controldesk_project_open",
+      "description": "Opens an existing ControlDesk project by name from the active project root, making it the active project for all subsequent operations. Use project_list_recent to discover available project names beforehand. Prerequisite: at least one project root must be registered (use project_discover → project_root_manage to add one if needed). IMPORTANT: To create, save, close, remove, configure, or back up a project, or to create/manage experiments, call project_discover first — it activates project_manage, project_backup_manage, experiment_manage, and experiment_io_manage tools.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/ProjectOpenInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "ProjectOpenInput": {
+            "description": "Input for project_open.",
+            "properties": {
+              "name": {
+                "description": "Name of an existing project inside the active project root.",
+                "examples": [
+                  "ECU_TestProject"
+                ],
+                "title": "Name",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "title": "ProjectOpenInput",
+            "type": "object"
+          }
+        },
+        "title": "project_openArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "project",
+        "group": "project_management"
+      }
+    },
+    {
+      "name": "controldesk_project_discover",
+      "description": "Returns a catalogue of all project management tools that are not loaded by default. ALWAYS call this tool first when you need to: CREATE a new project or experiment, save, close, remove, configure, or back up a project, manage project root folders, or create, activate, rename, export, or import experiments. The catalogue lists each tool name, its purpose, all supported actions, and the required parameters per action. After calling this tool, use the listed tool names and actions directly.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "project_discoverArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "project",
+        "group": "project_management"
+      }
+    },
+    {
+      "name": "controldesk_recorder_main_start",
+      "description": "Starts the main recorder. The recorder begins writing sampled signals to the configured output MF4 file. Use with_trigger=True if trigger-based start/stop conditions are configured — recording will wait for the start trigger to fire. Call AFTER measurement_start to ensure buffers are populated and AFTER recorder_main_manage(action='configure') to set the output filename. Preconditions: measurement must be running; recorder must be configured. Do not call if recording is already active — a repeated call returns an error; call recorder_main_stop first to end the current recording before starting a new one. Dry-run: set dry_run=True to preview the start — the tool checks whether the recorder is already running without starting it.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/RecorderMainStartInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "RecorderMainStartInput": {
+            "description": "Input for recorder_main_start.",
+            "properties": {
+              "with_trigger": {
+                "default": false,
+                "description": "Set to True if trigger-based start/stop conditions are configured. Recording waits for the start trigger to fire. Defaults to False.",
+                "examples": [
+                  false,
+                  true
+                ],
+                "title": "With Trigger",
+                "type": "boolean"
+              },
+              "overwrite_existing": {
+                "default": true,
+                "description": "Set to False to append to an existing file instead of overwriting. Defaults to True.",
+                "examples": [
+                  true,
+                  false
+                ],
+                "title": "Overwrite Existing",
+                "type": "boolean"
+              },
+              "dry_run": {
+                "default": false,
+                "description": "When True, checks whether the recorder is already running and returns a preview without starting it. Use this to preview a start before committing it.",
+                "title": "Dry Run",
+                "type": "boolean"
+              }
+            },
+            "title": "RecorderMainStartInput",
+            "type": "object"
+          }
+        },
+        "title": "recorder_main_startArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "recorder",
+        "group": "recorder_management"
+      }
+    },
+    {
+      "name": "controldesk_recorder_main_stop",
+      "description": "Stops the main recorder. Any open output MF4 file is finalized and closed. Call this BEFORE measurement_stop to ensure all buffered data is written to disk. After this call, the output file is complete and ready for analysis. Preconditions: recording must be active (recorder_main_start was called). Dry-run: set dry_run=True to preview the stop — the tool checks whether the recorder is currently running without stopping it.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/RecorderMainStopInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "RecorderMainStopInput": {
+            "description": "Input for recorder_main_stop.",
+            "properties": {
+              "dry_run": {
+                "default": false,
+                "description": "When True, checks whether the recorder is currently running and returns a preview without stopping it. Use this to preview a stop before committing it.",
+                "title": "Dry Run",
+                "type": "boolean"
+              }
+            },
+            "title": "RecorderMainStopInput",
+            "type": "object"
+          }
+        },
+        "title": "recorder_main_stopArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "recorder",
+        "group": "recorder_management"
+      }
+    },
+    {
+      "name": "controldesk_recorder_main_manage",
+      "description": "Manages recorder configuration and trigger (mutating only). Set 'action' to specify what to do: 'configure' — configure the recorder output filename, sequential naming, and integration settings (requires base_filename; must be called before start); 'invoke_trigger' — bypass the start trigger and begin recording immediately (recorder must be in WaitingForTrigger state). Use recorder_discover to get recorder state (recorder_query) and to access signal management and export/import operations.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/RecorderMainManageInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "RecorderMainManageAction": {
+            "description": "Actions for recorder_main_manage consolidated tool (mutating only).",
+            "enum": [
+              "configure",
+              "invoke_trigger"
+            ],
+            "title": "RecorderMainManageAction",
+            "type": "string"
+          },
+          "RecorderMainManageInput": {
+            "description": "Input for recorder_main_manage (mutating actions only).",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/RecorderMainManageAction"
+              },
+              "base_filename": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Base Filename"
+              },
+              "automatic_naming_enabled": {
+                "default": false,
+                "title": "Automatic Naming Enabled",
+                "type": "boolean"
+              },
+              "automatic_naming_start_index": {
+                "default": 1,
+                "title": "Automatic Naming Start Index",
+                "type": "integer"
+              },
+              "automatic_naming_minimum_digits": {
+                "default": 3,
+                "title": "Automatic Naming Minimum Digits",
+                "type": "integer"
+              },
+              "add_to_experiment_enabled": {
+                "default": false,
+                "title": "Add To Experiment Enabled",
+                "type": "boolean"
+              },
+              "open_in_data_pool_enabled": {
+                "default": false,
+                "title": "Open In Data Pool Enabled",
+                "type": "boolean"
+              },
+              "write_to_file_enabled": {
+                "default": true,
+                "title": "Write To File Enabled",
+                "type": "boolean"
+              },
+              "automatic_signal_configuration_enabled": {
+                "default": true,
+                "title": "Automatic Signal Configuration Enabled",
+                "type": "boolean"
+              },
+              "description": {
+                "default": "",
+                "title": "Description",
+                "type": "string"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "title": "RecorderMainManageInput",
+            "type": "object"
+          }
+        },
+        "title": "recorder_main_manageArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "recorder",
+        "group": "recorder_management"
+      }
+    },
+    {
+      "name": "controldesk_recorder_discover",
+      "description": "Returns a catalogue of all available recorder operations that are not loaded by default. Call this tool first when you need to manage recorder signals or export/import recorder configurations. The catalogue lists each tool, its purpose, and the actions it supports.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "recorder_discoverArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "recorder",
+        "group": "recorder_management"
+      }
+    },
+    {
+      "name": "controldesk_tool_window_list",
+      "description": "Enumerates all tool windows (panels) available in the current ControlDesk instance. Returns the exact caption (name), current dock state, and visibility status for each window. Use this as the first step to discover which panels are available and what names to pass to other tool_window_* tools. Available panels depend on ControlDesk license and installed features. Window names returned are the exact strings to pass to tool_window_show, tool_window_manage, and tool_window_query. Prerequisite: controldesk_app_start_or_attach must have been called.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/ToolWindowListInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "ToolWindowListInput": {
+            "description": "Input for tool_window_list.",
+            "properties": {
+              "limit": {
+                "default": 200,
+                "description": "Maximum number of records to return per call.",
+                "maximum": 1000,
+                "minimum": 1,
+                "title": "Limit",
+                "type": "integer"
+              },
+              "offset": {
+                "default": 0,
+                "description": "Zero-based offset for pagination.",
+                "minimum": 0,
+                "title": "Offset",
+                "type": "integer"
+              }
+            },
+            "title": "ToolWindowListInput",
+            "type": "object"
+          }
+        },
+        "title": "tool_window_listArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "tool_window",
+        "group": "window_management"
+      }
+    },
+    {
+      "name": "controldesk_tool_window_show",
+      "description": "Shows and activates a specific named tool window (panel). If previously closed, it reopens in its last docked position. If already visible, brings it to foreground. Window name must exactly match the Caption from tool_window_list(). Common panels: 'Project', 'Variables', 'Measurement Data Pool', 'Measurement Configuration', 'Platforms/Devices', 'Interpreter', 'Messages', 'Properties', 'Mappings', 'BusNavigator', 'LayoutEditor'. Prerequisite: ControlDesk running; main window visible (app_set_window_visible(True)). Use tool_window_query(action='check_exists') first if panel availability is uncertain.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/ToolWindowShowInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "ToolWindowShowInput": {
+            "description": "Input for tool_window_show.",
+            "properties": {
+              "window_name": {
+                "description": "Exact caption of the panel to show (case-sensitive). Use tool_window_list() to discover available names. Common panels: 'Project', 'Variables', 'Measurement Data Pool', 'Measurement Configuration', 'Platforms/Devices', 'Interpreter', 'Messages', 'Properties', 'Mappings', 'BusNavigator', 'LayoutEditor'.",
+                "examples": [
+                  "Variables",
+                  "Messages",
+                  "Project"
+                ],
+                "title": "Window Name",
+                "type": "string"
+              }
+            },
+            "required": [
+              "window_name"
+            ],
+            "title": "ToolWindowShowInput",
+            "type": "object"
+          }
+        },
+        "title": "tool_window_showArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "tool_window",
+        "group": "window_management"
+      }
+    },
+    {
+      "name": "controldesk_tool_window_manage",
+      "description": "Manages tool window state and docking (mutating operations only). Set 'action' to specify what to do: 'close' — close (hide) a panel; the underlying domain is not affected; save_layout=True (default) preserves dock position for next show (requires window_name); 'set_dock_state' — change the docking mode of a panel (requires window_name and dock_state; dock_state values: Docked, DockedAsDocument, AutoHidden, Floating, Closed). Use tool_window_discover for get_state, check_exists, and get_geometry operations.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/ToolWindowManageInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "ToolWindowManageAction": {
+            "description": "Actions for tool_window_manage consolidated tool (mutating only).",
+            "enum": [
+              "close",
+              "set_dock_state"
+            ],
+            "title": "ToolWindowManageAction",
+            "type": "string"
+          },
+          "ToolWindowManageInput": {
+            "description": "Input for tool_window_manage (mutating actions only).",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/ToolWindowManageAction"
+              },
+              "window_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Window Name"
+              },
+              "save_layout": {
+                "default": true,
+                "title": "Save Layout",
+                "type": "boolean"
+              },
+              "dock_state": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/ToolWindowState"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "title": "ToolWindowManageInput",
+            "type": "object"
+          },
+          "ToolWindowState": {
+            "description": "ControlDesk tool window docking states.\n\nConfirmed from XaWindowTests.cs (WindowState enum):\n  WindowState.Docked, WindowState.DockedAsDocument,\n  WindowState.AutoHidden, WindowState.Floating, WindowState.Closed",
+            "enum": [
+              "Docked",
+              "DockedAsDocument",
+              "AutoHidden",
+              "Floating",
+              "Closed"
+            ],
+            "title": "ToolWindowState",
+            "type": "string"
+          }
+        },
+        "title": "tool_window_manageArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "tool_window",
+        "group": "window_management"
+      }
+    },
+    {
+      "name": "controldesk_tool_window_discover",
+      "description": "Returns a catalogue of all available tool window operations that are not loaded by default. Call this tool first when you need to check whether a panel exists or inspect its geometry. The catalogue lists each tool, its purpose, and the actions it supports.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "tool_window_discoverArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "tool_window",
+        "group": "window_management"
+      }
+    },
+    {
+      "name": "controldesk_variable_find",
+      "description": "Locates a variable or signal by its name or fully qualified connection path in the active variable description. Returns complete variable metadata including type, readability, write-ability, limits, and identifiers. Call this tool first before reading or writing a variable to confirm it exists and determine which read/write tool to use next. If the variable is a Curve, Map, or Array, the response indicates so and recommends using specialized read/write tools. Preconditions: the platform must be connected and a variable description must be loaded (use platform_manage(action='add_variable_description') to load one). Online calibration is NOT required to find/inspect variables — it is only required to read or write actual ECU values via variable_read/variable_write. To list all variables or browse groups in the variable description, call variable_discover first, then use variable_list.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/VariableFindInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "SearchMode": {
+            "description": "Variable lookup search mode for variable_find.",
+            "enum": [
+              "name",
+              "path"
+            ],
+            "title": "SearchMode",
+            "type": "string"
+          },
+          "VariableFindInput": {
+            "description": "Input for variable_find.",
+            "properties": {
+              "identifier": {
+                "description": "Variable name (e.g., 'air_mass', 'f_Kp_1') OR fully qualified connection path (e.g., 'XCP()://ParamVector[0]', 'XCP(5ms)://control_out'). Names are matched by simple string; paths must use the PlatformName(RasterName)://VariableName format.",
+                "examples": [
+                  "f_Kp_1",
+                  "XCP()://f_Kp_1"
+                ],
+                "title": "Identifier",
+                "type": "string"
+              },
+              "search_mode": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/SearchMode"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Optional. Defaults to 'name' if identifier looks like a simple name, else 'path'. Explicitly set to force behavior."
+              }
+            },
+            "required": [
+              "identifier"
+            ],
+            "title": "VariableFindInput",
+            "type": "object"
+          }
+        },
+        "title": "variable_findArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "variable",
+        "group": "discovery"
+      }
+    },
+    {
+      "name": "controldesk_variable_read",
+      "description": "Reads the current value of a variable from the ECU. Set read_type to specify the variable kind: 'scalar' — numeric Parameter or Measurement value (requires variable_name); 'curve' — 1-D lookup table, returns axis + function values (requires variable_name); 'map' — 2-D lookup table, returns X-axis, Y-axis, function matrix (requires variable_name); 'array_element' — single element of an array variable (requires element_path); 'string' — ECU string label or calibration identifier (requires variable_name). Preconditions: online calibration must be running; variable must be readable.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/VariableReadInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "ValueFormat": {
+            "description": "Value format for read/write operations.",
+            "enum": [
+              "Converted",
+              "Source"
+            ],
+            "title": "ValueFormat",
+            "type": "string"
+          },
+          "VariableReadInput": {
+            "description": "Input for the consolidated variable_read tool.",
+            "properties": {
+              "read_type": {
+                "$ref": "#/$defs/VariableReadType",
+                "description": "Type of variable to read. 'scalar' — numeric Parameter or Measurement; 'curve' — 1-D lookup table (axis + function values); 'map' — 2-D lookup table (X-axis, Y-axis, function matrix); 'array_element' — single element of an array (requires element_path); 'string' — ECU string label or calibration identifier.",
+                "examples": [
+                  "scalar",
+                  "curve",
+                  "array_element"
+                ]
+              },
+              "variable_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Name or connection path of the variable (e.g., 'control_out', 'FuelCurve', 'XCP()://CalibID'). Required for read_type: scalar, curve, map, string.",
+                "examples": [
+                  "control_out",
+                  "FuelCurve"
+                ],
+                "title": "Variable Name"
+              },
+              "element_path": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Fully qualified path to an array element (e.g., 'XCP()://ParamVector[0]'). Required for read_type='array_element'.",
+                "examples": [
+                  "XCP()://ParamVector[0]"
+                ],
+                "title": "Element Path"
+              },
+              "value_format": {
+                "$ref": "#/$defs/ValueFormat",
+                "default": "Converted",
+                "description": "Defaults to 'Converted' (physical value in engineering units). Set to 'Source' for raw hardware value. Ignored for read_type='string'."
+              }
+            },
+            "required": [
+              "read_type"
+            ],
+            "title": "VariableReadInput",
+            "type": "object"
+          },
+          "VariableReadType": {
+            "description": "Read operation type for the consolidated variable_read tool.",
+            "enum": [
+              "scalar",
+              "curve",
+              "map",
+              "array_element",
+              "string"
+            ],
+            "title": "VariableReadType",
+            "type": "string"
+          }
+        },
+        "title": "variable_readArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "variable",
+        "group": "read"
+      }
+    },
+    {
+      "name": "controldesk_variable_write",
+      "description": "Writes a new value to a variable on the ECU working page. Set 'action' to specify the write type: 'scalar' — numeric Parameter (requires variable_name and value); 'array_element' — single element of a parameter array (requires element_path and value); 'string' — ECU string label or identifier (requires variable_name and value as string); 'curve' — 1-D lookup table (requires variable_name and function_values list of floats; axis_values optional); 'map' — 2-D lookup table (requires variable_name and function_values 2-D list; x_axis_values, y_axis_values optional). Preconditions: online calibration running; working data set activated (call variable_discover first, then data_set_manage(action='activate_working_page')); variable must be writable. Dry-run: set dry_run=True to preview the change without writing to the ECU — the tool reads the current value and returns a diff (current_value, proposed_value, would_change) without modifying any ECU state. Use this before committing high-impact changes.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/VariableWriteInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "ValueFormat": {
+            "description": "Value format for read/write operations.",
+            "enum": [
+              "Converted",
+              "Source"
+            ],
+            "title": "ValueFormat",
+            "type": "string"
+          },
+          "VariableWriteAction": {
+            "description": "Actions for the consolidated variable_write tool.",
+            "enum": [
+              "scalar",
+              "array_element",
+              "string",
+              "curve",
+              "map"
+            ],
+            "title": "VariableWriteAction",
+            "type": "string"
+          },
+          "VariableWriteInput": {
+            "description": "Input for the consolidated variable_write tool.",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/VariableWriteAction"
+              },
+              "variable_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Variable Name"
+              },
+              "element_path": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Element Path"
+              },
+              "value": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Value"
+              },
+              "value_format": {
+                "$ref": "#/$defs/ValueFormat",
+                "default": "Converted"
+              },
+              "function_values": {
+                "anyOf": [
+                  {
+                    "items": {},
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Function Values"
+              },
+              "axis_values": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "type": "number"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Axis Values"
+              },
+              "x_axis_values": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "type": "number"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "X Axis Values"
+              },
+              "y_axis_values": {
+                "anyOf": [
+                  {
+                    "items": {
+                      "type": "number"
+                    },
+                    "type": "array"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Y Axis Values"
+              },
+              "dry_run": {
+                "default": false,
+                "description": "When True, validates the target variable and returns the current value together with the proposed value without writing to the ECU. Use this to preview a change before committing it.",
+                "title": "Dry Run",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "action"
+            ],
+            "title": "VariableWriteInput",
+            "type": "object"
+          }
+        },
+        "title": "variable_writeArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "variable",
+        "group": "write"
+      }
+    },
+    {
+      "name": "controldesk_variable_discover",
+      "description": "Returns a catalogue of all available variable management operations that are not loaded by default. ALWAYS call this tool first when you need to: list all variables or signals in the active variable description, browse variable groups, list variable descriptions, activate a variable description, or manage data set pages. The catalogue lists each tool, its purpose, and the actions it supports.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "variable_discoverArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "variable",
+        "group": "discovery"
+      }
+    }
+  ]
+}

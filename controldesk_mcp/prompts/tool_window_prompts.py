@@ -3,9 +3,8 @@
 Prompts registered:
   manage_tool_windows — list, show, dock, and close ControlDesk tool windows
 
-All 6 tool_window-domain tools are covered:
-  tool_window_list, tool_window_check_exists, tool_window_show, tool_window_close,
-  tool_window_set_dock_state, tool_window_get_state
+Tool-window tools used: controldesk_tool_window_list, controldesk_tool_window_show,
+    controldesk_tool_window_manage, controldesk_tool_window_query, controldesk_tool_window_discover
 
 Layer: MCP Prompt adapter — pure Python; no COM or service calls.
 """
@@ -41,18 +40,18 @@ def manage_tool_windows(
                 f"**Parameters:**\n"
                 f"- Window name: {window_name or '(not specified — list all first)'}\n\n"
                 f"**Steps — execute in order:**\n\n"
-                f"1. Call `tool_window_list` to see all registered tool windows and their "
+                f"1. Call `controldesk_tool_window_list` to see all registered tool windows and their "
                 f"   current visibility and dock state.\n"
-                f"2. To check whether a specific window exists: call "
-                f"   `tool_window_check_exists`{name_arg}.\n"
-                f"3. To show a window: call `tool_window_show`{name_arg}. "
+                f"2. Call `controldesk_tool_window_discover` to activate query and management tools.\n"
+                f"3. To check whether a specific window exists: call "
+                f"   `controldesk_tool_window_query` with action='check_exists'{name_arg}.\n"
+                f"4. To show a window: call `controldesk_tool_window_show`{name_arg}. "
                 f"   This makes the window visible if it was hidden.\n"
-                f"4. To inspect the current state of a window: call "
-                f"   `tool_window_get_state`{name_arg} (returns visibility, size, position).\n"
-                f"5. To change docking: call `tool_window_set_dock_state`{name_arg} with "
+                f"5. To inspect state: call `controldesk_tool_window_query` with action='get_state'{name_arg}.\n"
+                f"6. To change docking: call `controldesk_tool_window_manage` with action='set_dock_state'{name_arg} and "
                 f"   the desired dock location (left, right, bottom, floating, etc.).\n"
-                f"6. To close a window when done: call `tool_window_close`{name_arg}.\n"
-                f"7. Report: window name, final dock state, and visibility."
+                f"7. To close a window: call `controldesk_tool_window_manage` with action='close'{name_arg}.\n"
+                f"8. Report: window name, final dock state, and visibility."
             ),
         }
     ]
