@@ -44,6 +44,16 @@ class TestSettingsDefaults:
 
         assert get_settings().mcp_port == 8000
 
+    def test_default_variable_resolution_cache_ttl_is_300(self) -> None:
+        from controldesk_mcp.config.settings import get_settings
+
+        assert get_settings().variable_resolution_cache_ttl_seconds == 300.0
+
+    def test_default_variable_resolution_debug_telemetry_is_false(self) -> None:
+        from controldesk_mcp.config.settings import get_settings
+
+        assert get_settings().variable_resolution_debug_telemetry is False
+
 
 class TestSettingsFromEnvironment:
     """Verify environment variable overrides."""
@@ -57,7 +67,14 @@ class TestSettingsFromEnvironment:
         from controldesk_mcp.config.settings import get_settings
 
         get_settings.cache_clear()
-        for key in ("MCP_TRANSPORT", "LOG_LEVEL", "COM_TIMEOUT_MS", "MCP_PORT"):
+        for key in (
+            "MCP_TRANSPORT",
+            "LOG_LEVEL",
+            "COM_TIMEOUT_MS",
+            "MCP_PORT",
+            "VARIABLE_RESOLUTION_CACHE_TTL_SECONDS",
+            "VARIABLE_RESOLUTION_DEBUG_TELEMETRY",
+        ):
             os.environ.pop(key, None)
 
     def test_transport_override(self, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -122,3 +139,21 @@ class TestSettingsFromEnvironment:
 
         with pytest.raises(ValidationError):
             Settings(com_timeout_ms=100)
+
+    def test_variable_resolution_cache_ttl_override(self) -> None:
+        from controldesk_mcp.config.settings import Settings
+
+        s = Settings(variable_resolution_cache_ttl_seconds=30.0)
+        assert s.variable_resolution_cache_ttl_seconds == 30.0
+
+    def test_variable_resolution_cache_ttl_below_minimum_raises(self) -> None:
+        from controldesk_mcp.config.settings import Settings
+
+        with pytest.raises(ValidationError):
+            Settings(variable_resolution_cache_ttl_seconds=-1.0)
+
+    def test_variable_resolution_debug_telemetry_override(self) -> None:
+        from controldesk_mcp.config.settings import Settings
+
+        s = Settings(variable_resolution_debug_telemetry=True)
+        assert s.variable_resolution_debug_telemetry is True

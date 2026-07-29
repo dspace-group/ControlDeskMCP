@@ -826,6 +826,26 @@ class TestReadStringVariable:
         with pytest.raises(BridgePreconditionError):
             read_string_variable(app, "nonexistent")
 
+    def test_falls_back_to_value_converted_for_string_like_parameter(self) -> None:
+        var = _make_variable(name="SignalForm", var_type="Parameter")
+        type(var).Value = PropertyMock(side_effect=Exception("no Value"))
+        type(var).ValueConverted = PropertyMock(return_value="sine")
+        app = _make_app_with_variables([var])
+
+        result = read_string_variable(app, "SignalForm")
+
+        assert result["value"] == "sine"
+        assert result["variable_name"] == "SignalForm"
+
+    def test_raises_precondition_when_fallback_is_not_string(self) -> None:
+        var = _make_variable(name="f_Kp_1", var_type="Parameter")
+        type(var).Value = PropertyMock(side_effect=Exception("no Value"))
+        type(var).ValueConverted = PropertyMock(return_value=123)
+        app = _make_app_with_variables([var])
+
+        with pytest.raises(BridgePreconditionError):
+            read_string_variable(app, "f_Kp_1")
+
 
 # ── write_string_variable ─────────────────────────────────────────────────────
 

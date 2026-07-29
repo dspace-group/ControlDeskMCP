@@ -216,6 +216,11 @@ uv run pytest -m integration
 - **COM call is blocked or rejected:** close modal dialogs in ControlDesk and retry.
 - **A tool call times out or ControlDesk exits:** call `app_get_logs(...)` for
   candidate ControlDesk log files, then restart and reattach with `start_controldesk(...)`.
+- **Variable lookup is ambiguous:** allow resolver fallback to complete, review the
+  top candidates returned by `resolution_details`, and retry with the selected
+  candidate path.
+- **Grouped instrument phrases resolve poorly:** run variable discovery/list-all,
+  verify the active variable description, and retry with the same phrase.
 
 ## Further Documentation
 
@@ -225,6 +230,7 @@ uv run pytest -m integration
 - [Server architecture](docs/architecture.md)
 - [Error handling](docs/error-handling.md)
 - [Release verification and artifact policy](docs/release.md)
+- [Variable resolution behavior and operator guide](docs/variable-resolution.md)
 - [Contributing guide](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)

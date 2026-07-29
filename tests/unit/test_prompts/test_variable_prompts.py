@@ -49,6 +49,39 @@ class TestReadWriteVariables:
         text = _text(read_write_variables())
         assert len(text) > 50
 
+    def test_enforces_resolver_first_ordering(self) -> None:
+        from controldesk_mcp.prompts.variable_prompts import read_write_variables
+
+        text = _text(read_write_variables())
+        assert "instrument hint -> bounded `controldesk_variable_find` name attempts" in text
+        assert "`controldesk_variable_list(action='list_all')` fallback" in text
+
+    def test_includes_ambiguity_candidate_selection_guidance(self) -> None:
+        from controldesk_mcp.prompts.variable_prompts import read_write_variables
+
+        text = _text(read_write_variables())
+        assert "top 3-5 candidates" in text
+        assert "ask the operator to pick one" in text
+
+    def test_includes_no_early_full_path_request_guidance(self) -> None:
+        from controldesk_mcp.prompts.variable_prompts import read_write_variables
+
+        text = _text(read_write_variables())
+        assert "Do not ask the operator for a fully qualified path" in text
+
+    def test_includes_ignore_unknown_com_object_guidance(self) -> None:
+        from controldesk_mcp.prompts.variable_prompts import read_write_variables
+
+        text = _text(read_write_variables())
+        assert "<COMObject <unknown>>" in text
+
+    def test_includes_write_safety_guidance(self) -> None:
+        from controldesk_mcp.prompts.variable_prompts import read_write_variables
+
+        text = _text(read_write_variables())
+        assert "is_writable" in text
+        assert "init-only lock state" in text
+
 
 class TestDiscoverVariables:
     def test_returns_one_user_message(self) -> None:
@@ -87,6 +120,12 @@ class TestDiscoverVariables:
         from controldesk_mcp.prompts.variable_prompts import discover_variables
 
         assert len(_text(discover_variables())) > 50
+
+    def test_discover_includes_list_all_before_manual_path_guidance(self) -> None:
+        from controldesk_mcp.prompts.variable_prompts import discover_variables
+
+        text = _text(discover_variables())
+        assert "fallback before requesting manual full paths" in text
 
 
 class TestManageVariableDescriptions:

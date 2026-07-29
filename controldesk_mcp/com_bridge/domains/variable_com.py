@@ -1039,7 +1039,37 @@ def read_string_variable(app: Any, variable_name: str) -> dict[str, Any]:
     variables = _get_active_variables(app)
     var = _lookup_variable(variables, variable_name, None)
     try:
-        value = str(var.Value)
+        value_obj: Any
+        try:
+            value_obj = var.Value
+        except Exception:
+            # Some string-like variables expose their textual value via ValueConverted.
+            try:
+                value_obj = var.ValueConverted
+            except Exception as exc:
+                raise BridgePreconditionError(
+                    (
+                        f"Variable '{variable_name}' cannot be read with read_type='string'. "
+                        "It does not expose a string value via Value or ValueConverted."
+                    ),
+                    error_code="BRIDGE_VARIABLE_NOT_STRING",
+                    recovery_hint="Use variable_read with read_type='scalar' for numeric/enum-like variables.",
+                ) from exc
+
+        if isinstance(value_obj, bytes):
+            value = value_obj.decode("utf-8", errors="replace")
+        elif isinstance(value_obj, str):
+            value = value_obj
+        else:
+            raise BridgePreconditionError(
+                (
+                    f"Variable '{variable_name}' returned non-string value type "
+                    f"'{type(value_obj).__name__}' for read_type='string'."
+                ),
+                error_code="BRIDGE_VARIABLE_NOT_STRING",
+                recovery_hint="Use variable_read with read_type='scalar' for non-string variables.",
+            )
+
         max_length = None
         try:
             max_length = int(var.MaxLength)

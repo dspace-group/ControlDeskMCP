@@ -73,6 +73,10 @@ async def _lifespan(server: FastMCP) -> Any:  # type: ignore[type-arg]
         yield {}
     finally:
         _log.debug("ControlDesk MCP Server shutting down")
+        # Best-effort resolver cache reset between sessions.
+        from controldesk_mcp.services.variable_service import clear_resolution_cache  # noqa: PLC0415
+
+        clear_resolution_cache()
         await com_bridge.shutdown()
 
 
