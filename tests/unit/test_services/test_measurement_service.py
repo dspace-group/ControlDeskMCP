@@ -11,6 +11,7 @@ import pytest
 
 import controldesk_mcp.com_bridge as bridge
 from controldesk_mcp.com_bridge.errors import BridgeConnectionError, BridgeOperationError
+from controldesk_mcp.models.errors import ErrorEnvelope
 from controldesk_mcp.models.measurement import (
     DataLoggerConfigureInput,
     DataLoggerCreateInput,
@@ -112,6 +113,74 @@ class TestSignalAdd:
             result = await signal_add(MeasurementSignalAddInput(connection_path="XCP(5ms)://control_out"))
 
         assert result.get("category") is not None
+
+    @pytest.mark.asyncio
+    async def test_resolves_non_path_with_instrument_hints_before_add(self) -> None:
+        conn = _make_connected_bridge()
+        app_mock = conn.get_app.return_value
+        instrument_payload = {
+            "layout_name": "Default",
+            "instruments": [{"name": "dSPACE Data Measurements control_out"}],
+        }
+        expected = {
+            "added": True,
+            "connection_path": "XCP(5ms)://control_out",
+            "variable_name": "control_out",
+            "platform_name": "XCP",
+            "raster_name": "5ms",
+            "is_connected": True,
+            "active": True,
+            "recording_enabled": True,
+            "timestamp_utc": "2026-05-04T10:00:00.000Z",
+        }
+
+        with patch(
+            "controldesk_mcp.com_bridge.dispatch",
+            new_callable=AsyncMock,
+            side_effect=[app_mock, instrument_payload, expected],
+        ) as dispatch_mock, patch(
+            "controldesk_mcp.services.variable_service.resolve_variable_path",
+            new_callable=AsyncMock,
+            return_value="XCP(5ms)://control_out",
+        ) as resolve_mock:
+            from controldesk_mcp.services.measurement_service import signal_add
+
+            result = await signal_add(MeasurementSignalAddInput(connection_path="control out"))
+
+        resolve_mock.assert_awaited_once_with(
+            "control out",
+            instrument_names=["dSPACE Data Measurements control_out"],
+        )
+        assert dispatch_mock.await_args_list[-1].args[2] == "XCP(5ms)://control_out"
+        assert result["added"] is True
+
+    @pytest.mark.asyncio
+    async def test_returns_resolution_error_when_non_path_is_ambiguous(self) -> None:
+        conn = _make_connected_bridge()
+        app_mock = conn.get_app.return_value
+        instrument_payload = {"layout_name": "Default", "instruments": []}
+        ambiguous_error = ErrorEnvelope(
+            error_code="VARIABLE_RESOLUTION_AMBIGUOUS",
+            category="INPUT_VALIDATION",
+            message="Ambiguous variable",
+            retryable=False,
+        )
+
+        with patch(
+            "controldesk_mcp.com_bridge.dispatch",
+            new_callable=AsyncMock,
+            side_effect=[app_mock, instrument_payload],
+        ), patch(
+            "controldesk_mcp.services.variable_service.resolve_variable_path",
+            new_callable=AsyncMock,
+            return_value=ambiguous_error,
+        ):
+            from controldesk_mcp.services.measurement_service import signal_add
+
+            result = await signal_add(MeasurementSignalAddInput(connection_path="air mass"))
+
+        assert isinstance(result, ErrorEnvelope)
+        assert result["error_code"] == "VARIABLE_RESOLUTION_AMBIGUOUS"
 
 
 # ── Test signal_remove ────────────────────────────────────────────────────────

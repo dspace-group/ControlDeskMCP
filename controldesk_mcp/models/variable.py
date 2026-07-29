@@ -465,6 +465,7 @@ class VariableFindResult(DictModelMixin, BaseModel):
     is_changeable_only_during_initialization: bool = False
     unit: str = ""
     description: str = ""
+    resolution_details: dict = {}
 
 
 class VariableGetInfoResult(DictModelMixin, BaseModel):

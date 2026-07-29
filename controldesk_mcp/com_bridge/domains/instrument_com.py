@@ -65,6 +65,7 @@ from controldesk_mcp.com_bridge.errors import BridgeOperationError, BridgePrecon
 # for the IViPlotter2Signal IDispatch GUID gives the correct dispatch whose
 # type info includes MainVariable as a settable property.
 _IID_IVI_PLOTTER2_SIGNAL = "{371ab2bc-6e25-4bb8-a6f5-6a432a7dec66}"
+_UNRESOLVED_VARIABLE_PATH_SENTINEL = "<unresolved>"
 
 
 def _as_plotter_signal(sig: Any) -> Any:
@@ -77,6 +78,80 @@ def _as_plotter_signal(sig: Any) -> Any:
         return win32com.client.Dispatch(sig._oleobj_.QueryInterface(iid))
     except Exception:
         return sig
+
+
+def _safe_str(value: Any) -> str | None:
+    try:
+        text = str(value).strip()
+        return text or None
+    except Exception:
+        return None
+
+
+def _is_opaque_com_string(value: str | None) -> bool:
+    if not value:
+        return False
+    lowered = value.lower()
+    return "<comobject" in lowered and "<unknown>" in lowered
+
+
+def _extract_variable_path(main_variable: Any) -> tuple[str | None, str | None, str | None]:
+    """Extract a variable path from a COM MainVariable object.
+
+    Returns (path, source, unavailable_reason).
+    """
+    if main_variable is None:
+        return None, None, None
+
+    raw_text = _safe_str(main_variable)
+    if raw_text and not _is_opaque_com_string(raw_text):
+        return raw_text, "main_variable", None
+
+    try:
+        path = _safe_str(main_variable.Path)
+        if path and not _is_opaque_com_string(path):
+            return path, "main_variable.path", None
+    except Exception:
+        pass
+
+    try:
+        path = _safe_str(main_variable.Connection.Variable.Path)
+        if path and not _is_opaque_com_string(path):
+            return path, "connection.variable.path", None
+    except Exception:
+        pass
+
+    if raw_text and _is_opaque_com_string(raw_text):
+        return None, None, "opaque_main_variable"
+    return None, None, "path_not_available"
+
+
+def _build_signal_connection_entry(
+    *,
+    main_variable: Any,
+    axis_index: int | None,
+    signal_index: int | None,
+    color: str | None,
+) -> dict[str, Any] | None:
+    path, source, unavailable_reason = _extract_variable_path(main_variable)
+    if path:
+        return {
+            "axis_index": axis_index,
+            "signal_index": signal_index,
+            "variable_path": path,
+            "color": color,
+            "variable_path_source": source,
+        }
+
+    if unavailable_reason:
+        return {
+            "axis_index": axis_index,
+            "signal_index": signal_index,
+            "variable_path": _UNRESOLVED_VARIABLE_PATH_SENTINEL,
+            "color": color,
+            "variable_path_unavailable_reason": unavailable_reason,
+        }
+    return None
 
 
 def _get_type_string(instr: Any) -> str:
@@ -241,11 +316,12 @@ def instrument_list(app: Any) -> dict[str, Any]:
             h = int(pos.Height)
             # Only attempt MainVariable for simple instruments
             main_var: str | None = None
+            main_var_source: str | None = None
+            main_var_unavailable_reason: str | None = None
             signal_mode = _resolve_signal_mode(type_string)
             if signal_mode == "main_variable":
                 try:
-                    mv = instr.MainVariable
-                    main_var = str(mv) if mv else None
+                    main_var, main_var_source, main_var_unavailable_reason = _extract_variable_path(instr.MainVariable)
                 except Exception:
                     pass
             result.append(
@@ -257,6 +333,8 @@ def instrument_list(app: Any) -> dict[str, Any]:
                     "width": w,
                     "height": h,
                     "main_variable": main_var,
+                    "main_variable_source": main_var_source,
+                    "main_variable_unavailable_reason": main_var_unavailable_reason,
                 }
             )
         except Exception as exc:
@@ -352,9 +430,14 @@ def instrument_get_info(app: Any, instrument_name: str) -> dict[str, Any]:
 
     try:
         if signal_mode == "main_variable":
-            mv = str(instr.MainVariable) if instr.MainVariable else None
-            if mv:
-                connections.append({"variable_path": mv, "axis_index": None, "signal_index": None, "color": None})
+            entry = _build_signal_connection_entry(
+                main_variable=instr.MainVariable,
+                axis_index=None,
+                signal_index=None,
+                color=None,
+            )
+            if entry:
+                connections.append(entry)
         elif signal_mode == "plotter_signal":
             plot = instr.ActivePlot
             y_axes = plot.YAxes
@@ -363,34 +446,35 @@ def instrument_get_info(app: Any, instrument_name: str) -> dict[str, Any]:
                 sigs = axis.Signals
                 for si in range(int(sigs.Count)):
                     sig = _as_plotter_signal(sigs.Item(si))
-                    mv = str(sig.MainVariable) if sig.MainVariable else None
-                    if mv:
-                        connections.append(
-                            {
-                                "axis_index": ai,
-                                "signal_index": si,
-                                "variable_path": mv,
-                                "color": None,
-                            }
-                        )
+                    entry = _build_signal_connection_entry(
+                        main_variable=sig.MainVariable,
+                        axis_index=ai,
+                        signal_index=si,
+                        color=None,
+                    )
+                    if entry:
+                        connections.append(entry)
         elif signal_mode == "array_row":
             rows = instr.Rows
             for ri in range(int(rows.Count)):
                 row = rows.Item(ri)
-                mv = str(row.MainVariable) if row.MainVariable else None
-                if mv:
-                    connections.append(
-                        {
-                            "axis_index": None,
-                            "signal_index": ri,
-                            "variable_path": mv,
-                            "color": None,
-                        }
-                    )
+                entry = _build_signal_connection_entry(
+                    main_variable=row.MainVariable,
+                    axis_index=None,
+                    signal_index=ri,
+                    color=None,
+                )
+                if entry:
+                    connections.append(entry)
         elif signal_mode == "sub_instrument":
-            mv = str(instr.ActiveSubInstrument.MainVariable) if instr.ActiveSubInstrument.MainVariable else None
-            if mv:
-                connections.append({"variable_path": mv, "axis_index": None, "signal_index": None, "color": None})
+            entry = _build_signal_connection_entry(
+                main_variable=instr.ActiveSubInstrument.MainVariable,
+                axis_index=None,
+                signal_index=None,
+                color=None,
+            )
+            if entry:
+                connections.append(entry)
     except Exception:
         pass  # Signal info is best-effort; don't fail the whole call
 

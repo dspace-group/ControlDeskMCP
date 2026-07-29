@@ -109,6 +109,8 @@ class InstrumentInfo(DictModelMixin, BaseModel):
     width: int
     height: int
     main_variable: Optional[str] = None
+    main_variable_source: Optional[str] = None
+    main_variable_unavailable_reason: Optional[str] = None
 
 
 class InstrumentTypeInfo(DictModelMixin, BaseModel):
@@ -126,6 +128,8 @@ class SignalConnection(DictModelMixin, BaseModel):
     signal_index: Optional[int] = None
     variable_path: str
     color: Optional[str] = None
+    variable_path_source: Optional[str] = None
+    variable_path_unavailable_reason: Optional[str] = None
 
 
 # ── Input models ──────────────────────────────────────────────────────────────

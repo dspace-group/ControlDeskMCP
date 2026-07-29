@@ -68,6 +68,8 @@ from controldesk_mcp.models.measurement import (
     TriggerRuleRemoveInput,
     TriggerRuleRemoveResult,
 )
+from controldesk_mcp.services import variable_service
+from controldesk_mcp.services.variable_path_resolver import is_connection_path
 from controldesk_mcp.utils.logger import get_logger
 
 _log = get_logger(__name__)
@@ -80,10 +82,34 @@ async def signal_add(
     try:
         conn = com_bridge.get_connection()
         app = await com_bridge.dispatch(conn.get_app)
+        connection_path = params.connection_path
+
+        if not is_connection_path(connection_path):
+            instrument_names: list[str] = []
+            try:
+                instrument_payload = await com_bridge.dispatch(com_bridge.domains.instrument_com.instrument_list, app)
+                instrument_names = [
+                    str(item.get("name", ""))
+                    for item in instrument_payload.get("instruments", [])
+                    if isinstance(item, dict) and str(item.get("name", "")).strip()
+                ]
+            except BridgeError as exc:
+                _log.warning("measurement_signal_add instrument hint discovery failed: %s", exc)
+            except Exception as exc:
+                _log.warning("measurement_signal_add instrument hint discovery unexpected error: %s", exc)
+
+            resolved_or_error = await variable_service.resolve_variable_path(
+                connection_path,
+                instrument_names=instrument_names,
+            )
+            if isinstance(resolved_or_error, ErrorEnvelope):
+                return resolved_or_error
+            connection_path = resolved_or_error
+
         result = await com_bridge.dispatch(
             com_bridge.domains.measurement_com.signal_add,
             app,
-            params.connection_path,
+            connection_path,
         )
         return MeasurementSignalAddResult(**result)
     except BridgeError as exc:
