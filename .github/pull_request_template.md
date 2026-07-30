@@ -1,19 +1,21 @@
 ## Summary
 
-Describe the change and the user or maintainer problem it solves.
+What changed and why?
 
-## Changes
+## MCP Impact
 
--
+- [ ] No MCP contract change
+- [ ] New tool
+- [ ] Schema change
+- [ ] Behavior change
+- [ ] Rename/remove
 
-## Validation
-
-- [ ] Added or updated focused tests where behavior changed
-- [ ] Ran the relevant local validation command(s)
-- [ ] Updated documentation, catalog entries, or changelog as needed
+## Impact (if any):
 
 ## Checklist
 
-- [ ] This change follows [CONTRIBUTING.md](../CONTRIBUTING.md)
-- [ ] No credentials, customer data, or sensitive logs are included
-- [ ] The change does not introduce an undocumented MCP contract change
+- [ ] Tool rationale documented (for new tools)
+- [ ] Security considerations reviewed
+- [ ] Tested locally
+- [ ] Docs updated
+- [ ] No undocumented contract changes
