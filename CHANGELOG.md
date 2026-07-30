@@ -18,5 +18,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial ControlDesk MCP Server release.
 - MCP tools for ControlDesk application, project, platform, measurement,
   calibration, variable, instrument, layout, recorder, and bus operations.
-
-The current package version is `0.1.0`.

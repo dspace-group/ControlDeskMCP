@@ -46,8 +46,9 @@ is officially representing the project in public spaces.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported privately to the project maintainers. All reports will be reviewed and
-investigated promptly and fairly.
+reported privately via
+[GitHub Security Advisories](https://github.com/dSPACEGroup/ControlDeskMCP/security/advisories/new).
+All reports will be reviewed and investigated promptly and fairly.
 
 Maintainers may take any action they deem appropriate, including a private or
 public warning, a temporary ban, or a permanent ban from community spaces.
