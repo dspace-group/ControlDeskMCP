@@ -60,24 +60,25 @@ from controldesk_mcp.com_bridge.error_handling.hresult import map_com_error
 from controldesk_mcp.com_bridge.errors import BridgeOperationError, BridgePreconditionError
 
 # ── Plotter signal COM interface helper ───────────────────────────────────────
-# TimeSignal directly implements IViPlotter2Signal, but its class auto-dispatch
-# does NOT expose MainVariable (it is an explicit interface member).  QI-ing
-# for the IViPlotter2Signal IDispatch GUID gives the correct dispatch whose
-# type info includes MainVariable as a settable property.
-_IID_IVI_PLOTTER2_SIGNAL = "{371ab2bc-6e25-4bb8-a6f5-6a432a7dec66}"
+# Some signal auto-dispatch classes do not expose MainVariable directly.
+# Use IDispatch name lookup as a GUID-free fallback to read the property.
 _UNRESOLVED_VARIABLE_PATH_SENTINEL = "<unresolved>"
 
 
-def _as_plotter_signal(sig: Any) -> Any:
-    """QI a signal COM object for IViPlotter2Signal to expose MainVariable."""
+def _get_main_variable(signal_obj: Any) -> Any:
+    """Read MainVariable from a signal object, with IDispatch fallback."""
+    try:
+        return signal_obj.MainVariable
+    except Exception:
+        pass
+
     try:
         import pythoncom  # noqa: PLC0415
-        import win32com.client  # noqa: PLC0415
 
-        iid = pythoncom.MakeIID(_IID_IVI_PLOTTER2_SIGNAL)
-        return win32com.client.Dispatch(sig._oleobj_.QueryInterface(iid))
+        dispid = signal_obj._oleobj_.GetIDsOfNames("MainVariable")
+        return signal_obj._oleobj_.Invoke(dispid, 0, pythoncom.INVOKE_PROPERTYGET, 1)
     except Exception:
-        return sig
+        return None
 
 
 def _safe_str(value: Any) -> str | None:
@@ -445,9 +446,9 @@ def instrument_get_info(app: Any, instrument_name: str) -> dict[str, Any]:
                 axis = y_axes.Item(ai)
                 sigs = axis.Signals
                 for si in range(int(sigs.Count)):
-                    sig = _as_plotter_signal(sigs.Item(si))
+                    sig = sigs.Item(si)
                     entry = _build_signal_connection_entry(
-                        main_variable=sig.MainVariable,
+                        main_variable=_get_main_variable(sig),
                         axis_index=ai,
                         signal_index=si,
                         color=None,
@@ -678,8 +679,10 @@ def instrument_disconnect_signal(
                     axis = y_axes.Item(axis_index)
                     sigs = axis.Signals
                     for si in range(int(sigs.Count)):
-                        sig = _as_plotter_signal(sigs.Item(si))
-                        if str(sig.MainVariable) == variable_path:
+                        sig = sigs.Item(si)
+                        current_main_variable = _get_main_variable(sig)
+                        current_path, _, _ = _extract_variable_path(current_main_variable)
+                        if current_path == variable_path:
                             sig.Remove()
                             break
         elif signal_mode == "array_row":
