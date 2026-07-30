@@ -37,8 +37,8 @@ Report violations privately to the project maintainers.
 
 ### Local Setup — Quick Path (recommended)
 
-A single bootstrap script handles everything: uv installation check, dependency
-sync, and smoke tests.
+A single bootstrap script handles everything: uv installation check and dependency
+sync.
 
 ```powershell
 # 1. Clone the repository
@@ -188,12 +188,12 @@ Run `python scripts/validate_mcp_tools.py` to verify.
 
 ### Four-Layer Architecture (NON-NEGOTIABLE)
 
-| Layer              | Module                               | Rule                                            |
-| ------------------ | ------------------------------------ | ----------------------------------------------- |
+| Layer              | Module                                               | Rule                                            |
+| ------------------ | ---------------------------------------------------- | ----------------------------------------------- |
 | **1 — Protocol**   | `controldesk_mcp/server/`, `controldesk_mcp/main.py` | MCP handshake, validation, logging              |
-| **2 — Tools**      | `controldesk_mcp/tools/<domain>/`            | Domain logic, formatting, preconditions         |
-| **3 — Dispatch**   | `controldesk_mcp.com_bridge.dispatch()`      | Single async entry point; timeout guard         |
-| **4 — COM Bridge** | `controldesk_mcp/com_bridge/`                | STA thread, COM lifecycle, error classification |
+| **2 — Tools**      | `controldesk_mcp/tools/<domain>/`                    | Domain logic, formatting, preconditions         |
+| **3 — Dispatch**   | `controldesk_mcp.com_bridge.dispatch()`              | Single async entry point; timeout guard         |
+| **4 — COM Bridge** | `controldesk_mcp/com_bridge/`                        | STA thread, COM lifecycle, error classification |
 
 **FORBIDDEN**:
 
