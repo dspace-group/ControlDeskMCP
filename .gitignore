@@ -35,6 +35,9 @@ TestResult*/
 # VS Code / IDE — commit .vscode/mcp.json; ignore everything else
 .vscode/*
 !.vscode/mcp.json
+!.vscode/mcp-inspector.json
+!.vscode/tasks.json
+!.vscode/launch.json
 .idea/
 *.iml
 

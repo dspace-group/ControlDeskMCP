@@ -65,14 +65,19 @@ $env:LOG_LEVEL = "INFO"
 Write-Host ''
 Write-Host '=== ControlDesk MCP — Inspector ===' -ForegroundColor Cyan
 Write-Host ''
-Write-Host '  UI   : http://localhost:5173' -ForegroundColor Green
 Write-Host '  Server : uv run python -m controldesk_mcp  (stdio transport)' -ForegroundColor Green
 Write-Host '  PYTHONPATH : ' + $env:PYTHONPATH
 Write-Host ''
 Write-Host 'The Inspector spawns the server as a child process.' -ForegroundColor Yellow
+Write-Host 'Watch for the URL below (typically http://localhost:6274 with an auth token).' -ForegroundColor Yellow
 Write-Host 'Press Ctrl+C to stop both.' -ForegroundColor Yellow
+Write-Host ''# ── Launch ────────────────────────────────────────────────────────────────────
+# Use the locally installed mcp-inspector from node_modules
+Write-Host ''
+Write-Host 'Starting Inspector (this may take a moment on first run)...' -ForegroundColor Yellow
+Write-Host 'Output will appear below:' -ForegroundColor Yellow
 Write-Host ''
 
-# ── Launch ────────────────────────────────────────────────────────────────────
-# -y  : auto-confirm the one-time npx package download (no interactive prompt)
+# Run mcp-inspector directly from node_modules - output appears in real-time
+# The inspector will print the URL when ready
 npx -y @modelcontextprotocol/inspector uv run python -m controldesk_mcp
