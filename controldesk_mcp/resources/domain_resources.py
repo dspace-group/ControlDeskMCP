@@ -59,6 +59,7 @@ _DOMAIN_FILTERS: dict[str, tuple[str, frozenset[str] | None, frozenset[str]]] = 
     "bus_monitor": ("bus_monitor", None, frozenset()),
     "bus_replay": ("bus_replay", None, frozenset()),
     "calibration": ("calibration", None, frozenset()),
+    "ecu_diagnostics": ("ecu_diagnostics", None, frozenset()),
     "experiment": ("project", frozenset({"experiment_management"}), frozenset()),
     "instrument": ("instrument", None, frozenset()),
     "layout": ("layout", None, frozenset()),

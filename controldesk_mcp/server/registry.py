@@ -22,6 +22,7 @@ from __future__ import annotations
 import controldesk_mcp.prompts.application_prompts  # noqa: E402, F401
 import controldesk_mcp.prompts.bus_prompts  # noqa: E402, F401
 import controldesk_mcp.prompts.calibration_prompts  # noqa: E402, F401
+import controldesk_mcp.prompts.ecu_diagnostics_prompts  # noqa: E402, F401
 import controldesk_mcp.prompts.instrument_prompts  # noqa: E402, F401
 import controldesk_mcp.prompts.layout_prompts  # noqa: E402, F401
 import controldesk_mcp.prompts.measurement_prompts  # noqa: E402, F401
@@ -43,6 +44,7 @@ import controldesk_mcp.tools.bus_logging.management  # noqa: F401
 import controldesk_mcp.tools.bus_monitor.monitoring  # noqa: F401
 import controldesk_mcp.tools.bus_replay.management  # noqa: F401
 import controldesk_mcp.tools.calibration.management  # noqa: F401
+import controldesk_mcp.tools.ecu_diagnostics.management  # noqa: F401
 import controldesk_mcp.tools.instrument.management  # noqa: F401
 import controldesk_mcp.tools.layout.management  # noqa: F401
 import controldesk_mcp.tools.measurement.management  # noqa: F401
