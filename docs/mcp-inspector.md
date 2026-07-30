@@ -231,16 +231,16 @@ sequenceDiagram
 
 ## Troubleshooting
 
-| Symptom                                 | Likely Cause                                        | Fix                                                   |
-| --------------------------------------- | --------------------------------------------------- | ----------------------------------------------------- |
-| `npx not found`                         | Node.js not installed                               | Install from https://nodejs.org                       |
-| Browser shows blank page                | Inspector still starting                            | Wait 3–5 s and refresh                                |
-| Tool returns `BridgeError`              | ControlDesk not running or not connected            | Start ControlDesk, call `controldesk_app_start_or_attach` first   |
-| Tool not visible in Inspector           | Tool not imported in `registry.py`                  | Add the import; restart Inspector                     |
-| Schema shows `{}` for a tool            | Pydantic model missing or wrong type                | Check `controldesk_mcp/models/<domain>.py`                    |
-| **Resources tab is empty**              | Resource modules not imported in `registry.py`      | Ensure `import controldesk_mcp.resources.<module>` is present |
-| **Prompts tab is empty**                | Prompt modules not imported in `registry.py`        | Ensure `import controldesk_mcp.prompts.<module>` is present   |
-| `connection-status` shows `NOT_STARTED` | Server started but `controldesk_app_start_or_attach` not called | Call the tool in the Tools tab first                  |
+| Symptom                                 | Likely Cause                                                    | Fix                                                             |
+| --------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- |
+| `npx not found`                         | Node.js not installed                                           | Install from https://nodejs.org                                 |
+| Browser shows blank page                | Inspector still starting                                        | Wait 3–5 s and refresh                                          |
+| Tool returns `BridgeError`              | ControlDesk not running or not connected                        | Start ControlDesk, call `controldesk_app_start_or_attach` first |
+| Tool not visible in Inspector           | Tool not imported in `registry.py`                              | Add the import; restart Inspector                               |
+| Schema shows `{}` for a tool            | Pydantic model missing or wrong type                            | Check `controldesk_mcp/models/<domain>.py`                      |
+| **Resources tab is empty**              | Resource modules not imported in `registry.py`                  | Ensure `import controldesk_mcp.resources.<module>` is present   |
+| **Prompts tab is empty**                | Prompt modules not imported in `registry.py`                    | Ensure `import controldesk_mcp.prompts.<module>` is present     |
+| `connection-status` shows `NOT_STARTED` | Server started but `controldesk_app_start_or_attach` not called | Call the tool in the Tools tab first                            |
 
 ---
 
@@ -253,40 +253,38 @@ VS Code build shortcut.
 
 ### Available Tasks
 
-| Task                                       | Shortcut                       | What It Does                                                       |
-| ------------------------------------------ | ------------------------------ | ------------------------------------------------------------------ |
-| **Launch MCP Inspector** _(default build)_ | `Ctrl+Shift+B`                 | Starts Inspector + server together — opens `http://localhost:5173` |
-| **Run Quality Gate** _(default test)_      | `Ctrl+Shift+P` → Run Test Task | Runs lint, format-check, layering check, and unit tests            |
-| **Start Server (Debug)**                   | `Ctrl+Shift+P` → Run Task      | Verbose stdio-only mode, no Inspector UI                           |
+| Task                                  | Shortcut                       | What It Does                                               |
+| ------------------------------------- | ------------------------------ | ---------------------------------------------------------- |
+| **Debug ControlDesk MCP Server**      | **F5**                         | Starts Inspector + server under debugpy — breakpoints work |
+| **Run Quality Gate** _(default test)_ | `Ctrl+Shift+P` → Run Test Task | Runs lint, format-check, layering check, and unit tests    |
 
 ### Start Inspector from VS Code
 
 ```
-Ctrl + Shift + B   →   "Launch MCP Inspector"
+F5   →   "Debug ControlDesk MCP Server"
 ```
 
-VS Code opens a dedicated terminal, runs `scripts/inspect.ps1`, which:
+VS Code runs the `preLaunchTask` then launches the server under debugpy:
 
-1. Verifies `npx` is available (fails clearly if Node.js is missing)
-2. Ensures Python deps are up-to-date (`uv sync --extra dev`)
-3. Starts `npx -y @modelcontextprotocol/inspector python -m controldesk_mcp`
-4. The Inspector browser UI opens at **http://localhost:5173**
-5. The MCP server is spawned as a child process — one `Ctrl+C` stops both
+1. Starts `npx @modelcontextprotocol/inspector --config .vscode/mcp-inspector.json` in a dedicated terminal
+2. Launches `python -m controldesk_mcp` with `MCP_TRANSPORT=streamable-http` on `http://127.0.0.1:8000/mcp`
+3. Breakpoints in tool and service code are hit immediately
+4. Open the Inspector browser tab → the ControlDesk MCP server is pre-configured → click **Connect**
 
 ```mermaid
 sequenceDiagram
-    participant Dev as Developer (Ctrl+Shift+B)
-    participant VS as VS Code Task Runner
-    participant PS as inspect.ps1
+    participant Dev as Developer (F5)
+    participant VS as VS Code (debugpy)
     participant NPX as MCP Inspector (npx)
-    participant Srv as MCP Server (python -m controldesk_mcp)
+    participant Srv as MCP Server (streamable-http)
 
-    Dev->>VS: Ctrl+Shift+B
-    VS->>PS: pwsh -File scripts/inspect.ps1
-    PS->>NPX: npx -y @modelcontextprotocol/inspector python -m controldesk_mcp
-    NPX->>Srv: spawn child process (stdio)
-    Srv-->>NPX: MCP initialize handshake
-    NPX-->>Dev: Browser opens http://localhost:5173
+    Dev->>VS: F5 — "Debug ControlDesk MCP Server"
+    VS->>NPX: preLaunchTask: npx @modelcontextprotocol/inspector --config mcp-inspector.json
+    VS->>Srv: python -m controldesk_mcp (debugpy attached)
+    Srv-->>VS: Uvicorn running on http://127.0.0.1:8000
+    Dev->>NPX: Open Inspector browser → click Connect
+    NPX-->>Srv: HTTP POST /mcp (initialize)
+    Srv-->>NPX: MCP handshake complete
 ```
 
 ---
@@ -348,18 +346,19 @@ The `workbench.mcp.serverOptions` command also opens a quickpick showing Start /
 
 ## Related Documentation
 
-| File                                                                                | Purpose                                                        |
-| ----------------------------------------------------------------------------------- | -------------------------------------------------------------- |
-| [docs/architecture.md](architecture.md)                                             | Five-layer server architecture, transport protocol, COM bridge |
-| [AGENTS.md](../AGENTS.md)                                                           | Non-obvious rules for AI coding agents                         |
-| [scripts/debug.ps1](../scripts/debug.ps1)                                           | Verbose debug launcher (no Inspector)                          |
-| [.vscode/tasks.json](../.vscode/tasks.json)                                         | VS Code task definitions (build/test/debug)                    |
-| [controldesk_mcp/resources/server_resources.py](../controldesk_mcp/resources/server_resources.py)   | Server-level resources                                         |
-| [controldesk_mcp/resources/domain_resources.py](../controldesk_mcp/resources/domain_resources.py)   | Domain tool catalog + URI template resource                    |
-| [controldesk_mcp/prompts/session_prompts.py](../controldesk_mcp/prompts/session_prompts.py)         | Session setup & diagnosis prompts                              |
-| [controldesk_mcp/prompts/measurement_prompts.py](../controldesk_mcp/prompts/measurement_prompts.py) | Measurement workflow prompts                                   |
-| [controldesk_mcp/prompts/variable_prompts.py](../controldesk_mcp/prompts/variable_prompts.py)       | Variable read/write prompts                                    |
-| [controldesk_mcp/prompts/calibration_prompts.py](../controldesk_mcp/prompts/calibration_prompts.py) | Calibration workflow prompts                                   |
-| [controldesk_mcp/prompts/bus_prompts.py](../controldesk_mcp/prompts/bus_prompts.py)                 | Bus logging, monitor, and replay prompts                       |
-| [controldesk_mcp/prompts/project_prompts.py](../controldesk_mcp/prompts/project_prompts.py)         | Project and experiment workflow prompts                        |
-| [controldesk_mcp/server/registry.py](../controldesk_mcp/server/registry.py)                         | Single registration point for tools, resources, prompts        |
+| File                                                                                                | Purpose                                                                 |
+| --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| [docs/architecture.md](architecture.md)                                                             | Five-layer server architecture, transport protocol, COM bridge          |
+| [AGENTS.md](../AGENTS.md)                                                                           | Non-obvious rules for AI coding agents                                  |
+| [.vscode/launch.json](../.vscode/launch.json)                                                       | VS Code debug configuration — "Debug ControlDesk MCP Server"            |
+| [.vscode/tasks.json](../.vscode/tasks.json)                                                         | VS Code task definitions (Inspector pre-launch task)                    |
+| [.vscode/mcp-inspector.json](../.vscode/mcp-inspector.json)                                         | Inspector server config — pre-configures the ControlDesk MCP server URL |
+| [controldesk_mcp/resources/server_resources.py](../controldesk_mcp/resources/server_resources.py)   | Server-level resources                                                  |
+| [controldesk_mcp/resources/domain_resources.py](../controldesk_mcp/resources/domain_resources.py)   | Domain tool catalog + URI template resource                             |
+| [controldesk_mcp/prompts/session_prompts.py](../controldesk_mcp/prompts/session_prompts.py)         | Session setup & diagnosis prompts                                       |
+| [controldesk_mcp/prompts/measurement_prompts.py](../controldesk_mcp/prompts/measurement_prompts.py) | Measurement workflow prompts                                            |
+| [controldesk_mcp/prompts/variable_prompts.py](../controldesk_mcp/prompts/variable_prompts.py)       | Variable read/write prompts                                             |
+| [controldesk_mcp/prompts/calibration_prompts.py](../controldesk_mcp/prompts/calibration_prompts.py) | Calibration workflow prompts                                            |
+| [controldesk_mcp/prompts/bus_prompts.py](../controldesk_mcp/prompts/bus_prompts.py)                 | Bus logging, monitor, and replay prompts                                |
+| [controldesk_mcp/prompts/project_prompts.py](../controldesk_mcp/prompts/project_prompts.py)         | Project and experiment workflow prompts                                 |
+| [controldesk_mcp/server/registry.py](../controldesk_mcp/server/registry.py)                         | Single registration point for tools, resources, prompts                 |

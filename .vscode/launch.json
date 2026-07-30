@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug ControlDesk MCP Server",
+            "type": "debugpy",
+            "request": "launch",
+            "preLaunchTask": "Open MCP Inspector (connect to running server)",
+            "module": "controldesk_mcp.main",
+            "python": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "env": {
+                "PYTHONUNBUFFERED": "1",
+                "LOG_LEVEL": "DEBUG",
+                "MCP_TRANSPORT": "streamable-http",
+                "MCP_HOST": "127.0.0.1",
+                "MCP_PORT": "8000"
+            }
+        }
+    ]
+}

@@ -190,15 +190,11 @@ Run the quality gate after changes:
 Start the MCP Inspector to browse tool schemas and test calls. Node.js 18 or
 newer must be available on `PATH`.
 
-```powershell
-.\scripts\inspect.ps1
-```
+In VS Code, press **F5** and select **"Debug ControlDesk MCP Server"**. This
+starts the MCP Inspector automatically, launches the server under the debugger,
+and pre-configures the Inspector with the server URL — just click **Connect**.
 
-For direct local debugging, use:
-
-```powershell
-.\scripts\debug.ps1
-```
+See [docs/mcp-inspector.md](docs/mcp-inspector.md) for full details.
 
 Integration tests need a live ControlDesk installation and are skipped by the
 normal quality gate. Run them explicitly when needed:
