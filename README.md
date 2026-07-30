@@ -107,14 +107,14 @@ directory and referenced by its absolute path.
 
 The appropriate sequence depends on the task, but a normal online workflow is:
 
-1. `start_controldesk(...)`
-2. `project_open(...)` or `project_discover(...)`
-3. `platform_manage(...)` and `platform_connect(...)`, when communication with
+1. `controldesk_app_start_or_attach(...)`
+2. `controldesk_project_open(...)` or `controldesk_project_discover(...)`
+3. `controldesk_platform_manage(...)` and `controldesk_platform_connect(...)`, when communication with
    an ECU or virtual platform is required
 4. Use the required measurement, calibration, variable, recording, or bus tool
 5. Stop active measurement, calibration, and recorder operations before calling
-   `platform_disconnect(...)`
-6. Call `stop_controldesk(...)` only when ControlDesk should be closed
+   `controldesk_platform_disconnect(...)`
+6. Call `controldesk_app_stop(...)` only when ControlDesk should be closed
 
 Use the relevant `*_discover()` tool when a domain offers additional on-demand
 operations. Tool calls return structured results; failures contain an error code,
@@ -214,8 +214,8 @@ uv run pytest -m integration
 - **ControlDesk is not found:** verify the installation and license; optionally
   set `CONTROLDESK_VERSION` to the installed release, for example `2026-A`.
 - **COM call is blocked or rejected:** close modal dialogs in ControlDesk and retry.
-- **A tool call times out or ControlDesk exits:** call `app_get_logs(...)` for
-  candidate ControlDesk log files, then restart and reattach with `start_controldesk(...)`.
+- **A tool call times out or ControlDesk exits:** call `controldesk_app_get_logs(...)` for
+  candidate ControlDesk log files, then restart and reattach with `controldesk_app_start_or_attach(...)`.
 - **Variable lookup is ambiguous:** allow resolver fallback to complete, review the
   top candidates returned by `resolution_details`, and retry with the selected
   candidate path.

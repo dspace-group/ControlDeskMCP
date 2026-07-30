@@ -12,13 +12,10 @@ The following versions of ControlDesk MCP Server are currently supported with se
 
 **Please do not report security vulnerabilities through public GitHub issues.**
 
-If you discover a security vulnerability, report it through one of the following channels:
-
-1. **GitHub Security Advisories** (preferred): Use the
-   [Report a vulnerability](../../security/advisories/new) button in the
-   Security tab of this repository.
-2. **Email**: Contact the maintainers directly. Include as much information as
-   possible to help reproduce and understand the scope of the issue.
+If you discover a security vulnerability, open a
+[GitHub Security Advisory](../../security/advisories/new) in the Security tab
+of this repository. Include as much detail as possible to help reproduce and
+understand the scope of the issue.
 
 ### What to Include
 

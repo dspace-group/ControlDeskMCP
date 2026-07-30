@@ -74,17 +74,6 @@ uv run pytest --version
 project dependencies change. Commit that update with the same change. CI and
 release workflows use locked dependency installation and reject stale locks.
 
-### Package Index / Proxy Configuration
-
-The setup script accepts `-PipIndexUrl` for compatibility and maps it to
-`UV_INDEX_URL` so `uv` resolves dependencies through your package mirror.
-
-If you need a corporate proxy or Artifactory mirror, pass `-PipIndexUrl`:
-
-```powershell
-.\scripts\setup.ps1 -PipIndexUrl "https://artifactory.example.com/api/pypi/pypi-remote/simple"
-```
-
 ### Verify Your Setup
 
 ```powershell
@@ -396,57 +385,10 @@ Mermaid renders natively in GitHub, VS Code, and MCP Inspector docs.
 Do not report suspected security vulnerabilities in a public issue. Follow the
 private reporting process in the [Security Policy](SECURITY.md).
 
-### Bug Reports
+### Bug Reports and Feature Requests
 
-Use the **Bug Report** issue template. Include:
-
-```markdown
-## Description
-
-[Clear, concise description of the bug]
-
-## Steps to Reproduce
-
-1. ...
-2. ...
-
-## Expected Behavior
-
-[What should happen]
-
-## Actual Behavior
-
-[What actually happens]
-
-## Environment
-
-- Python version: 3.11
-- OS: Windows 11 / Ubuntu 22.04 / macOS
-- MCP server version: 0.1.0
-
-## Logs / Error Messages
-
-[Paste any relevant errors or logs]
-```
-
-### Feature Requests
-
-Use the **Feature Request** issue template. Include:
-
-```markdown
-## Description
-
-[Clear description of the feature]
-
-## Use Case
-
-[Why this is needed; real-world scenario]
-
-## Acceptance Criteria
-
-- [ ] Criterion 1
-- [ ] Criterion 2
-```
+Use the provided GitHub issue templates. They guide you through the required
+information for bug reports and feature requests.
 
 ### Discussions
 

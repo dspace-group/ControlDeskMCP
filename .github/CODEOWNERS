@@ -1,9 +1,9 @@
 # Default reviewers for all repository content.
 
-- @sureandhara @joshua-n-dspace
+* @dspace-group/controldeskmcp-maintain @sureandhara @joshua-n-dspace
 
 # Security-sensitive and release automation changes require maintainer review.
 
-/.github/ @sureandhara @joshua-n-dspace
-/SECURITY.md @sureandhara @joshua-n-dspace
-/scripts/ @sureandhara @joshua-n-dspace
+/.github/ @dspace-group/controldeskmcp-maintain @sureandhara @joshua-n-dspace
+/SECURITY.md @dspace-group/controldeskmcp-maintain @sureandhara @joshua-n-dspace
+/scripts/ @dspace-group/controldeskmcp-maintain @sureandhara @joshua-n-dspace
