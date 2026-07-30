@@ -52,7 +52,6 @@ def _utc_now() -> str:
 # Values derived from demo script enum usage patterns.
 
 _PROTOCOL_INT_CANDIDATES: dict[str, tuple[int, ...]] = {
-    # ControlDesk 2026-B accepts UDS as 2.
     # Additional fallback values keep compatibility with potential variants.
     "ISO_14229_UDS": (2, 0),
     "KWP2000": (1,),
