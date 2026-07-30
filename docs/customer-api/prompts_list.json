@@ -97,6 +97,70 @@
       ]
     },
     {
+      "name": "ecu_diagnostics_setup_workflow",
+      "description": "End-to-end guide for setting up a ControlDesk ECU Diagnostics session: create Diagnostic2 platform, load ODX database, select vehicle, configure logical link with protocol and interface, then connect. Accepts optional platform_name and odx_directory_path to pre-fill steps.",
+      "arguments": [
+        {
+          "name": "platform_name",
+          "required": false
+        },
+        {
+          "name": "odx_directory_path",
+          "required": false
+        },
+        {
+          "name": "vehicle_name",
+          "required": false
+        },
+        {
+          "name": "link_name",
+          "required": false
+        },
+        {
+          "name": "protocol",
+          "required": false
+        },
+        {
+          "name": "physical_connection",
+          "required": false
+        },
+        {
+          "name": "vendor_name",
+          "required": false
+        },
+        {
+          "name": "interface_name",
+          "required": false
+        },
+        {
+          "name": "channel_index",
+          "required": false
+        }
+      ]
+    },
+    {
+      "name": "ecu_diagnostics_link_configuration",
+      "description": "Focused guide for configuring the logical link protocol and interface on an existing Diagnostic2 platform. Use when the platform and ODX database are already loaded and a vehicle has been selected, and only the link protocol or interface needs to be changed.",
+      "arguments": [
+        {
+          "name": "platform_name",
+          "required": false
+        },
+        {
+          "name": "link_name",
+          "required": false
+        },
+        {
+          "name": "protocol",
+          "required": false
+        },
+        {
+          "name": "physical_connection",
+          "required": false
+        }
+      ]
+    },
+    {
       "name": "manage_instrument_workflow",
       "description": "Guided workflow for managing instruments on a ControlDesk layout: enumerate instruments and types, add, configure, move, arrange, and connect/disconnect signals. Accepts optional layout and instrument name parameters.",
       "arguments": [

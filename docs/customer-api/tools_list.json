@@ -1606,6 +1606,317 @@
       }
     },
     {
+      "name": "controldesk_ecu_diagnostics_setup",
+      "description": "Configures the ODX diagnostic database for a Diagnostic2 platform. Set 'action' to specify what to do: 'add_odx_directory' — add all ODX files from a directory to ActiveDiagnosticsDatabase (requires platform_name, directory_path; optional db_name, optimize). Also suppresses blocking UI dialogs via GeneralSettings.DisplayStatusInformation = False. 'list_odx_files' — list currently loaded ODX file paths (requires platform_name). Prerequisite: platform_manage(action='add', platform_type='Diagnostic2') must have been called first to create the platform.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/DiagSetupInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "DiagSetupAction": {
+            "description": "Actions for controldesk_ecu_diagnostics_setup tool.",
+            "enum": [
+              "add_odx_directory",
+              "list_odx_files"
+            ],
+            "title": "DiagSetupAction",
+            "type": "string"
+          },
+          "DiagSetupInput": {
+            "description": "Consolidated input for controldesk_ecu_diagnostics_setup (MAIN tool).\n\nThe *action* field determines which fields are required:\n  add_odx_directory → platform_name, directory_path; optional db_name, optimize\n  list_odx_files    → platform_name",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/DiagSetupAction",
+                "description": "Setup action to perform: 'add_odx_directory' — add all ODX files from a directory to the active database; 'list_odx_files' — list currently loaded ODX file paths."
+              },
+              "platform_name": {
+                "description": "Name of the Diagnostic2 platform (e.g. 'ECU Diagnostics', as returned by platform_manage add).",
+                "examples": [
+                  "ECU Diagnostics"
+                ],
+                "title": "Platform Name",
+                "type": "string"
+              },
+              "directory_path": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Required for action='add_odx_directory'. Absolute path to the ODX folder.",
+                "examples": [
+                  "C:\\DiagDemo\\ECUDiagnostics_v2.0.2"
+                ],
+                "title": "Directory Path"
+              },
+              "db_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Optional for action='add_odx_directory'. Custom name for the database.",
+                "examples": [
+                  "MyDatabase"
+                ],
+                "title": "Db Name"
+              },
+              "optimize": {
+                "default": false,
+                "description": "Optional for action='add_odx_directory'. Optimize database for faster loading.",
+                "examples": [
+                  false
+                ],
+                "title": "Optimize",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "action",
+              "platform_name"
+            ],
+            "title": "DiagSetupInput",
+            "type": "object"
+          }
+        },
+        "title": "ecu_diagnostics_setupArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "ecu_diagnostics",
+        "group": "database_management"
+      }
+    },
+    {
+      "name": "controldesk_ecu_diagnostics_link_setup",
+      "description": "Manages vehicle selection, logical-link setup, and interface configuration for a Diagnostic2 platform. Set 'action' to specify what to do: 'list_vehicles' — enumerate all vehicles from VehicleSelection.Vehicles (requires platform_name); 'select_vehicle' — select a vehicle by short name (requires platform_name, vehicle_name); 'list_logical_links' — enumerate all logical links (requires platform_name); 'select_logical_link' — select a logical link by short name (requires platform_name, link_name); 'configure_logical_link' — set protocol and physical connection on a link (requires platform_name, link_name, protocol, physical_connection); 'list_interfaces' — list available vendors and interfaces for a link (requires platform_name, link_name); 'select_interface' — select vendor/interface/channel (requires platform_name, link_name, vendor_name, interface_name; optional channel_index). Prerequisite: an ODX database must be loaded via ecu_diagnostics_setup first.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "params": {
+            "$ref": "#/$defs/DiagLinkSetupInput"
+          }
+        },
+        "required": [
+          "params"
+        ],
+        "$defs": {
+          "DiagLinkSetupAction": {
+            "description": "Actions for controldesk_ecu_diagnostics_link_setup tool.",
+            "enum": [
+              "list_vehicles",
+              "select_vehicle",
+              "list_logical_links",
+              "select_logical_link",
+              "configure_logical_link",
+              "list_interfaces",
+              "select_interface"
+            ],
+            "title": "DiagLinkSetupAction",
+            "type": "string"
+          },
+          "DiagLinkSetupInput": {
+            "description": "Consolidated input for controldesk_ecu_diagnostics_link_setup (MAIN tool).\n\nThe *action* field determines which additional fields are required:\n  list_vehicles        → platform_name\n  select_vehicle       → platform_name, vehicle_name\n  list_logical_links   → platform_name\n  select_logical_link  → platform_name, link_name\n  configure_logical_link → platform_name, link_name, protocol, physical_connection\n  list_interfaces      → platform_name, link_name\n  select_interface     → platform_name, link_name, vendor_name, interface_name, channel_index",
+            "properties": {
+              "action": {
+                "$ref": "#/$defs/DiagLinkSetupAction",
+                "description": "Link setup action: 'list_vehicles', 'select_vehicle', 'list_logical_links', 'select_logical_link', 'configure_logical_link', 'list_interfaces', 'select_interface'."
+              },
+              "platform_name": {
+                "description": "Name of the Diagnostic2 platform.",
+                "examples": [
+                  "ECU Diagnostics"
+                ],
+                "title": "Platform Name",
+                "type": "string"
+              },
+              "vehicle_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Required for action='select_vehicle'. Vehicle short name.",
+                "examples": [
+                  "VI_DemoCar"
+                ],
+                "title": "Vehicle Name"
+              },
+              "link_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Required for select_logical_link, configure_logical_link, list_interfaces, select_interface.",
+                "examples": [
+                  "LL_DemoECU"
+                ],
+                "title": "Link Name"
+              },
+              "protocol": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/ECUDiagnosticsProtocol"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Required for action='configure_logical_link'. Protocol to use.",
+                "examples": [
+                  "ISO_14229_UDS"
+                ]
+              },
+              "physical_connection": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/ECUDiagnosticsPhysicalConnection"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Required for action='configure_logical_link'. Physical bus type.",
+                "examples": [
+                  "CAN"
+                ]
+              },
+              "vendor_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Required for action='select_interface'. Interface vendor name.",
+                "examples": [
+                  "dSPACE"
+                ],
+                "title": "Vendor Name"
+              },
+              "interface_name": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "description": "Required for action='select_interface'. Interface name.",
+                "examples": [
+                  "Virtual"
+                ],
+                "title": "Interface Name"
+              },
+              "channel_index": {
+                "default": 0,
+                "description": "For action='select_interface'. Zero-based channel index.",
+                "examples": [
+                  0
+                ],
+                "title": "Channel Index",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "action",
+              "platform_name"
+            ],
+            "title": "DiagLinkSetupInput",
+            "type": "object"
+          },
+          "ECUDiagnosticsPhysicalConnection": {
+            "description": "Physical connection types for ECU diagnostics logical links.\n\nInteger COM values (ECUDiagnosticsPhysicalConnection):\n  CAN       → 0\n  LIN       → 1\n  Ethernet  → 2\n  FlexRay   → 3\n  K_Line    → 4\n  DoIP      → 5",
+            "enum": [
+              "CAN",
+              "LIN",
+              "Ethernet",
+              "FlexRay",
+              "K_Line",
+              "DoIP"
+            ],
+            "title": "ECUDiagnosticsPhysicalConnection",
+            "type": "string"
+          },
+          "ECUDiagnosticsProtocol": {
+            "description": "Supported ECU diagnostics protocols.\n\nInteger COM values (ECUDiagnosticsProtocol):\n        ISO_14229_UDS → 2\n        KWP2000       → 1\n        ISO_14230     → 1 (K-Line variant)\n\n    Note: Some ControlDesk installations can expose variant-specific protocol\n    values. The COM bridge applies runtime-safe fallbacks where needed.",
+            "enum": [
+              "ISO_14229_UDS",
+              "KWP2000",
+              "ISO_14230"
+            ],
+            "title": "ECUDiagnosticsProtocol",
+            "type": "string"
+          }
+        },
+        "title": "ecu_diagnostics_link_setupArguments"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "ecu_diagnostics",
+        "group": "link_management"
+      }
+    },
+    {
+      "name": "controldesk_ecu_diagnostics_discover",
+      "description": "Returns a catalogue of all available ECU Diagnostics operations that are not loaded by default. Call this tool first when you need to manage ODX database files individually, manage vehicle selection, or manage logical-link and interface settings via dedicated tools. The catalogue lists each tool, its purpose, and the actions it supports.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "title": "ecu_diagnostics_discoverArguments"
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "domain": "ecu_diagnostics",
+        "group": "database_management"
+      }
+    },
+    {
       "name": "controldesk_instrument_list",
       "description": "Enumerates instruments on the active ControlDesk layout, or lists available instrument types from the instrument library. Default (list_types=False): returns name, type, position (x, y), size (width, height), and main_variable for each instrument on the active layout. With list_types=True: returns all available instrument type strings, their category (Controls, Data Displays, Calibration, Decorations, Utility), and signal connection mode — useful before calling instrument_manage(action='add'). Instrument names returned are the exact strings to pass to instrument_manage and instrument_signal_manage. Prerequisite: controldesk_app_start_or_attach must have been called; a layout must be active (call layout_manage(action='activate') first).",
       "inputSchema": {
