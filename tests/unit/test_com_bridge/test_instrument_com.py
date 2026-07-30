@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from unittest.mock import MagicMock, PropertyMock, patch
+from unittest.mock import MagicMock, PropertyMock
 
 from controldesk_mcp.com_bridge.domains.instrument_com import instrument_get_info, instrument_list
 
@@ -125,8 +125,7 @@ def test_instrument_get_info_uses_connection_variable_path_fallback_for_plotter_
     type(instr).ActivePlot = PropertyMock(return_value=plot)
 
     app = _make_app_with_instruments([instr])
-    with patch("controldesk_mcp.com_bridge.domains.instrument_com._as_plotter_signal", side_effect=lambda s: s):
-        result = instrument_get_info(app, "TimePlotter1")
+    result = instrument_get_info(app, "TimePlotter1")
 
     assert len(result["signal_connections"]) == 1
     assert result["signal_connections"][0]["variable_path"] == "XCP(5ms)://control_out"

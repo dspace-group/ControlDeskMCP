@@ -36,6 +36,9 @@ EXPECTED_TOOLS: frozenset[str] = frozenset(
         "controldesk_calibration_manage",
         "controldesk_calibration_start",
         "controldesk_calibration_stop",
+        "controldesk_ecu_diagnostics_discover",
+        "controldesk_ecu_diagnostics_link_setup",
+        "controldesk_ecu_diagnostics_setup",
         "controldesk_instrument_discover",
         "controldesk_instrument_list",
         "controldesk_instrument_manage",
@@ -94,6 +97,8 @@ EXPECTED_PROMPTS: frozenset[str] = frozenset(
         "configure_measurement_triggers",
         "diagnose_connection",
         "discover_variables",
+        "ecu_diagnostics_link_configuration",
+        "ecu_diagnostics_setup_workflow",
         "export_experiment",
         "manage_application_window",
         "manage_bus_filters",
@@ -148,7 +153,7 @@ class TestToolSurface:
         }
         tool_names = immediate_names | deferred_names
 
-        assert len(tool_names) == 87
+        assert len(tool_names) == 93
         assert all(re.fullmatch(r"controldesk_[a-z][a-z0-9_]*_[a-z][a-z0-9_]*", name) for name in tool_names)
 
     def test_exact_tool_count(self, registered_mcp) -> None:

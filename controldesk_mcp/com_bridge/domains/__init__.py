@@ -8,6 +8,7 @@ from controldesk_mcp.com_bridge.domains import (
     bus_monitor_com,  # noqa: F401
     bus_replay_com,  # noqa: F401
     calibration_com,  # noqa: F401
+    ecu_diagnostics_com,  # noqa: F401
     instrument_com,  # noqa: F401
     layout_com,  # noqa: F401
     measurement_com,  # noqa: F401
@@ -24,6 +25,7 @@ __all__ = [
     "bus_monitor_com",
     "bus_replay_com",
     "calibration_com",
+    "ecu_diagnostics_com",
     "instrument_com",
     "layout_com",
     "measurement_com",

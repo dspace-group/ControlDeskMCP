@@ -11,6 +11,7 @@ class ToolDomain(str, Enum):
     BUS_MONITOR = "bus_monitor"
     BUS_REPLAY = "bus_replay"
     CALIBRATION = "calibration"
+    ECU_DIAGNOSTICS = "ecu_diagnostics"
     INSTRUMENT = "instrument"
     LAYOUT = "layout"
     MEASUREMENT = "measurement"
@@ -67,6 +68,10 @@ class ToolGroup(str, Enum):
     # variable
     READ = "read"
     WRITE = "write"
+    # ecu_diagnostics
+    DATABASE_MANAGEMENT = "database_management"
+    VEHICLE_MANAGEMENT = "vehicle_management"
+    LINK_MANAGEMENT = "link_management"
 
 
 class MetaInfo(dict):
