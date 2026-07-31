@@ -275,7 +275,6 @@ uv run pytest -m integration
 - [Error handling](docs/error-handling.md)
 - [Release verification and artifact policy](docs/release.md)
 - [Variable resolution behavior and operator guide](docs/variable-resolution.md)
-- [Contributing guide](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
 - [Changelog](CHANGELOG.md)
