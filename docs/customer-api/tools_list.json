@@ -820,7 +820,7 @@
               },
               "update_rate_ms": {
                 "default": 100,
-                "description": "UI refresh rate in milliseconds (e.g. 100 = refresh every 100ms). Valid range: 10â€“5000 ms.",
+                "description": "UI refresh rate in milliseconds (e.g. 100 = refresh every 100ms). Valid range: 10-5000 ms.",
                 "examples": [
                   100,
                   50
