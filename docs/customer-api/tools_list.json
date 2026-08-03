@@ -94,7 +94,7 @@
     },
     {
       "name": "controldesk_app_stop",
-      "description": "Gracefully shuts down the ControlDesk application. All windows are closed, COM objects are released, and the ControlDesk process terminates. Optionally saves all open projects before shutting down. Dry-run: set dry_run=True to preview the shutdown â€” the tool checks whether the active project has unsaved changes and reports the impact of save_all_projects without quitting ControlDesk.",
+      "description": "Gracefully shuts down the ControlDesk application. All windows are closed, COM objects are released, and the ControlDesk process terminates. Optionally saves all open projects before shutting down. Dry-run: set dry_run=True to preview the shutdown - the tool checks whether the active project has unsaved changes and reports the impact of save_all_projects without quitting ControlDesk.",
       "inputSchema": {
         "type": "object",
         "properties": {
