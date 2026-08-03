@@ -238,7 +238,7 @@
     },
     {
       "name": "controldesk_bus_logger_create",
-      "description": "Creates a new bus logger on a specified physical bus access. The logger will capture all bus frames (CAN messages, LIN frames, FlexRay frames, or Ethernet packets) on that channel. After creation, configure the logger via controldesk_bus_logger_configure before starting. Logger names must be unique within a physical bus access. Dry-run: set dry_run=True to preview the create â€” the tool checks whether a logger with that name already exists without creating anything.",
+      "description": "Creates a new bus logger on a specified physical bus access. The logger will capture all bus frames (CAN messages, LIN frames, FlexRay frames, or Ethernet packets) on that channel. After creation, configure the logger via controldesk_bus_logger_configure before starting. Logger names must be unique within a physical bus access. Dry-run: set dry_run=True to preview the create - the tool checks whether a logger with that name already exists without creating anything.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -534,7 +534,7 @@
     },
     {
       "name": "controldesk_bus_logger_manage",
-      "description": "Manages bus logger lifecycle operations (mutating only). Set 'action' to specify what to do: 'start' â€” activate and start logging (requires logger_name). Do not call 'start' if the logger is already running â€” a repeated call returns an error and does not restart it; call 'stop' first. 'stop' â€” stop logging and deactivate, flushing buffered frames to disk (requires logger_name). Use controldesk_bus_logger_discover to query state or list loggers and for admin operations (remove, clear_all, set_activated, rename).",
+      "description": "Manages bus logger lifecycle operations (mutating only). Set 'action' to specify what to do: 'start' - activate and start logging (requires logger_name). Do not call 'start' if the logger is already running - a repeated call returns an error and does not restart it; call 'stop' first. 'stop' - stop logging and deactivate, flushing buffered frames to disk (requires logger_name). Use controldesk_bus_logger_discover to query state or list loggers and for admin operations (remove, clear_all, set_activated, rename).",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -560,7 +560,7 @@
             "properties": {
               "action": {
                 "$ref": "#/$defs/BusLoggerManageAction",
-                "description": "Mutating action to perform on a bus logger. 'start' â€” activate and start logging (requires logger_name); 'stop' â€” stop logging and deactivate (requires logger_name).",
+                "description": "Mutating action to perform on a bus logger. 'start' - activate and start logging (requires logger_name); 'stop' - stop logging and deactivate (requires logger_name).",
                 "examples": [
                   "start",
                   "stop"
@@ -670,7 +670,7 @@
     },
     {
       "name": "controldesk_bus_monitor_create",
-      "description": "Creates a new bus monitor on a specified physical bus access. The monitor will capture and display all bus frames (CAN messages, LIN frames, FlexRay frames, or Ethernet packets) on that channel in real-time within the BusNavigator instrument. After creation, configure the monitor via controldesk_bus_monitor_configure before starting. Monitor names must be unique within a physical bus access. Dry-run: set dry_run=True to preview the create â€” the tool checks whether a monitor with that name already exists without creating anything.",
+      "description": "Creates a new bus monitor on a specified physical bus access. The monitor will capture and display all bus frames (CAN messages, LIN frames, FlexRay frames, or Ethernet packets) on that channel in real-time within the BusNavigator instrument. After creation, configure the monitor via controldesk_bus_monitor_configure before starting. Monitor names must be unique within a physical bus access. Dry-run: set dry_run=True to preview the create - the tool checks whether a monitor with that name already exists without creating anything.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -893,7 +893,7 @@
     },
     {
       "name": "controldesk_bus_monitor_manage",
-      "description": "Manages bus monitor lifecycle operations (mutating only). Set 'action' to specify what to do: 'start' â€” activate and start monitoring (requires monitor_name). Do not call 'start' if the monitor is already running â€” a repeated call returns an error and does not restart it; call 'stop' first. 'stop' â€” stop monitoring, frames remain in buffer (requires monitor_name); 'remove' â€” remove a specific monitor (requires monitor_name; stop first); 'clear_all' â€” remove all monitors and their buffered data (requires confirm=True; destructive); 'rename' â€” rename an existing monitor (requires monitor_name and new_name). Use controldesk_bus_monitor_discover to query state or list monitors.",
+      "description": "Manages bus monitor lifecycle operations (mutating only). Set 'action' to specify what to do: 'start' - activate and start monitoring (requires monitor_name). Do not call 'start' if the monitor is already running - a repeated call returns an error and does not restart it; call 'stop' first. 'stop' - stop monitoring, frames remain in buffer (requires monitor_name); 'remove' - remove a specific monitor (requires monitor_name; stop first); 'clear_all' - remove all monitors and their buffered data (requires confirm=True; destructive); 'rename' - rename an existing monitor (requires monitor_name and new_name). Use controldesk_bus_monitor_discover to query state or list monitors.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -922,7 +922,7 @@
             "properties": {
               "action": {
                 "$ref": "#/$defs/BusMonitorManageAction",
-                "description": "Mutating action to perform on a bus monitor. 'start' â€” activate and start monitoring (requires monitor_name); 'stop' â€” stop monitoring (requires monitor_name); 'remove' â€” remove a specific monitor (requires monitor_name; stop first); 'clear_all' â€” remove all monitors from a physical bus access (requires confirm=True); 'rename' â€” rename an existing monitor (requires monitor_name and new_name). Use bus_monitor_query to query state or list monitors.",
+                "description": "Mutating action to perform on a bus monitor. 'start' - activate and start monitoring (requires monitor_name); 'stop' - stop monitoring (requires monitor_name); 'remove' - remove a specific monitor (requires monitor_name; stop first); 'clear_all' - remove all monitors from a physical bus access (requires confirm=True); 'rename' - rename an existing monitor (requires monitor_name and new_name). Use bus_monitor_query to query state or list monitors.",
                 "examples": [
                   "start",
                   "stop",
@@ -1059,7 +1059,7 @@
     },
     {
       "name": "controldesk_bus_replay_create",
-      "description": "Creates a new bus replay on a specified physical bus access. The replay will transmit previously recorded bus frames (from a log file) onto the bus. After creation, configure the replay via controldesk_bus_replay_configure before starting. Replay names must be unique within a physical bus access. Dry-run: set dry_run=True to preview the create â€” the tool checks whether a replay with that name already exists without creating anything.",
+      "description": "Creates a new bus replay on a specified physical bus access. The replay will transmit previously recorded bus frames (from a log file) onto the bus. After creation, configure the replay via controldesk_bus_replay_configure before starting. Replay names must be unique within a physical bus access. Dry-run: set dry_run=True to preview the create - the tool checks whether a replay with that name already exists without creating anything.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1321,7 +1321,7 @@
     },
     {
       "name": "controldesk_bus_replay_manage",
-      "description": "Manages bus replay lifecycle operations (mutating only). Set 'action' to specify what to do: 'start' â€” activate and start replay (requires replay_name). Do not call 'start' if the replay is already running â€” a repeated call returns an error and does not restart it; call 'stop' first. 'stop' â€” stop and deactivate replay, ceasing frame transmission (requires replay_name). Use controldesk_bus_replay_discover to query state or list replays and for admin operations (remove, clear_all, set_activated, rename).",
+      "description": "Manages bus replay lifecycle operations (mutating only). Set 'action' to specify what to do: 'start' - activate and start replay (requires replay_name). Do not call 'start' if the replay is already running - a repeated call returns an error and does not restart it; call 'stop' first. 'stop' - stop and deactivate replay, ceasing frame transmission (requires replay_name). Use controldesk_bus_replay_discover to query state or list replays and for admin operations (remove, clear_all, set_activated, rename).",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1347,7 +1347,7 @@
             "properties": {
               "action": {
                 "$ref": "#/$defs/BusReplayManageAction",
-                "description": "Mutating action to perform on a bus replay. 'start' â€” activate and start replay (requires replay_name); 'stop' â€” stop and deactivate replay (requires replay_name). Use bus_replay_query to query state or list replays. For admin operations use bus_replay_admin_manage.",
+                "description": "Mutating action to perform on a bus replay. 'start' - activate and start replay (requires replay_name); 'stop' - stop and deactivate replay (requires replay_name). Use bus_replay_query to query state or list replays. For admin operations use bus_replay_admin_manage.",
                 "examples": [
                   "start",
                   "stop"
@@ -1457,7 +1457,7 @@
     },
     {
       "name": "controldesk_calibration_start",
-      "description": "Starts online calibration on all platforms in the active experiment simultaneously. Online calibration is the mode in which ControlDesk actively communicates with connected ECUs and enables live reading and writing of calibration parameters on the working page. This is a mandatory prerequisite before any variable read/write operation can be performed. Call controldesk_platform_connect first to confirm at least one platform has connection state Connected. Do not call this tool if online calibration is already running â€” call controldesk_calibration_stop first. Dry-run: set dry_run=True to preview the start â€” the tool checks whether online calibration is already running without starting it.",
+      "description": "Starts online calibration on all platforms in the active experiment simultaneously. Online calibration is the mode in which ControlDesk actively communicates with connected ECUs and enables live reading and writing of calibration parameters on the working page. This is a mandatory prerequisite before any variable read/write operation can be performed. Call controldesk_platform_connect first to confirm at least one platform has connection state Connected. Do not call this tool if online calibration is already running - call controldesk_calibration_stop first. Dry-run: set dry_run=True to preview the start - the tool checks whether online calibration is already running without starting it.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1498,7 +1498,7 @@
     },
     {
       "name": "controldesk_calibration_stop",
-      "description": "Stops online calibration on all platforms in the active experiment. After this call, variable read/write operations are no longer possible until controldesk_calibration_start is called again. Call this tool before controldesk_platform_disconnect and before closing the project. It is safe to call even when measurement is still running â€” ControlDesk stops measurement automatically when calibration is stopped.",
+      "description": "Stops online calibration on all platforms in the active experiment. After this call, variable read/write operations are no longer possible until controldesk_calibration_start is called again. Call this tool before controldesk_platform_disconnect and before closing the project. It is safe to call even when measurement is still running - ControlDesk stops measurement automatically when calibration is stopped.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1532,7 +1532,7 @@
     },
     {
       "name": "controldesk_calibration_manage",
-      "description": "Manages calibration page operations (mutating only). Set 'action' to specify what to do: 'activate_reference_page' â€” switch all platforms to the ECU reference (flash) page (read-only baseline; calibration must be running); 'activate_working_page' â€” switch all platforms back to the ECU working (RAM) page to re-enable parameter writes (calibration must be running); 'refresh_parameters' â€” re-upload all ECU parameter values from the ECU to ControlDesk (calibration must be running; does not write to ECU). Use controldesk_calibration_discover to query calibration state. Use controldesk_calibration_start/stop to control online calibration.",
+      "description": "Manages calibration page operations (mutating only). Set 'action' to specify what to do: 'activate_reference_page' - switch all platforms to the ECU reference (flash) page (read-only baseline; calibration must be running); 'activate_working_page' - switch all platforms back to the ECU working (RAM) page to re-enable parameter writes (calibration must be running); 'refresh_parameters' - re-upload all ECU parameter values from the ECU to ControlDesk (calibration must be running; does not write to ECU). Use controldesk_calibration_discover to query calibration state. Use controldesk_calibration_start/stop to control online calibration.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1607,7 +1607,7 @@
     },
     {
       "name": "controldesk_ecu_diagnostics_setup",
-      "description": "Configures the ODX diagnostic database for a Diagnostic2 platform. Set 'action' to specify what to do: 'add_odx_directory' â€” add all ODX files from a directory to ActiveDiagnosticsDatabase (requires platform_name, directory_path; optional db_name, optimize). Also suppresses blocking UI dialogs via GeneralSettings.DisplayStatusInformation = False. 'list_odx_files' â€” list currently loaded ODX file paths (requires platform_name). Prerequisite: controldesk_platform_manage(action='add', platform_type='Diagnostic2') must have been called first to create the platform.",
+      "description": "Configures the ODX diagnostic database for a Diagnostic2 platform. Set 'action' to specify what to do: 'add_odx_directory' - add all ODX files from a directory to ActiveDiagnosticsDatabase (requires platform_name, directory_path; optional db_name, optimize). Also suppresses blocking UI dialogs via GeneralSettings.DisplayStatusInformation = False. 'list_odx_files' - list currently loaded ODX file paths (requires platform_name). Prerequisite: controldesk_platform_manage(action='add', platform_type='Diagnostic2') must have been called first to create the platform.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1633,7 +1633,7 @@
             "properties": {
               "action": {
                 "$ref": "#/$defs/DiagSetupAction",
-                "description": "Setup action to perform: 'add_odx_directory' â€” add all ODX files from a directory to the active database; 'list_odx_files' â€” list currently loaded ODX file paths."
+                "description": "Setup action to perform: 'add_odx_directory' - add all ODX files from a directory to the active database; 'list_odx_files' - list currently loaded ODX file paths."
               },
               "platform_name": {
                 "description": "Name of the Diagnostic2 platform (e.g. 'ECU Diagnostics', as returned by platform_manage add).",
@@ -1708,7 +1708,7 @@
     },
     {
       "name": "controldesk_ecu_diagnostics_link_setup",
-      "description": "Manages vehicle selection, logical-link setup, and interface configuration for a Diagnostic2 platform. Set 'action' to specify what to do: 'list_vehicles' â€” enumerate all vehicles from VehicleSelection.Vehicles (requires platform_name); 'select_vehicle' â€” select a vehicle by short name (requires platform_name, vehicle_name); 'list_logical_links' â€” enumerate all logical links (requires platform_name); 'select_logical_link' â€” select a logical link by short name (requires platform_name, link_name); 'configure_logical_link' â€” set protocol and physical connection on a link (requires platform_name, link_name, protocol, physical_connection); 'list_interfaces' â€” list available vendors and interfaces for a link (requires platform_name, link_name); 'select_interface' â€” select vendor/interface/channel (requires platform_name, link_name, vendor_name, interface_name; optional channel_index). Prerequisite: an ODX database must be loaded via controldesk_ecu_diagnostics_setup first.",
+      "description": "Manages vehicle selection, logical-link setup, and interface configuration for a Diagnostic2 platform. Set 'action' to specify what to do: 'list_vehicles' - enumerate all vehicles from VehicleSelection.Vehicles (requires platform_name); 'select_vehicle' - select a vehicle by short name (requires platform_name, vehicle_name); 'list_logical_links' - enumerate all logical links (requires platform_name); 'select_logical_link' - select a logical link by short name (requires platform_name, link_name); 'configure_logical_link' - set protocol and physical connection on a link (requires platform_name, link_name, protocol, physical_connection); 'list_interfaces' - list available vendors and interfaces for a link (requires platform_name, link_name); 'select_interface' - select vendor/interface/channel (requires platform_name, link_name, vendor_name, interface_name; optional channel_index). Prerequisite: an ODX database must be loaded via controldesk_ecu_diagnostics_setup first.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1918,7 +1918,7 @@
     },
     {
       "name": "controldesk_instrument_list",
-      "description": "Enumerates instruments on the active ControlDesk layout, or lists available instrument types from the instrument library. Default (list_types=False): returns name, type, position (x, y), size (width, height), and main_variable for each instrument on the active layout. With list_types=True: returns all available instrument type strings, their category (Controls, Data Displays, Calibration, Decorations, Utility), and signal connection mode â€” useful before calling controldesk_instrument_manage(action='add'). Instrument names returned are the exact strings to pass to controldesk_instrument_manage and instrument_signal_manage. Prerequisite: controldesk_app_start_or_attach must have been called; a layout must be active (call controldesk_layout_manage(action='activate') first).",
+      "description": "Enumerates instruments on the active ControlDesk layout, or lists available instrument types from the instrument library. Default (list_types=False): returns name, type, position (x, y), size (width, height), and main_variable for each instrument on the active layout. With list_types=True: returns all available instrument type strings, their category (Controls, Data Displays, Calibration, Decorations, Utility), and signal connection mode - useful before calling controldesk_instrument_manage(action='add'). Instrument names returned are the exact strings to pass to controldesk_instrument_manage and instrument_signal_manage. Prerequisite: controldesk_app_start_or_attach must have been called; a layout must be active (call controldesk_layout_manage(action='activate') first).",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -1974,7 +1974,7 @@
     },
     {
       "name": "controldesk_instrument_query",
-      "description": "Read-only queries for instruments on the active ControlDesk layout (readOnlyHint=true). 'get_info' â€” retrieve detailed metadata including signal connections (requires instrument_name). Use controldesk_instrument_list to discover available instrument names.",
+      "description": "Read-only queries for instruments on the active ControlDesk layout (readOnlyHint=true). 'get_info' - retrieve detailed metadata including signal connections (requires instrument_name). Use controldesk_instrument_list to discover available instrument names.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2037,7 +2037,7 @@
     },
     {
       "name": "controldesk_instrument_manage",
-      "description": "Manages instruments on the active ControlDesk layout (mutating operations only). Set 'action' to specify what to do: 'add' â€” add a new instrument (requires instrument_type and instrument_name; optional x, y, width, height; use controldesk_instrument_list(list_types=True) for valid type strings; replay risk: calling 'add' again with the same instrument_name returns an error and does not create a second instrument); 'remove' â€” remove an instrument from the layout (requires instrument_name); 'move' â€” reposition or resize an instrument (requires instrument_name; optional x, y, width, height); 'configure' â€” set display properties such as caption, back_color, fore_color, show_border (requires instrument_name; all properties are optional); 'arrange' â€” align, distribute, group or ungroup instruments (requires instrument_names list and arrange_action: align_top, align_bottom, align_left, align_right, center_horizontally, center_vertically, space_evenly_horizontal, space_evenly_vertical, group, ungroup). Use controldesk_instrument_query to retrieve instrument metadata. Use controldesk_instrument_discover to access signal connect/disconnect operations. Prerequisite: a layout must be active (controldesk_layout_manage(action='activate')).",
+      "description": "Manages instruments on the active ControlDesk layout (mutating operations only). Set 'action' to specify what to do: 'add' - add a new instrument (requires instrument_type and instrument_name; optional x, y, width, height; use controldesk_instrument_list(list_types=True) for valid type strings; replay risk: calling 'add' again with the same instrument_name returns an error and does not create a second instrument); 'remove' - remove an instrument from the layout (requires instrument_name); 'move' - reposition or resize an instrument (requires instrument_name; optional x, y, width, height); 'configure' - set display properties such as caption, back_color, fore_color, show_border (requires instrument_name; all properties are optional); 'arrange' - align, distribute, group or ungroup instruments (requires instrument_names list and arrange_action: align_top, align_bottom, align_left, align_right, center_horizontally, center_vertically, space_evenly_horizontal, space_evenly_vertical, group, ungroup). Use controldesk_instrument_query to retrieve instrument metadata. Use controldesk_instrument_discover to access signal connect/disconnect operations. Prerequisite: a layout must be active (controldesk_layout_manage(action='activate')).",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2079,7 +2079,7 @@
             "type": "string"
           },
           "InstrumentManageInput": {
-            "description": "Input for instrument_manage â€” mutating operations only.",
+            "description": "Input for instrument_manage - mutating operations only.",
             "properties": {
               "action": {
                 "$ref": "#/$defs/InstrumentManageAction",
@@ -2372,7 +2372,7 @@
     },
     {
       "name": "controldesk_layout_query",
-      "description": "Read-only queries for ControlDesk layouts (readOnlyHint=true). 'get_info' â€” retrieve metadata (name, file_path, is_open, is_active, editing_mode) for a layout (requires name). Use controldesk_layout_list to discover available layout names.",
+      "description": "Read-only queries for ControlDesk layouts (readOnlyHint=true). 'get_info' - retrieve metadata (name, file_path, is_open, is_active, editing_mode) for a layout (requires name). Use controldesk_layout_list to discover available layout names.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2435,7 +2435,7 @@
     },
     {
       "name": "controldesk_layout_manage",
-      "description": "Manages the lifecycle and configuration of ControlDesk layouts (mutating operations only). Set 'action' to specify what to do: 'create' â€” create a new empty layout (requires name; replay risk: calling 'create' again with the same name returns an error and does not create a second layout); 'open' â€” open an existing layout and make it visible (requires name); 'save' â€” save a layout to its .cdl file (requires name); 'close' â€” close an open layout; save_before_close defaults to True (requires name); 'activate' â€” bring a layout to the foreground (requires name); 'configure' â€” set the editing mode of a layout (requires name and editing_mode: Design, Runtime, Hybrid). Use controldesk_layout_query to get layout metadata. Use controldesk_layout_list to discover available layout names. Use controldesk_layout_discover to access export/import operations. Prerequisite: controldesk_app_start_or_attach must have been called.",
+      "description": "Manages the lifecycle and configuration of ControlDesk layouts (mutating operations only). Set 'action' to specify what to do: 'create' - create a new empty layout (requires name; replay risk: calling 'create' again with the same name returns an error and does not create a second layout); 'open' - open an existing layout and make it visible (requires name); 'save' - save a layout to its .cdl file (requires name); 'close' - close an open layout; save_before_close defaults to True (requires name); 'activate' - bring a layout to the foreground (requires name); 'configure' - set the editing mode of a layout (requires name and editing_mode: Design, Runtime, Hybrid). Use controldesk_layout_query to get layout metadata. Use controldesk_layout_list to discover available layout names. Use controldesk_layout_discover to access export/import operations. Prerequisite: controldesk_app_start_or_attach must have been called.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2471,7 +2471,7 @@
             "type": "string"
           },
           "LayoutManageInput": {
-            "description": "Input for layout_manage â€” mutating operations only.",
+            "description": "Input for layout_manage - mutating operations only.",
             "properties": {
               "action": {
                 "$ref": "#/$defs/LayoutManageAction",
@@ -2569,7 +2569,7 @@
     },
     {
       "name": "controldesk_measurement_start",
-      "description": "Starts measurement on all connected platforms. The measurement process begins sampling all configured signals at their specified raster rates into the measurement buffer. This must be called BEFORE controldesk_recorder_main_start to ensure data is being buffered. Preconditions: online calibration must be running; at least one platform must be connected. Do not call if measurement is already running â€” calling again while active returns an error and does not restart or reset measurement.",
+      "description": "Starts measurement on all connected platforms. The measurement process begins sampling all configured signals at their specified raster rates into the measurement buffer. This must be called BEFORE controldesk_recorder_main_start to ensure data is being buffered. Preconditions: online calibration must be running; at least one platform must be connected. Do not call if measurement is already running - calling again while active returns an error and does not restart or reset measurement.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2637,7 +2637,7 @@
     },
     {
       "name": "controldesk_measurement_manage",
-      "description": "Manages core measurement configuration and signal operations (mutating only). Set 'action' to specify what to do: 'configure_buffer' â€” set buffer size and overflow warning (requires buffer_size_seconds); 'configure_settings' â€” set data pool path and auto-save behavior; 'signal_add' â€” add a variable signal (requires connection_path; replay risk: calling 'signal_add' again with the same connection_path may fail with a duplicate-signal error, so check via controldesk_measurement_discover first); 'signal_remove' â€” remove a signal (requires connection_path). Use controldesk_measurement_discover to query state/configuration/signals and for raster management, trigger rules, recordings, bookmarks, and data loggers.",
+      "description": "Manages core measurement configuration and signal operations (mutating only). Set 'action' to specify what to do: 'configure_buffer' - set buffer size and overflow warning (requires buffer_size_seconds); 'configure_settings' - set data pool path and auto-save behavior; 'signal_add' - add a variable signal (requires connection_path; replay risk: calling 'signal_add' again with the same connection_path may fail with a duplicate-signal error, so check via controldesk_measurement_discover first); 'signal_remove' - remove a signal (requires connection_path). Use controldesk_measurement_discover to query state/configuration/signals and for raster management, trigger rules, recordings, bookmarks, and data loggers.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2874,7 +2874,7 @@
     },
     {
       "name": "controldesk_platform_disconnect",
-      "description": "Releases the communication link between ControlDesk and a specific ECU/platform. Must be called after controldesk_calibration_stop â€” disconnecting while calibration is running will cause data loss. Disconnecting an already-disconnected platform is a safe no-op (idempotent).",
+      "description": "Releases the communication link between ControlDesk and a specific ECU/platform. Must be called after controldesk_calibration_stop - disconnecting while calibration is running will cause data loss. Disconnecting an already-disconnected platform is a safe no-op (idempotent).",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -2921,7 +2921,7 @@
     },
     {
       "name": "controldesk_platform_manage",
-      "description": "Manages all platform configuration operations (mutating only). Set 'action' to specify what to do: 'add' â€” add a new platform (requires platform_type; replay risk: repeating 'add' with the same platform_type is not guaranteed safe and can create a duplicate platform entry or fail, so check via controldesk_platform_discover first); 'activate_registered' â€” attach registered hardware to experiment (requires unique_name); 'configure' â€” set CAN interface or hardware assignment (requires platform_name + fields); 'configure_calibration_behavior' â€” set startup page behavior (requires platform_name + calibration_behavior + initial_page); 'configure_transport' â€” CAN baud rate or Ethernet adapter settings (requires platform_name); 'set_api_version' â€” set automation API version (requires version); 'select_interface_manual' â€” select CAN vendor/interface/channel (requires platform_name + vendor_name + interface_name + channel_index); 'add_variable_description' â€” load A2L/SDF/DBC/LDF variable description (requires platform_name + file_path). Use controldesk_platform_discover to query platforms, list types, and list interfaces. For admin operations (remove, rename, set_enabled) use platform_admin_manage. For hardware registry operations use platform_hardware_manage.",
+      "description": "Manages all platform configuration operations (mutating only). Set 'action' to specify what to do: 'add' - add a new platform (requires platform_type; replay risk: repeating 'add' with the same platform_type is not guaranteed safe and can create a duplicate platform entry or fail, so check via controldesk_platform_discover first); 'activate_registered' - attach registered hardware to experiment (requires unique_name); 'configure' - set CAN interface or hardware assignment (requires platform_name + fields); 'configure_calibration_behavior' - set startup page behavior (requires platform_name + calibration_behavior + initial_page); 'configure_transport' - CAN baud rate or Ethernet adapter settings (requires platform_name); 'set_api_version' - set automation API version (requires version); 'select_interface_manual' - select CAN vendor/interface/channel (requires platform_name + vendor_name + interface_name + channel_index); 'add_variable_description' - load A2L/SDF/DBC/LDF variable description (requires platform_name + file_path). Use controldesk_platform_discover to query platforms, list types, and list interfaces. For admin operations (remove, rename, set_enabled) use platform_admin_manage. For hardware registry operations use platform_hardware_manage.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -3287,7 +3287,7 @@
     },
     {
       "name": "controldesk_project_list_recent",
-      "description": "Lists the most recently used projects across all registered project roots, ordered by last-modified timestamp (most recent first). Mirrors ControlDesk's 'Recent' section: use this to pick a project to open without knowing its exact name in advance. Each entry includes root_path, name, full_path, last_modified_utc (ISO-8601 UTC timestamp of the project file), and experiments (list of experiment names discovered from the project directory on disk). Use the 'limit' parameter to control how many projects are returned (default 10). No prerequisite â€” safe to call as soon as ControlDesk is running. IMPORTANT: To create, save, close, remove, configure, or back up a project, or to create/manage experiments, call controldesk_project_discover first â€” it activates project_manage, project_backup_manage, experiment_manage, and experiment_io_manage tools.",
+      "description": "Lists the most recently used projects across all registered project roots, ordered by last-modified timestamp (most recent first). Mirrors ControlDesk's 'Recent' section: use this to pick a project to open without knowing its exact name in advance. Each entry includes root_path, name, full_path, last_modified_utc (ISO-8601 UTC timestamp of the project file), and experiments (list of experiment names discovered from the project directory on disk). Use the 'limit' parameter to control how many projects are returned (default 10). No prerequisite - safe to call as soon as ControlDesk is running. IMPORTANT: To create, save, close, remove, configure, or back up a project, or to create/manage experiments, call controldesk_project_discover first - it activates project_manage, project_backup_manage, experiment_manage, and experiment_io_manage tools.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -3342,7 +3342,7 @@
     },
     {
       "name": "controldesk_project_open",
-      "description": "Opens an existing ControlDesk project by name from the active project root, making it the active project for all subsequent operations. Use controldesk_project_list_recent to discover available project names beforehand. Prerequisite: at least one project root must be registered (use controldesk_project_discover â†’ project_root_manage to add one if needed). IMPORTANT: To create, save, close, remove, configure, or back up a project, or to create/manage experiments, call controldesk_project_discover first â€” it activates project_manage, project_backup_manage, experiment_manage, and experiment_io_manage tools.",
+      "description": "Opens an existing ControlDesk project by name from the active project root, making it the active project for all subsequent operations. Use controldesk_project_list_recent to discover available project names beforehand. Prerequisite: at least one project root must be registered (use controldesk_project_discover â†’ project_root_manage to add one if needed). IMPORTANT: To create, save, close, remove, configure, or back up a project, or to create/manage experiments, call controldesk_project_discover first - it activates project_manage, project_backup_manage, experiment_manage, and experiment_io_manage tools.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -3407,7 +3407,7 @@
     },
     {
       "name": "controldesk_recorder_main_start",
-      "description": "Starts the main recorder. The recorder begins writing sampled signals to the configured output MF4 file. Use with_trigger=True if trigger-based start/stop conditions are configured â€” recording will wait for the start trigger to fire. Call AFTER controldesk_measurement_start to ensure buffers are populated and AFTER controldesk_recorder_main_manage(action='configure') to set the output filename. Preconditions: measurement must be running; recorder must be configured. Do not call if recording is already active â€” a repeated call returns an error; call controldesk_recorder_main_stop first to end the current recording before starting a new one. Dry-run: set dry_run=True to preview the start â€” the tool checks whether the recorder is already running without starting it.",
+      "description": "Starts the main recorder. The recorder begins writing sampled signals to the configured output MF4 file. Use with_trigger=True if trigger-based start/stop conditions are configured - recording will wait for the start trigger to fire. Call AFTER controldesk_measurement_start to ensure buffers are populated and AFTER controldesk_recorder_main_manage(action='configure') to set the output filename. Preconditions: measurement must be running; recorder must be configured. Do not call if recording is already active - a repeated call returns an error; call controldesk_recorder_main_stop first to end the current recording before starting a new one. Dry-run: set dry_run=True to preview the start - the tool checks whether the recorder is already running without starting it.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -3468,7 +3468,7 @@
     },
     {
       "name": "controldesk_recorder_main_stop",
-      "description": "Stops the main recorder. Any open output MF4 file is finalized and closed. Call this BEFORE controldesk_measurement_stop to ensure all buffered data is written to disk. After this call, the output file is complete and ready for analysis. Preconditions: recording must be active (controldesk_recorder_main_start was called). Dry-run: set dry_run=True to preview the stop â€” the tool checks whether the recorder is currently running without stopping it.",
+      "description": "Stops the main recorder. Any open output MF4 file is finalized and closed. Call this BEFORE controldesk_measurement_stop to ensure all buffered data is written to disk. After this call, the output file is complete and ready for analysis. Preconditions: recording must be active (controldesk_recorder_main_start was called). Dry-run: set dry_run=True to preview the stop - the tool checks whether the recorder is currently running without stopping it.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -3509,7 +3509,7 @@
     },
     {
       "name": "controldesk_recorder_main_manage",
-      "description": "Manages recorder configuration and trigger (mutating only). Set 'action' to specify what to do: 'configure' â€” configure the recorder output filename, sequential naming, and integration settings (requires base_filename; must be called before start); 'invoke_trigger' â€” bypass the start trigger and begin recording immediately (recorder must be in WaitingForTrigger state). Use controldesk_recorder_main_discover to get recorder state and to access signal management and export/import operations.",
+      "description": "Manages recorder configuration and trigger (mutating only). Set 'action' to specify what to do: 'configure' - configure the recorder output filename, sequential naming, and integration settings (requires base_filename; must be called before start); 'invoke_trigger' - bypass the start trigger and begin recording immediately (recorder must be in WaitingForTrigger state). Use controldesk_recorder_main_discover to get recorder state and to access signal management and export/import operations.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -3728,7 +3728,7 @@
     },
     {
       "name": "controldesk_tool_window_manage",
-      "description": "Manages tool window state and docking (mutating operations only). Set 'action' to specify what to do: 'close' â€” close (hide) a panel; the underlying domain is not affected; save_layout=True (default) preserves dock position for next show (requires window_name); 'set_dock_state' â€” change the docking mode of a panel (requires window_name and dock_state; dock_state values: Docked, DockedAsDocument, AutoHidden, Floating, Closed). Use controldesk_tool_window_discover for get_state, check_exists, and get_geometry operations.",
+      "description": "Manages tool window state and docking (mutating operations only). Set 'action' to specify what to do: 'close' - close (hide) a panel; the underlying domain is not affected; save_layout=True (default) preserves dock position for next show (requires window_name); 'set_dock_state' - change the docking mode of a panel (requires window_name and dock_state; dock_state values: Docked, DockedAsDocument, AutoHidden, Floating, Closed). Use controldesk_tool_window_discover for get_state, check_exists, and get_geometry operations.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -3837,7 +3837,7 @@
     },
     {
       "name": "controldesk_variable_find",
-      "description": "Locates a variable or signal by its name or fully qualified connection path in the active variable description. Returns complete variable metadata including type, readability, write-ability, limits, and identifiers. Call this tool first before reading or writing a variable to confirm it exists and determine which read/write tool to use next. If the variable is a Curve, Map, or Array, the response indicates so and recommends using specialized read/write tools. Preconditions: the platform must be connected and a variable description must be loaded (use controldesk_platform_manage(action='add_variable_description') to load one). Online calibration is NOT required to find/inspect variables â€” it is only required to read or write actual ECU values via controldesk_variable_read/controldesk_variable_write. To list all variables or browse groups in the variable description, call controldesk_variable_discover first, then use variable_list.",
+      "description": "Locates a variable or signal by its name or fully qualified connection path in the active variable description. Returns complete variable metadata including type, readability, write-ability, limits, and identifiers. Call this tool first before reading or writing a variable to confirm it exists and determine which read/write tool to use next. If the variable is a Curve, Map, or Array, the response indicates so and recommends using specialized read/write tools. Preconditions: the platform must be connected and a variable description must be loaded (use controldesk_platform_manage(action='add_variable_description') to load one). Online calibration is NOT required to find/inspect variables - it is only required to read or write actual ECU values via controldesk_variable_read/controldesk_variable_write. To list all variables or browse groups in the variable description, call controldesk_variable_discover first, then use variable_list.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -3905,7 +3905,7 @@
     },
     {
       "name": "controldesk_variable_read",
-      "description": "Reads the current value of a variable from the ECU. Set read_type to specify the variable kind: 'scalar' â€” numeric Parameter or Measurement value (requires variable_name); 'curve' â€” 1-D lookup table, returns axis + function values (requires variable_name); 'map' â€” 2-D lookup table, returns X-axis, Y-axis, function matrix (requires variable_name); 'array_element' â€” single element of an array variable (requires element_path); 'string' â€” ECU string label or calibration identifier (requires variable_name). Preconditions: online calibration must be running; variable must be readable.",
+      "description": "Reads the current value of a variable from the ECU. Set read_type to specify the variable kind: 'scalar' - numeric Parameter or Measurement value (requires variable_name); 'curve' - 1-D lookup table, returns axis + function values (requires variable_name); 'map' - 2-D lookup table, returns X-axis, Y-axis, function matrix (requires variable_name); 'array_element' - single element of an array variable (requires element_path); 'string' - ECU string label or calibration identifier (requires variable_name). Preconditions: online calibration must be running; variable must be readable.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -3931,7 +3931,7 @@
             "properties": {
               "read_type": {
                 "$ref": "#/$defs/VariableReadType",
-                "description": "Type of variable to read. 'scalar' â€” numeric Parameter or Measurement; 'curve' â€” 1-D lookup table (axis + function values); 'map' â€” 2-D lookup table (X-axis, Y-axis, function matrix); 'array_element' â€” single element of an array (requires element_path); 'string' â€” ECU string label or calibration identifier.",
+                "description": "Type of variable to read. 'scalar' - numeric Parameter or Measurement; 'curve' - 1-D lookup table (axis + function values); 'map' - 2-D lookup table (X-axis, Y-axis, function matrix); 'array_element' - single element of an array (requires element_path); 'string' - ECU string label or calibration identifier.",
                 "examples": [
                   "scalar",
                   "curve",
@@ -4011,7 +4011,7 @@
     },
     {
       "name": "controldesk_variable_write",
-      "description": "Writes a new value to a variable on the ECU working page. Set 'action' to specify the write type: 'scalar' â€” numeric Parameter (requires variable_name and value); 'array_element' â€” single element of a parameter array (requires element_path and value); 'string' â€” ECU string label or identifier (requires variable_name and value as string); 'curve' â€” 1-D lookup table (requires variable_name and function_values list of floats; axis_values optional); 'map' â€” 2-D lookup table (requires variable_name and function_values 2-D list; x_axis_values, y_axis_values optional). Preconditions: online calibration running; working data set activated (call controldesk_variable_discover first, then data_set_manage(action='activate_working_page')); variable must be writable. Dry-run: set dry_run=True to preview the change without writing to the ECU â€” the tool reads the current value and returns a diff (current_value, proposed_value, would_change) without modifying any ECU state. Use this before committing high-impact changes.",
+      "description": "Writes a new value to a variable on the ECU working page. Set 'action' to specify the write type: 'scalar' - numeric Parameter (requires variable_name and value); 'array_element' - single element of a parameter array (requires element_path and value); 'string' - ECU string label or identifier (requires variable_name and value as string); 'curve' - 1-D lookup table (requires variable_name and function_values list of floats; axis_values optional); 'map' - 2-D lookup table (requires variable_name and function_values 2-D list; x_axis_values, y_axis_values optional). Preconditions: online calibration running; working data set activated (call controldesk_variable_discover first, then data_set_manage(action='activate_working_page')); variable must be writable. Dry-run: set dry_run=True to preview the change without writing to the ECU - the tool reads the current value and returns a diff (current_value, proposed_value, would_change) without modifying any ECU state. Use this before committing high-impact changes.",
       "inputSchema": {
         "type": "object",
         "properties": {
