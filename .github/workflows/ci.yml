@@ -38,7 +38,7 @@ jobs:
         run: uv python install ${{ env.PYTHON_VERSION }}
 
       - name: Install dependencies
-        run: uv sync --locked --python ${{ env.PYTHON_VERSION }} --extra dev
+        run: uv sync --python ${{ env.PYTHON_VERSION }} --extra dev
 
       - name: Ruff lint
         run: uv run ruff check controldesk_mcp tests
@@ -78,7 +78,7 @@ jobs:
         run: uv python install ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: uv sync --locked --python ${{ matrix.python-version }} --extra dev
+        run: uv sync --python ${{ matrix.python-version }} --extra dev
 
       - name: Run unit tests
         run: uv run pytest tests/unit/ -m "not integration" -v
