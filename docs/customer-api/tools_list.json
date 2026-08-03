@@ -1629,7 +1629,7 @@
             "type": "string"
           },
           "DiagSetupInput": {
-            "description": "Consolidated input for controldesk_ecu_diagnostics_setup (MAIN tool).\n\nThe *action* field determines which fields are required:\n  add_odx_directory â†’ platform_name, directory_path; optional db_name, optimize\n  list_odx_files    â†’ platform_name",
+            "description": "Consolidated input for controldesk_ecu_diagnostics_setup (MAIN tool).\n\nThe *action* field determines which fields are required:\n  add_odx_directory -> platform_name, directory_path; optional db_name, optimize\n  list_odx_files    -> platform_name",
             "properties": {
               "action": {
                 "$ref": "#/$defs/DiagSetupAction",
@@ -1735,7 +1735,7 @@
             "type": "string"
           },
           "DiagLinkSetupInput": {
-            "description": "Consolidated input for controldesk_ecu_diagnostics_link_setup (MAIN tool).\n\nThe *action* field determines which additional fields are required:\n  list_vehicles        â†’ platform_name\n  select_vehicle       â†’ platform_name, vehicle_name\n  list_logical_links   â†’ platform_name\n  select_logical_link  â†’ platform_name, link_name\n  configure_logical_link â†’ platform_name, link_name, protocol, physical_connection\n  list_interfaces      â†’ platform_name, link_name\n  select_interface     â†’ platform_name, link_name, vendor_name, interface_name, channel_index",
+            "description": "Consolidated input for controldesk_ecu_diagnostics_link_setup (MAIN tool).\n\nThe *action* field determines which additional fields are required:\n  list_vehicles        -> platform_name\n  select_vehicle       -> platform_name, vehicle_name\n  list_logical_links   -> platform_name\n  select_logical_link  -> platform_name, link_name\n  configure_logical_link -> platform_name, link_name, protocol, physical_connection\n  list_interfaces      -> platform_name, link_name\n  select_interface     -> platform_name, link_name, vendor_name, interface_name, channel_index",
             "properties": {
               "action": {
                 "$ref": "#/$defs/DiagLinkSetupAction",
@@ -1861,7 +1861,7 @@
             "type": "object"
           },
           "ECUDiagnosticsPhysicalConnection": {
-            "description": "Physical connection types for ECU diagnostics logical links.\n\nInteger COM values (ECUDiagnosticsPhysicalConnection):\n  CAN       â†’ 0\n  LIN       â†’ 1\n  Ethernet  â†’ 2\n  FlexRay   â†’ 3\n  K_Line    â†’ 4\n  DoIP      â†’ 5",
+            "description": "Physical connection types for ECU diagnostics logical links.\n\nInteger COM values (ECUDiagnosticsPhysicalConnection):\n  CAN       -> 0\n  LIN       -> 1\n  Ethernet  -> 2\n  FlexRay   -> 3\n  K_Line    -> 4\n  DoIP      -> 5",
             "enum": [
               "CAN",
               "LIN",
@@ -1874,7 +1874,7 @@
             "type": "string"
           },
           "ECUDiagnosticsProtocol": {
-            "description": "Supported ECU diagnostics protocols.\n\nInteger COM values (ECUDiagnosticsProtocol):\n        ISO_14229_UDS â†’ 2\n        KWP2000       â†’ 1\n        ISO_14230     â†’ 1 (K-Line variant)\n\n    Note: Some ControlDesk installations can expose variant-specific protocol\n    values. The COM bridge applies runtime-safe fallbacks where needed.",
+            "description": "Supported ECU diagnostics protocols.\n\nInteger COM values (ECUDiagnosticsProtocol):\n        ISO_14229_UDS -> 2\n        KWP2000       -> 1\n        ISO_14230     -> 1 (K-Line variant)\n\n    Note: Some ControlDesk installations can expose variant-specific protocol\n    values. The COM bridge applies runtime-safe fallbacks where needed.",
             "enum": [
               "ISO_14229_UDS",
               "KWP2000",
@@ -3342,7 +3342,7 @@
     },
     {
       "name": "controldesk_project_open",
-      "description": "Opens an existing ControlDesk project by name from the active project root, making it the active project for all subsequent operations. Use controldesk_project_list_recent to discover available project names beforehand. Prerequisite: at least one project root must be registered (use controldesk_project_discover â†’ project_root_manage to add one if needed). IMPORTANT: To create, save, close, remove, configure, or back up a project, or to create/manage experiments, call controldesk_project_discover first - it activates project_manage, project_backup_manage, experiment_manage, and experiment_io_manage tools.",
+      "description": "Opens an existing ControlDesk project by name from the active project root, making it the active project for all subsequent operations. Use controldesk_project_list_recent to discover available project names beforehand. Prerequisite: at least one project root must be registered (use controldesk_project_discover -> project_root_manage to add one if needed). IMPORTANT: To create, save, close, remove, configure, or back up a project, or to create/manage experiments, call controldesk_project_discover first - it activates project_manage, project_backup_manage, experiment_manage, and experiment_io_manage tools.",
       "inputSchema": {
         "type": "object",
         "properties": {
