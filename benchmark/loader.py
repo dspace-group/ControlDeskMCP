@@ -24,8 +24,8 @@ async def load_tools() -> tuple[str, list[Any]]:
     """
     _ensure_project_on_path()
 
-    from controldesk_mcp.server.app import mcp  # noqa: PLC0415
     import controldesk_mcp.server.registry  # noqa: F401, PLC0415 — registers all @mcp.tool
+    from controldesk_mcp.server.app import mcp  # noqa: PLC0415
 
     tools = await mcp.list_tools()
     return mcp.name, tools

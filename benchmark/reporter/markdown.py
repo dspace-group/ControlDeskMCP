@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from ..models import BenchmarkReport, ToolMetrics
+from ..models import BenchmarkReport
 
 
 def _progress(pct: float, width: int = 20) -> str:
@@ -20,8 +20,8 @@ def save(report: BenchmarkReport, output_path: str, top_n: int = 30) -> None:
     lines += [
         f"# MCP Token Benchmark — {report.server_name}",
         "",
-        f"| Field | Value |",
-        f"|---|---|",
+        "| Field | Value |",
+        "|---|---|",
         f"| Generated | {report.timestamp} |",
         f"| Tokenizer | `{report.tokenizer_used}` (approximation) |",
         f"| Total tools | {report.total_tools} |",
@@ -88,8 +88,8 @@ def save(report: BenchmarkReport, output_path: str, top_n: int = 30) -> None:
         lines += [
             "## Statistical Summary",
             "",
-            f"| Metric | Value |",
-            f"|---|---|",
+            "| Metric | Value |",
+            "|---|---|",
             f"| Average tokens / tool | {avg:.0f} |",
             f"| Median (p50) | {p50} |",
             f"| 90th percentile (p90) | {p90} |",

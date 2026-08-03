@@ -104,6 +104,8 @@ def get_connection_status() -> str:
             {
                 "connected": False,
                 "state": "NOT_STARTED",
-                "message": ("COM bridge not started. Call controldesk_app_start_or_attach to launch or attach to ControlDesk."),
+                "message": (
+                    "COM bridge not started. Call controldesk_app_start_or_attach to launch or attach to ControlDesk."
+                ),
             }
         )

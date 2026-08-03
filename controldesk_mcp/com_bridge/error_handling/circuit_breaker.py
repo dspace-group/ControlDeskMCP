@@ -103,7 +103,8 @@ class CircuitBreaker:
                 raise BridgeCircuitOpenError(
                     f"Circuit OPEN for '{self.operation}' — cool-down expires in {remaining:.0f} s.",
                     recovery_hint=(
-                        f"Wait {remaining:.0f} s and retry, or call controldesk_app_start_or_attach to reset the connection."
+                        f"Wait {remaining:.0f} s and retry, or call "
+                        "controldesk_app_start_or_attach to reset the connection."
                     ),
                 )
 

@@ -9,12 +9,11 @@ Phase 1 scope:
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from enum import Enum
 import re
 import time
+from dataclasses import dataclass, field
+from enum import Enum
 from typing import Any, Awaitable, Callable
-
 
 _CAMEL_BOUNDARY_RE = re.compile(r"([a-z0-9])([A-Z])")
 _NON_ALNUM_RE = re.compile(r"[^A-Za-z0-9]+")
@@ -311,7 +310,7 @@ class VariablePathResolver:
             attempt_log.append(f"instrument hint='{normalized_hint}'")
             variants = _dedupe_preserve_order(generate_name_variants(normalized_hint) + variants)
 
-        for variant in variants[: max_find_attempts]:
+        for variant in variants[:max_find_attempts]:
             attempt_log.append(f"find name variant='{variant}'")
             result = await self._find_variable(variant, "name")
             if not bool(result.get("found")):

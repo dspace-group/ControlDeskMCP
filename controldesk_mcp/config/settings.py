@@ -152,17 +152,11 @@ class Settings(BaseSettings):
     variable_resolution_cache_ttl_seconds: float = Field(
         default=300.0,
         ge=0.0,
-        description=(
-            "TTL for variable path resolver in-memory cache entries. "
-            "Set to 0 to disable resolver caching."
-        ),
+        description=("TTL for variable path resolver in-memory cache entries. Set to 0 to disable resolver caching."),
     )
     variable_resolution_debug_telemetry: bool = Field(
         default=False,
-        description=(
-            "When True, include verbose resolver telemetry fields in responses "
-            "and attempt diagnostics."
-        ),
+        description=("When True, include verbose resolver telemetry fields in responses and attempt diagnostics."),
     )
 
     # ── Validators ────────────────────────────────────────────────────────────

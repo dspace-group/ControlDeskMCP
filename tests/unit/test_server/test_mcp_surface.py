@@ -142,9 +142,7 @@ class TestToolSurface:
     def test_all_declared_tool_names_follow_the_canonical_grammar(self, registered_mcp) -> None:
         immediate_names = {tool.name for tool in registered_mcp._tool_manager.list_tools()}
         deferred_names = {
-            kwargs["name"]
-            for entries in registered_mcp._deferred_addon_tools.values()
-            for _, kwargs in entries
+            kwargs["name"] for entries in registered_mcp._deferred_addon_tools.values() for _, kwargs in entries
         }
         tool_names = immediate_names | deferred_names
 

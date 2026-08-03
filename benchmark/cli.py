@@ -21,7 +21,6 @@ from .analyzer import MCPBenchmarkAnalyzer
 from .loader import load_tools_sync
 from .tokenizer import create_counter
 
-
 # ---------------------------------------------------------------------------
 # Shared context object
 # ---------------------------------------------------------------------------
@@ -176,7 +175,7 @@ def inspect(ctx: _Ctx, tool_name: str) -> None:
     click.echo(f"  Annotation tokens : {m.annotation_tokens}")
     click.echo(f"  Schema bytes      : {m.schema_bytes} B")
     click.echo(f"  Param count       : {m.param_count} ({m.required_param_count} required)")
-    click.echo(f"\nFull schema JSON:\n")
+    click.echo("\nFull schema JSON:\n")
     click.echo(json.dumps(json.loads(m.schema_json), indent=2))
 
 
@@ -226,6 +225,7 @@ def diff(old_report: str, new_report: str) -> None:
     'analyze --format json'.
     """
     from tabulate import tabulate
+
     from .reporter.json_reporter import load
 
     old = load(old_report)

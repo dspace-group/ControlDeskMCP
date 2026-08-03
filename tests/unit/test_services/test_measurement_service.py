@@ -134,15 +134,18 @@ class TestSignalAdd:
             "timestamp_utc": "2026-05-04T10:00:00.000Z",
         }
 
-        with patch(
-            "controldesk_mcp.com_bridge.dispatch",
-            new_callable=AsyncMock,
-            side_effect=[app_mock, instrument_payload, expected],
-        ) as dispatch_mock, patch(
-            "controldesk_mcp.services.variable_service.resolve_variable_path",
-            new_callable=AsyncMock,
-            return_value="XCP(5ms)://control_out",
-        ) as resolve_mock:
+        with (
+            patch(
+                "controldesk_mcp.com_bridge.dispatch",
+                new_callable=AsyncMock,
+                side_effect=[app_mock, instrument_payload, expected],
+            ) as dispatch_mock,
+            patch(
+                "controldesk_mcp.services.variable_service.resolve_variable_path",
+                new_callable=AsyncMock,
+                return_value="XCP(5ms)://control_out",
+            ) as resolve_mock,
+        ):
             from controldesk_mcp.services.measurement_service import signal_add
 
             result = await signal_add(MeasurementSignalAddInput(connection_path="control out"))
@@ -166,14 +169,17 @@ class TestSignalAdd:
             retryable=False,
         )
 
-        with patch(
-            "controldesk_mcp.com_bridge.dispatch",
-            new_callable=AsyncMock,
-            side_effect=[app_mock, instrument_payload],
-        ), patch(
-            "controldesk_mcp.services.variable_service.resolve_variable_path",
-            new_callable=AsyncMock,
-            return_value=ambiguous_error,
+        with (
+            patch(
+                "controldesk_mcp.com_bridge.dispatch",
+                new_callable=AsyncMock,
+                side_effect=[app_mock, instrument_payload],
+            ),
+            patch(
+                "controldesk_mcp.services.variable_service.resolve_variable_path",
+                new_callable=AsyncMock,
+                return_value=ambiguous_error,
+            ),
         ):
             from controldesk_mcp.services.measurement_service import signal_add
 

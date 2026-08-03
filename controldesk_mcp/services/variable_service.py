@@ -7,9 +7,9 @@ Calls: com_bridge.dispatch() exclusively — never imports win32com/comtypes.
 
 from __future__ import annotations
 
-from dataclasses import asdict
 import json
 import re
+from dataclasses import asdict
 
 from controldesk_mcp import com_bridge
 from controldesk_mcp.com_bridge.errors import BridgeError, BridgeOperationError
@@ -62,8 +62,8 @@ from controldesk_mcp.services.variable_path_resolver import (
     extract_instrument_tail_hint,
     is_connection_path,
 )
-from controldesk_mcp.utils.pagination import paginate
 from controldesk_mcp.utils.logger import get_logger
+from controldesk_mcp.utils.pagination import paginate
 
 _log = get_logger(__name__)
 _path_resolver: VariablePathResolver | None = None
@@ -125,7 +125,9 @@ def _resolver_not_found_or_ambiguous_error(identifier: str, status: ResolutionSt
         recovery_hint = "Closest matches:\n" + "\n".join(candidate_lines)
 
     return ErrorEnvelope(
-        error_code="VARIABLE_RESOLUTION_FAILED" if status == ResolutionStatus.not_found else "VARIABLE_RESOLUTION_AMBIGUOUS",
+        error_code=(
+            "VARIABLE_RESOLUTION_FAILED" if status == ResolutionStatus.not_found else "VARIABLE_RESOLUTION_AMBIGUOUS"
+        ),
         category="INPUT_VALIDATION",
         message=(
             f"Could not resolve variable '{identifier}'."
@@ -215,7 +217,9 @@ async def _resolve_variable_name_for_write(variable_name: str) -> str | ErrorEnv
         return ErrorEnvelope(
             error_code="VARIABLE_NOT_FOUND",
             category="INPUT_VALIDATION",
-            message=f"Resolved variable path '{resolved_or_error}' is not available in the active variable description.",
+            message=(
+                f"Resolved variable path '{resolved_or_error}' is not available in the active variable description."
+            ),
             retryable=False,
             recovery_hint="Call controldesk_variable_find or controldesk_variable_list(action='list_all') and retry.",
         )
@@ -249,7 +253,9 @@ async def _resolve_variable_name_for_write(variable_name: str) -> str | ErrorEnv
                     "and is currently runtime-locked."
                 ),
                 retryable=False,
-                recovery_hint="Stop online calibration or switch to an initialization context before writing this variable.",
+                recovery_hint=(
+                    "Stop online calibration or switch to an initialization context before writing this variable."
+                ),
             )
 
     return resolved_or_error
@@ -650,9 +656,7 @@ async def read_string_variable(
             return resolved_or_error
 
         app = await com_bridge.dispatch(_get_app_lambda())
-        result = await com_bridge.dispatch(
-            com_bridge.domains.variable_com.read_string_variable, app, resolved_or_error
-        )
+        result = await com_bridge.dispatch(com_bridge.domains.variable_com.read_string_variable, app, resolved_or_error)
         return VariableReadStringResult(**result)
     except BridgeError as exc:
         _log.warning("variable_read_string failed: %s", exc)

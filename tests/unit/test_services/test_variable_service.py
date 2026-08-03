@@ -98,22 +98,25 @@ class TestFindVariable:
                     telemetry={"strategy": "find_name", "attempts_count": 1},
                 )
 
-        with patch(
-            "controldesk_mcp.com_bridge.dispatch",
-            new_callable=AsyncMock,
-            side_effect=[
-                app_mock,
-                {"found": False},
-                {
-                    "found": True,
-                    "name": "f_Kp_1",
-                    "variable_type": "Parameter",
-                    "identifier": {"connection_path": "XCP()://f_Kp_1"},
-                },
-            ],
-        ), patch(
-            "controldesk_mcp.services.variable_service._get_variable_path_resolver",
-            return_value=_ResolverStub(),
+        with (
+            patch(
+                "controldesk_mcp.com_bridge.dispatch",
+                new_callable=AsyncMock,
+                side_effect=[
+                    app_mock,
+                    {"found": False},
+                    {
+                        "found": True,
+                        "name": "f_Kp_1",
+                        "variable_type": "Parameter",
+                        "identifier": {"connection_path": "XCP()://f_Kp_1"},
+                    },
+                ],
+            ),
+            patch(
+                "controldesk_mcp.services.variable_service._get_variable_path_resolver",
+                return_value=_ResolverStub(),
+            ),
         ):
             from controldesk_mcp.services.variable_service import find_variable
 
@@ -148,13 +151,16 @@ class TestFindVariable:
                     telemetry={"strategy": "list_all_ambiguous", "attempts_count": 1},
                 )
 
-        with patch(
-            "controldesk_mcp.com_bridge.dispatch",
-            new_callable=AsyncMock,
-            side_effect=[app_mock, {"found": False}],
-        ), patch(
-            "controldesk_mcp.services.variable_service._get_variable_path_resolver",
-            return_value=_ResolverStub(),
+        with (
+            patch(
+                "controldesk_mcp.com_bridge.dispatch",
+                new_callable=AsyncMock,
+                side_effect=[app_mock, {"found": False}],
+            ),
+            patch(
+                "controldesk_mcp.services.variable_service._get_variable_path_resolver",
+                return_value=_ResolverStub(),
+            ),
         ):
             from controldesk_mcp.services.variable_service import find_variable
 
@@ -184,14 +190,17 @@ class TestReadScalar:
             "timestamp_utc": "2024-01-01T00:00:00Z",
         }
 
-        with patch(
-            "controldesk_mcp.com_bridge.dispatch",
-            new_callable=AsyncMock,
-            side_effect=[app_mock, com_result],
-        ), patch(
-            "controldesk_mcp.services.variable_service._resolve_variable_name_for_read",
-            new_callable=AsyncMock,
-            return_value="XCP(5ms)://control_out",
+        with (
+            patch(
+                "controldesk_mcp.com_bridge.dispatch",
+                new_callable=AsyncMock,
+                side_effect=[app_mock, com_result],
+            ),
+            patch(
+                "controldesk_mcp.services.variable_service._resolve_variable_name_for_read",
+                new_callable=AsyncMock,
+                return_value="XCP(5ms)://control_out",
+            ),
         ):
             from controldesk_mcp.services.variable_service import read_scalar_variable
 
@@ -203,14 +212,17 @@ class TestReadScalar:
     async def test_returns_error_on_operation_error(self) -> None:
         _make_connected_bridge()
 
-        with patch(
-            "controldesk_mcp.com_bridge.dispatch",
-            new_callable=AsyncMock,
-            side_effect=BridgeOperationError("variable not found", error_code="BRIDGE_OPERATION"),
-        ), patch(
-            "controldesk_mcp.services.variable_service._resolve_variable_name_for_read",
-            new_callable=AsyncMock,
-            return_value="XCP()://nonexistent",
+        with (
+            patch(
+                "controldesk_mcp.com_bridge.dispatch",
+                new_callable=AsyncMock,
+                side_effect=BridgeOperationError("variable not found", error_code="BRIDGE_OPERATION"),
+            ),
+            patch(
+                "controldesk_mcp.services.variable_service._resolve_variable_name_for_read",
+                new_callable=AsyncMock,
+                return_value="XCP()://nonexistent",
+            ),
         ):
             from controldesk_mcp.services.variable_service import read_scalar_variable
 
@@ -239,14 +251,17 @@ class TestWriteScalar:
             "timestamp_utc": "2024-01-01T00:00:00Z",
         }
 
-        with patch(
-            "controldesk_mcp.com_bridge.dispatch",
-            new_callable=AsyncMock,
-            side_effect=[app_mock, com_result],
-        ), patch(
-            "controldesk_mcp.services.variable_service._resolve_variable_name_for_write",
-            new_callable=AsyncMock,
-            return_value="XCP()://f_Kp_1",
+        with (
+            patch(
+                "controldesk_mcp.com_bridge.dispatch",
+                new_callable=AsyncMock,
+                side_effect=[app_mock, com_result],
+            ),
+            patch(
+                "controldesk_mcp.services.variable_service._resolve_variable_name_for_write",
+                new_callable=AsyncMock,
+                return_value="XCP()://f_Kp_1",
+            ),
         ):
             from controldesk_mcp.services.variable_service import write_scalar_variable
 
@@ -259,14 +274,17 @@ class TestWriteScalar:
     async def test_returns_error_on_bridge_error(self) -> None:
         _make_connected_bridge()
 
-        with patch(
-            "controldesk_mcp.com_bridge.dispatch",
-            new_callable=AsyncMock,
-            side_effect=BridgeConnectionError("disconnected"),
-        ), patch(
-            "controldesk_mcp.services.variable_service._resolve_variable_name_for_write",
-            new_callable=AsyncMock,
-            return_value="XCP()://f_Kp_1",
+        with (
+            patch(
+                "controldesk_mcp.com_bridge.dispatch",
+                new_callable=AsyncMock,
+                side_effect=BridgeConnectionError("disconnected"),
+            ),
+            patch(
+                "controldesk_mcp.services.variable_service._resolve_variable_name_for_write",
+                new_callable=AsyncMock,
+                return_value="XCP()://f_Kp_1",
+            ),
         ):
             from controldesk_mcp.services.variable_service import write_scalar_variable
 
@@ -377,14 +395,17 @@ class TestPhase2Resolution:
 
     @pytest.mark.asyncio
     async def test_resolve_for_write_blocks_non_writable(self) -> None:
-        with patch(
-            "controldesk_mcp.services.variable_service._resolve_variable_name_for_read",
-            new_callable=AsyncMock,
-            return_value="XCP()://f_Kp_1",
-        ), patch(
-            "controldesk_mcp.services.variable_service._resolver_find_variable",
-            new_callable=AsyncMock,
-            return_value={"found": True, "name": "f_Kp_1", "is_writable": False},
+        with (
+            patch(
+                "controldesk_mcp.services.variable_service._resolve_variable_name_for_read",
+                new_callable=AsyncMock,
+                return_value="XCP()://f_Kp_1",
+            ),
+            patch(
+                "controldesk_mcp.services.variable_service._resolver_find_variable",
+                new_callable=AsyncMock,
+                return_value={"found": True, "name": "f_Kp_1", "is_writable": False},
+            ),
         ):
             from controldesk_mcp.services.variable_service import _resolve_variable_name_for_write
 
@@ -398,23 +419,27 @@ class TestPhase2Resolution:
         conn = _make_connected_bridge()
         app_mock = conn.get_app.return_value
 
-        with patch(
-            "controldesk_mcp.services.variable_service._resolve_variable_name_for_read",
-            new_callable=AsyncMock,
-            return_value="XCP()://f_InitOnly",
-        ), patch(
-            "controldesk_mcp.services.variable_service._resolver_find_variable",
-            new_callable=AsyncMock,
-            return_value={
-                "found": True,
-                "name": "f_InitOnly",
-                "is_writable": True,
-                "is_changeable_only_during_initialization": True,
-            },
-        ), patch(
-            "controldesk_mcp.com_bridge.dispatch",
-            new_callable=AsyncMock,
-            side_effect=[app_mock, {"calibration_state": "Started"}],
+        with (
+            patch(
+                "controldesk_mcp.services.variable_service._resolve_variable_name_for_read",
+                new_callable=AsyncMock,
+                return_value="XCP()://f_InitOnly",
+            ),
+            patch(
+                "controldesk_mcp.services.variable_service._resolver_find_variable",
+                new_callable=AsyncMock,
+                return_value={
+                    "found": True,
+                    "name": "f_InitOnly",
+                    "is_writable": True,
+                    "is_changeable_only_during_initialization": True,
+                },
+            ),
+            patch(
+                "controldesk_mcp.com_bridge.dispatch",
+                new_callable=AsyncMock,
+                side_effect=[app_mock, {"calibration_state": "Started"}],
+            ),
         ):
             from controldesk_mcp.services.variable_service import _resolve_variable_name_for_write
 
