@@ -188,25 +188,19 @@ def add_odx_files_from_directory(
     except BridgePreconditionError:
         raise
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaECUDiagnosticsDatabaseFiles", method="AddFilesFromDirectory"
-        ) from exc
+        raise map_com_error(exc, interface="IXaECUDiagnosticsDatabaseFiles", method="AddFilesFromDirectory") from exc
 
     if db_name:
         try:
             db.Name = db_name
         except Exception as exc:
-            raise map_com_error(
-                exc, interface="IXaECUDiagnosticsDatabase", method="Name"
-            ) from exc
+            raise map_com_error(exc, interface="IXaECUDiagnosticsDatabase", method="Name") from exc
 
     try:
         db.OptimizeDatabaseEnabled = optimize
         db.Update()
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaECUDiagnosticsDatabase", method="Update"
-        ) from exc
+        raise map_com_error(exc, interface="IXaECUDiagnosticsDatabase", method="Update") from exc
 
     # Count files after loading
     try:
@@ -241,9 +235,7 @@ def add_odx_file(app: Any, platform_name: str, file_path: str) -> dict[str, Any]
     except BridgePreconditionError:
         raise
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaECUDiagnosticsDatabaseFiles", method="Add"
-        ) from exc
+        raise map_com_error(exc, interface="IXaECUDiagnosticsDatabaseFiles", method="Add") from exc
 
     return {
         "platform_name": platform_name,
@@ -267,9 +259,7 @@ def list_odx_files(app: Any, platform_name: str) -> dict[str, Any]:
         db_files = db.DatabaseFiles
         count = int(db_files.Count)
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaECUDiagnosticsDatabaseFiles", method="Count"
-        ) from exc
+        raise map_com_error(exc, interface="IXaECUDiagnosticsDatabaseFiles", method="Count") from exc
 
     files: list[str] = []
     for i in range(count):
@@ -281,9 +271,7 @@ def list_odx_files(app: Any, platform_name: str) -> dict[str, Any]:
             except Exception:  # noqa: BLE001
                 files.append(str(item))
         except Exception as exc:
-            raise map_com_error(
-                exc, interface="IXaECUDiagnosticsDatabaseFiles", method="Item"
-            ) from exc
+            raise map_com_error(exc, interface="IXaECUDiagnosticsDatabaseFiles", method="Item") from exc
 
     return {
         "platform_name": platform_name,
@@ -308,18 +296,14 @@ def list_vehicles(app: Any, platform_name: str) -> dict[str, Any]:
         vehicles_col = db.VehicleSelection.Vehicles
         count = int(vehicles_col.Count)
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaECUDiagnosticsVehicleSelection", method="Vehicles.Count"
-        ) from exc
+        raise map_com_error(exc, interface="IXaECUDiagnosticsVehicleSelection", method="Vehicles.Count") from exc
 
     vehicles: list[dict] = []
     for i in range(count):
         try:
             v = vehicles_col.Item(i)
         except Exception as exc:
-            raise map_com_error(
-                exc, interface="IXaECUDiagnosticsVehicles", method="Item"
-            ) from exc
+            raise map_com_error(exc, interface="IXaECUDiagnosticsVehicles", method="Item") from exc
 
         def _safe(attr: str, default: str = "") -> str:
             try:
@@ -367,8 +351,7 @@ def select_vehicle(app: Any, platform_name: str, vehicle_name: str) -> dict[str,
             f"Vehicle '{vehicle_name}' not found on platform '{platform_name}'.",
             error_code="BRIDGE_DIAG_VEHICLE_NOT_FOUND",
             recovery_hint=(
-                "Call ecu_diagnostics_link_setup with action='list_vehicles' to see "
-                "available vehicle short names."
+                "Call ecu_diagnostics_link_setup with action='list_vehicles' to see available vehicle short names."
             ),
         ) from exc
 
@@ -376,9 +359,7 @@ def select_vehicle(app: Any, platform_name: str, vehicle_name: str) -> dict[str,
         vehicle.Select()
         db.Update()
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaECUDiagnosticsVehicle", method="Select"
-        ) from exc
+        raise map_com_error(exc, interface="IXaECUDiagnosticsVehicle", method="Select") from exc
 
     return {
         "platform_name": platform_name,
@@ -412,9 +393,7 @@ def list_logical_links(app: Any, platform_name: str) -> dict[str, Any]:
         try:
             lnk = links_col.Item(i)
         except Exception as exc:
-            raise map_com_error(
-                exc, interface="IXaECUDiagnosticsLogicalLinks", method="Item"
-            ) from exc
+            raise map_com_error(exc, interface="IXaECUDiagnosticsLogicalLinks", method="Item") from exc
 
         def _safe(attr: str, default: str = "") -> str:
             try:
@@ -471,16 +450,12 @@ def select_logical_link(app: Any, platform_name: str, link_name: str) -> dict[st
     try:
         lnk.Select()
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaECUDiagnosticsLogicalLink", method="Select"
-        ) from exc
+        raise map_com_error(exc, interface="IXaECUDiagnosticsLogicalLink", method="Select") from exc
 
     try:
         lls.Update()
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaECUDiagnosticsLogicalLinkSelection", method="Update"
-        ) from exc
+        raise map_com_error(exc, interface="IXaECUDiagnosticsLogicalLinkSelection", method="Update") from exc
 
     return {
         "platform_name": platform_name,
@@ -542,9 +517,7 @@ def configure_logical_link(
     try:
         lnk.Select()
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaECUDiagnosticsLogicalLink", method="Select"
-        ) from exc
+        raise map_com_error(exc, interface="IXaECUDiagnosticsLogicalLink", method="Select") from exc
 
     last_protocol_error: Exception | None = None
     for protocol_int in protocol_candidates:
@@ -565,16 +538,12 @@ def configure_logical_link(
     try:
         lnk.PhysicalConnection = phys_int
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaECUDiagnosticsLogicalLink", method="PhysicalConnection"
-        ) from exc
+        raise map_com_error(exc, interface="IXaECUDiagnosticsLogicalLink", method="PhysicalConnection") from exc
 
     try:
         lls.Update()
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaECUDiagnosticsLogicalLinkSelection", method="Update"
-        ) from exc
+        raise map_com_error(exc, interface="IXaECUDiagnosticsLogicalLinkSelection", method="Update") from exc
 
     return {
         "platform_name": platform_name,
@@ -603,9 +572,7 @@ def list_interfaces(app: Any, platform_name: str, link_name: str) -> dict[str, A
         raise BridgePreconditionError(
             f"Logical link '{link_name}' not found on platform '{platform_name}'.",
             error_code="BRIDGE_DIAG_LINK_NOT_FOUND",
-            recovery_hint=(
-                "Call ecu_diagnostics_link_setup with action='list_logical_links' first."
-            ),
+            recovery_hint=("Call ecu_diagnostics_link_setup with action='list_logical_links' first."),
         ) from exc
 
     try:
@@ -613,18 +580,14 @@ def list_interfaces(app: Any, platform_name: str, link_name: str) -> dict[str, A
         vendors_col = interface_sel.Vendors
         vendor_count = int(vendors_col.Count)
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaECUDiagnosticsInterfaceSelection", method="Vendors.Count"
-        ) from exc
+        raise map_com_error(exc, interface="IXaECUDiagnosticsInterfaceSelection", method="Vendors.Count") from exc
 
     vendors: list[dict] = []
     for vi in range(vendor_count):
         try:
             vendor = vendors_col.Item(vi)
         except Exception as exc:
-            raise map_com_error(
-                exc, interface="IXaECUDiagnosticsVendors", method="Item"
-            ) from exc
+            raise map_com_error(exc, interface="IXaECUDiagnosticsVendors", method="Item") from exc
 
         try:
             vendor_name = str(vendor.Name)
@@ -681,9 +644,7 @@ def select_interface_channel(
         raise BridgePreconditionError(
             f"Logical link '{link_name}' not found on platform '{platform_name}'.",
             error_code="BRIDGE_DIAG_LINK_NOT_FOUND",
-            recovery_hint=(
-                "Call ecu_diagnostics_link_setup with action='list_logical_links' first."
-            ),
+            recovery_hint=("Call ecu_diagnostics_link_setup with action='list_logical_links' first."),
         ) from exc
 
     try:
@@ -691,12 +652,10 @@ def select_interface_channel(
         vendor = interface_sel.Vendors.Item(vendor_name)
     except Exception as exc:
         raise BridgePreconditionError(
-            f"Vendor '{vendor_name}' not found for link '{link_name}' on "
-            f"platform '{platform_name}'.",
+            f"Vendor '{vendor_name}' not found for link '{link_name}' on platform '{platform_name}'.",
             error_code="BRIDGE_DIAG_INTERFACE_NOT_FOUND",
             recovery_hint=(
-                "Call ecu_diagnostics_link_setup with action='list_interfaces' to see "
-                "available vendors and interfaces."
+                "Call ecu_diagnostics_link_setup with action='list_interfaces' to see available vendors and interfaces."
             ),
         ) from exc
 
@@ -704,8 +663,7 @@ def select_interface_channel(
         iface = vendor.AvailableInterfaces.Item(interface_name)
     except Exception as exc:
         raise BridgePreconditionError(
-            f"Interface '{interface_name}' not found for vendor '{vendor_name}' on "
-            f"link '{link_name}'.",
+            f"Interface '{interface_name}' not found for vendor '{vendor_name}' on link '{link_name}'.",
             error_code="BRIDGE_DIAG_INTERFACE_NOT_FOUND",
             recovery_hint=(
                 "Call ecu_diagnostics_link_setup with action='list_interfaces' to see "
@@ -716,9 +674,7 @@ def select_interface_channel(
     try:
         iface.Channels.Item(channel_index).Select()
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaECUDiagnosticsChannel", method="Select"
-        ) from exc
+        raise map_com_error(exc, interface="IXaECUDiagnosticsChannel", method="Select") from exc
 
     # Suppress variable description generation during automation
     try:
@@ -729,9 +685,7 @@ def select_interface_channel(
     try:
         lls.Update()
     except Exception as exc:
-        raise map_com_error(
-            exc, interface="IXaECUDiagnosticsLogicalLinkSelection", method="Update"
-        ) from exc
+        raise map_com_error(exc, interface="IXaECUDiagnosticsLogicalLinkSelection", method="Update") from exc
 
     return {
         "platform_name": platform_name,

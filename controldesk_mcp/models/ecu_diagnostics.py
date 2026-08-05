@@ -166,8 +166,7 @@ class DiagAddOdxDirectoryInput(BaseModel):
     optimize: bool = Field(
         default=False,
         description=(
-            "Set to True to optimize the database for faster loading. "
-            "Optimization takes additional time at import."
+            "Set to True to optimize the database for faster loading. Optimization takes additional time at import."
         ),
         examples=[False, True],
     )
@@ -250,10 +249,7 @@ class DiagSelectVehicleInput(BaseModel):
         examples=["ECU Diagnostics"],
     )
     vehicle_name: str = Field(
-        description=(
-            "Short name of the vehicle to select "
-            "(as returned by list_vehicles, e.g. 'VI_DemoCar')."
-        ),
+        description=("Short name of the vehicle to select (as returned by list_vehicles, e.g. 'VI_DemoCar')."),
         examples=["VI_DemoCar"],
     )
 
@@ -295,8 +291,7 @@ class DiagSelectLogicalLinkInput(BaseModel):
     )
     link_name: str = Field(
         description=(
-            "Short name of the logical link to select "
-            "(as returned by list_logical_links, e.g. 'LL_DemoECU')."
+            "Short name of the logical link to select (as returned by list_logical_links, e.g. 'LL_DemoECU')."
         ),
         examples=["LL_DemoECU"],
     )
@@ -421,10 +416,7 @@ class DiagSetupInput(BaseModel):
         )
     )
     platform_name: str = Field(
-        description=(
-            "Name of the Diagnostic2 platform "
-            "(e.g. 'ECU Diagnostics', as returned by platform_manage add)."
-        ),
+        description=("Name of the Diagnostic2 platform (e.g. 'ECU Diagnostics', as returned by platform_manage add)."),
         examples=["ECU Diagnostics"],
     )
     directory_path: Optional[str] = Field(
@@ -475,10 +467,7 @@ class DiagLinkSetupInput(BaseModel):
     )
     link_name: Optional[str] = Field(
         default=None,
-        description=(
-            "Required for select_logical_link, configure_logical_link, "
-            "list_interfaces, select_interface."
-        ),
+        description=("Required for select_logical_link, configure_logical_link, list_interfaces, select_interface."),
         examples=["LL_DemoECU"],
     )
     protocol: Optional[ECUDiagnosticsProtocol] = Field(
@@ -546,10 +535,7 @@ class DiagLinkManageInput(BaseModel):
     """Input for controldesk_ecu_diagnostics_link_manage ADD-ON tool."""
 
     action: DiagLinkManageAction = Field(
-        description=(
-            "'list_links', 'select_link', 'configure_link', "
-            "'list_interfaces', or 'select_interface'."
-        )
+        description=("'list_links', 'select_link', 'configure_link', 'list_interfaces', or 'select_interface'.")
     )
     platform_name: str = Field(
         description="Name of the Diagnostic2 platform.",
