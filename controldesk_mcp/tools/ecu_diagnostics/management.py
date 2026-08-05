@@ -99,11 +99,7 @@ from controldesk_mcp.services import ecu_diagnostics_service
 )
 async def ecu_diagnostics_setup(
     params: DiagSetupInput,
-) -> (
-    DiagAddOdxDirectoryResult
-    | DiagListOdxFilesResult
-    | ErrorEnvelope
-):
+) -> DiagAddOdxDirectoryResult | DiagListOdxFilesResult | ErrorEnvelope:
     if params.action == DiagSetupAction.add_odx_directory:
         if not params.directory_path:
             return ErrorEnvelope(
@@ -121,9 +117,7 @@ async def ecu_diagnostics_setup(
             )
         )
     # list_odx_files
-    return await ecu_diagnostics_service.list_odx_files(
-        DiagListOdxFilesInput(platform_name=params.platform_name)
-    )
+    return await ecu_diagnostics_service.list_odx_files(DiagListOdxFilesInput(platform_name=params.platform_name))
 
 
 # ── Tool 2 — controldesk_ecu_diagnostics_link_setup ──────────────────────────
@@ -167,9 +161,7 @@ async def ecu_diagnostics_link_setup(
     | ErrorEnvelope
 ):
     if params.action == DiagLinkSetupAction.list_vehicles:
-        return await ecu_diagnostics_service.list_vehicles(
-            DiagListVehiclesInput(platform_name=params.platform_name)
-        )
+        return await ecu_diagnostics_service.list_vehicles(DiagListVehiclesInput(platform_name=params.platform_name))
 
     if params.action == DiagLinkSetupAction.select_vehicle:
         if not params.vehicle_name:
@@ -212,8 +204,7 @@ async def ecu_diagnostics_link_setup(
                 error_code="MISSING_PARAM",
                 category="INPUT_VALIDATION",
                 message=(
-                    "link_name, protocol, and physical_connection are required for "
-                    "action='configure_logical_link'."
+                    "link_name, protocol, and physical_connection are required for action='configure_logical_link'."
                 ),
                 recovery_hint=(
                     "Provide link_name (from list_logical_links), protocol "
@@ -250,13 +241,8 @@ async def ecu_diagnostics_link_setup(
         return ErrorEnvelope(
             error_code="MISSING_PARAM",
             category="INPUT_VALIDATION",
-            message=(
-                "link_name, vendor_name, and interface_name are required for "
-                "action='select_interface'."
-            ),
-            recovery_hint=(
-                "Call list_interfaces first to discover available vendors and interfaces."
-            ),
+            message=("link_name, vendor_name, and interface_name are required for action='select_interface'."),
+            recovery_hint=("Call list_interfaces first to discover available vendors and interfaces."),
         )
     return await ecu_diagnostics_service.select_interface_channel(
         DiagSelectInterfaceInput(
@@ -310,9 +296,7 @@ async def ecu_diagnostics_db_manage(
             )
         )
     # list_files
-    return await ecu_diagnostics_service.list_odx_files(
-        DiagListOdxFilesInput(platform_name=params.platform_name)
-    )
+    return await ecu_diagnostics_service.list_odx_files(DiagListOdxFilesInput(platform_name=params.platform_name))
 
 
 # ── GROUP: VEHICLE_MANAGEMENT ─────────────────────────────────────────────────
@@ -339,9 +323,7 @@ async def ecu_diagnostics_vehicle_manage(
     params: DiagVehicleManageInput,
 ) -> DiagListVehiclesResult | DiagSelectVehicleResult | ErrorEnvelope:
     if params.action == DiagVehicleManageAction.list_vehicles:
-        return await ecu_diagnostics_service.list_vehicles(
-            DiagListVehiclesInput(platform_name=params.platform_name)
-        )
+        return await ecu_diagnostics_service.list_vehicles(DiagListVehiclesInput(platform_name=params.platform_name))
     # select_vehicle
     if not params.vehicle_name:
         return ErrorEnvelope(
@@ -416,13 +398,8 @@ async def ecu_diagnostics_link_manage(
             return ErrorEnvelope(
                 error_code="MISSING_PARAM",
                 category="INPUT_VALIDATION",
-                message=(
-                    "link_name, protocol, and physical_connection are required for "
-                    "action='configure_link'."
-                ),
-                recovery_hint=(
-                    "Provide link_name (from list_links), protocol, and physical_connection."
-                ),
+                message=("link_name, protocol, and physical_connection are required for action='configure_link'."),
+                recovery_hint=("Provide link_name (from list_links), protocol, and physical_connection."),
             )
         return await ecu_diagnostics_service.configure_logical_link(
             DiagConfigureLogicalLinkInput(
@@ -453,13 +430,8 @@ async def ecu_diagnostics_link_manage(
         return ErrorEnvelope(
             error_code="MISSING_PARAM",
             category="INPUT_VALIDATION",
-            message=(
-                "link_name, vendor_name, and interface_name are required for "
-                "action='select_interface'."
-            ),
-            recovery_hint=(
-                "Call list_interfaces first to discover available vendors and interfaces."
-            ),
+            message=("link_name, vendor_name, and interface_name are required for action='select_interface'."),
+            recovery_hint=("Call list_interfaces first to discover available vendors and interfaces."),
         )
     return await ecu_diagnostics_service.select_interface_channel(
         DiagSelectInterfaceInput(
@@ -501,10 +473,7 @@ async def ecu_diagnostics_discover(ctx: Context) -> DiagDiscoverResult:
         tools=[
             ToolActionEntry(
                 tool_name="controldesk_ecu_diagnostics_db_manage",
-                purpose=(
-                    "Add individual ODX files to or list files in the active "
-                    "diagnostics database."
-                ),
+                purpose=("Add individual ODX files to or list files in the active diagnostics database."),
                 actions=["add_file", "list_files"],
                 required_params_per_action={
                     "add_file": ["platform_name", "file_path"],
