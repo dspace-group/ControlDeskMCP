@@ -4,7 +4,8 @@ Prompts registered:
   manage_instrument_workflow — list, add, configure, connect signals, and arrange instruments
 
 All instrument-domain tools are covered:
-  controldesk_instrument_list, controldesk_instrument_manage, controldesk_instrument_discover, controldesk_instrument_signal_manage
+    controldesk_instrument_list, controldesk_instrument_manage,
+    controldesk_instrument_discover, controldesk_instrument_signal_manage
 
 Layer: MCP Prompt adapter — pure Python; no COM or service calls.
 """

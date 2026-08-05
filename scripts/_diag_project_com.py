@@ -1,5 +1,6 @@
 """Diagnostic: discover correct COM property names for IXaProjectRoot and IXaExperiment."""
 import asyncio
+
 import controldesk_mcp.com_bridge as com_bridge
 
 

@@ -9,11 +9,11 @@ from controldesk_mcp.com_bridge.domains.instrument_com import instrument_get_inf
 
 class _OpaqueMainVariableWithPath:
     @property
-    def Path(self):
+    def Path(self):  # noqa: N802
         return "XCP()://air_mass"
 
     @property
-    def Connection(self):
+    def Connection(self):  # noqa: N802
         raise Exception("connection unavailable")
 
     def __str__(self) -> str:
@@ -22,11 +22,11 @@ class _OpaqueMainVariableWithPath:
 
 class _OpaqueMainVariableWithConnectionPath:
     @property
-    def Path(self):
+    def Path(self):  # noqa: N802
         raise Exception("path unavailable")
 
     @property
-    def Connection(self):
+    def Connection(self):  # noqa: N802
         connection = MagicMock()
         variable = MagicMock()
         type(variable).Path = PropertyMock(return_value="XCP(5ms)://control_out")
@@ -39,11 +39,11 @@ class _OpaqueMainVariableWithConnectionPath:
 
 class _OpaqueMainVariableUnresolved:
     @property
-    def Path(self):
+    def Path(self):  # noqa: N802
         raise Exception("path unavailable")
 
     @property
-    def Connection(self):
+    def Connection(self):  # noqa: N802
         raise Exception("connection unavailable")
 
     def __str__(self) -> str:

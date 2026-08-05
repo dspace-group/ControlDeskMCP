@@ -24,18 +24,42 @@ def _make_tool(name: str, description: str = "", meta: dict | None = None) -> Ma
 
 
 _SAMPLE_TOOLS = [
-    _make_tool("controldesk_app_start_or_attach", "Start or attach ControlDesk", {"domain": "application", "group": "lifecycle"}),
+    _make_tool(
+        "controldesk_app_start_or_attach",
+        "Start or attach ControlDesk",
+        {"domain": "application", "group": "lifecycle"},
+    ),
     _make_tool("controldesk_app_stop", "Quit ControlDesk", {"domain": "application", "group": "lifecycle"}),
     _make_tool("controldesk_measurement_start", "Start measurement", {"domain": "measurement", "group": "recording"}),
     _make_tool("controldesk_measurement_stop", "Stop measurement", {"domain": "measurement", "group": "recording"}),
-    _make_tool("controldesk_measurement_raster_manage", "Manage rasters", {"domain": "measurement", "group": "raster_management"}),
+    _make_tool(
+        "controldesk_measurement_raster_manage",
+        "Manage rasters",
+        {"domain": "measurement", "group": "raster_management"},
+    ),
     _make_tool("controldesk_platform_connect", "Connect a platform", {"domain": "platform", "group": "connectivity"}),
     _make_tool("controldesk_platform_query", "Query platforms", {"domain": "platform", "group": "configuration"}),
     _make_tool("controldesk_variable_read", "Read a variable", {"domain": "variable", "group": "read"}),
-    _make_tool("controldesk_bus_logger_manage", "Manage bus logger", {"domain": "bus_logging", "group": "logger_management"}),
-    _make_tool("controldesk_bus_filter_create", "Create bus filter", {"domain": "bus_logging", "group": "filter_management"}),
-    _make_tool("controldesk_bus_replay_manage", "Manage bus replay", {"domain": "bus_replay", "group": "replay_management"}),
-    _make_tool("controldesk_project_experiment_manage", "Manage experiment", {"domain": "project", "group": "experiment_management"}),
+    _make_tool(
+        "controldesk_bus_logger_manage",
+        "Manage bus logger",
+        {"domain": "bus_logging", "group": "logger_management"},
+    ),
+    _make_tool(
+        "controldesk_bus_filter_create",
+        "Create bus filter",
+        {"domain": "bus_logging", "group": "filter_management"},
+    ),
+    _make_tool(
+        "controldesk_bus_replay_manage",
+        "Manage bus replay",
+        {"domain": "bus_replay", "group": "replay_management"},
+    ),
+    _make_tool(
+        "controldesk_project_experiment_manage",
+        "Manage experiment",
+        {"domain": "project", "group": "experiment_management"},
+    ),
     _make_tool("controldesk_project_manage", "Manage project", {"domain": "project", "group": "project_management"}),
     _make_tool("health", "Health check"),
 ]

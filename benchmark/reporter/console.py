@@ -7,7 +7,6 @@ from tabulate import tabulate
 
 from ..models import BenchmarkReport, DomainMetrics, ToolMetrics
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
