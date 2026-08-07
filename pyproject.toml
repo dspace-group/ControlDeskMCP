@@ -18,7 +18,7 @@ classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Topic :: Scientific/Engineering",
 ]
-dependencies = ["mcp>=1.6.0", "pydantic>=2.0", "pydantic-settings>=2.0"]
+dependencies = ["mcp>=2.0.0", "pydantic>=2.0", "pydantic-settings>=2.0"]
 
 [project.urls]
 Homepage = "https://github.com/dspace-group/ControlDeskMCP"
