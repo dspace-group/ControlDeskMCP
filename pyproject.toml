@@ -37,7 +37,7 @@ dev = [
 ]
 # Windows-only: install before running scripts/build/build-exe.ps1
 packaging = [
-    "pyinstaller>=6.0",
+    "pyinstaller>=6.22.0",
     "pywin32>=306; sys_platform == 'win32'",
     "pyinstaller-hooks-contrib>=2024.0",
 ]
