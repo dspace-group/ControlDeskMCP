@@ -12,8 +12,10 @@ def test_package_imports() -> None:
 
 
 def test_mcp_instance_exists() -> None:
-    """FastMCP instance must be created and named correctly."""
+    """MCPServer instance must be created and named correctly."""
+    from mcp.server import MCPServer
+
     from controldesk_mcp.server.app import mcp
 
-    assert mcp is not None
+    assert isinstance(mcp, MCPServer)
     assert "ControlDesk" in mcp.name

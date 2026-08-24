@@ -15,6 +15,8 @@ from __future__ import annotations
 import argparse
 import sys
 
+from mcp.server.transport_security import TransportSecuritySettings
+
 from controldesk_mcp.config.settings import get_settings
 from controldesk_mcp.server.app import mcp
 from controldesk_mcp.utils.logger import get_logger
@@ -104,11 +106,15 @@ def main() -> None:
                 "API key middleware.",
                 cfg.mcp_host,
             )
-        mcp.settings.host = cfg.mcp_host
-        mcp.settings.port = cfg.mcp_port
+        transport_security = None
         if cfg.mcp_host not in ("127.0.0.1", "localhost", "::1"):
-            mcp.settings.transport_security.enable_dns_rebinding_protection = False
-        mcp.run(transport="streamable-http")
+            transport_security = TransportSecuritySettings(enable_dns_rebinding_protection=False)
+        mcp.run(
+            transport="streamable-http",
+            host=cfg.mcp_host,
+            port=cfg.mcp_port,
+            transport_security=transport_security,
+        )
     else:
         mcp.run(transport="stdio")
 

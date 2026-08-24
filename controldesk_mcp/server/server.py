@@ -4,7 +4,7 @@ import time
 from enum import Enum
 
 from mcp import Tool  # noqa: F401
-from mcp.server import FastMCP
+from mcp.server import MCPServer as _MCPServer
 from mcp.server.lowlevel.server import NotificationOptions
 
 from controldesk_mcp.models.tooldecorator.metainfo import AnnotationInfo, ToolDomain
@@ -33,7 +33,7 @@ class MCPToolCategory(Enum):
     NONE = "none"
 
 
-class MCPServer(FastMCP):
+class MCPServer(_MCPServer):
     tool_domain_dict: dict[str, list[str]] = {}
 
     def __init__(self, *args, **kwargs):
@@ -62,7 +62,7 @@ class MCPServer(FastMCP):
         Clients (VS Code Copilot, etc.) check this flag before subscribing to
         notifications/tools/list_changed. Without it they ignore the notification.
         """
-        original = self._mcp_server.create_initialization_options
+        original = self._lowlevel_server.create_initialization_options
 
         def _patched(notification_options=None, experimental_capabilities=None):
             opts = NotificationOptions(
@@ -72,7 +72,7 @@ class MCPServer(FastMCP):
             )
             return original(opts, experimental_capabilities or {})
 
-        self._mcp_server.create_initialization_options = _patched
+        self._lowlevel_server.create_initialization_options = _patched
 
     def tool(
         self,

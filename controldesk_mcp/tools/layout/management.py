@@ -20,7 +20,7 @@ All orchestration is delegated to controldesk_mcp.services.layout_service.
 
 from __future__ import annotations
 
-from mcp.server.fastmcp import Context
+from mcp.server.mcpserver import Context
 
 from controldesk_mcp.config.settings import get_settings
 from controldesk_mcp.models.errors import ErrorEnvelope
