@@ -9,8 +9,6 @@ import sys
 from contextlib import asynccontextmanager
 from typing import Any
 
-from mcp.server.fastmcp import FastMCP
-
 from controldesk_mcp.config.settings import get_settings
 from controldesk_mcp.server.server import MCPServer
 from controldesk_mcp.utils.logger import configure_root_level, get_logger
@@ -22,7 +20,7 @@ _log = get_logger(__name__)
 # FastMCP emits INFO-level logs for every protocol message.
 # Suppress them to keep stderr clean on the stdio transport.
 logging.getLogger("mcp.server").setLevel(logging.WARNING)
-logging.getLogger("mcp.server.fastmcp").setLevel(logging.WARNING)
+logging.getLogger("mcp.server.mcpserver").setLevel(logging.WARNING)
 
 
 # ── Startup validation ────────────────────────────────────────────────────────
@@ -48,7 +46,7 @@ def _validate_runtime() -> None:
 
 
 @asynccontextmanager
-async def _lifespan(server: FastMCP) -> Any:  # type: ignore[type-arg]
+async def _lifespan(server: MCPServer) -> Any:  # type: ignore[type-arg]
     """Configure logging, validate runtime, and bracket COM bridge lifecycle."""
     cfg = get_settings()
     configure_root_level(cfg.log_level)

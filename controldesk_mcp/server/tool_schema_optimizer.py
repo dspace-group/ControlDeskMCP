@@ -15,12 +15,12 @@ from __future__ import annotations
 
 import logging
 
-from mcp.server.fastmcp import FastMCP
+from mcp.server import MCPServer
 
 logger = logging.getLogger(__name__)
 
 
-def strip_output_schemas(mcp_instance: FastMCP) -> int:
+def strip_output_schemas(mcp_instance: MCPServer) -> int:
     """Set output_schema to None for every registered tool.
 
     Must be called after all @mcp.tool decorators have executed (i.e. after all
