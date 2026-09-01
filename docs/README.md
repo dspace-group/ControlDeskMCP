@@ -20,3 +20,10 @@ This directory contains supporting documentation for ControlDesk MCP Server.
 - [Security policy](../SECURITY.md)
 - [Code of Conduct](../CODE_OF_CONDUCT.md)
 - [Changelog](../CHANGELOG.md)
+
+## Support
+
+For technical questions and issues related to the dSPACE MCP Servers and related GitHub repositories, please open a GitHub issue.
+
+As a valued dSPACE customer, you are always welcome to contact dSPACE Support
+directly via [http://www.dspace.com/go/supportrequest](http://www.dspace.com/go/supportrequest).
