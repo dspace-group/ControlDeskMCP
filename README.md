@@ -20,9 +20,9 @@ ControlDesk project and experiment workflow.
 - **An MCP-compatible client application** that supports the Model Context
   Protocol (MCP) and can launch and communicate with MCP servers via the STDIO
   transport. Examples:
-  - Visual Studio Code with the GitHub Copilot extension
-  - Claude Desktop
-  - Cursor or Claude Code
+    - Visual Studio Code with the GitHub Copilot extension
+    - Claude Desktop
+    - Cursor or Claude Code
 - **PowerShell** — available by default on Windows; required to run the server
   launcher script and development scripts.
 
@@ -254,13 +254,14 @@ uv run pytest -m integration
 - **Test the COM API independently:** open PowerShell and check that ControlDesk
   COM automation is reachable before using the MCP server:
 
-  ```powershell
-  $app = New-Object -ComObject ControlDeskNG.Application
-  $app.GetType().FullName
-  ```
+    ```powershell
+    $app = New-Object -ComObject ControlDeskNG.Application
+    $app.GetType().FullName
+    ```
 
-  If this fails, the COM server is not registered or ControlDesk is not installed
-  correctly. Fix the ControlDesk installation before troubleshooting the MCP server.
+    If this fails, the COM server is not registered or ControlDesk is not installed
+    correctly. Fix the ControlDesk installation before troubleshooting the MCP server.
+
 - **MCP client cannot launch the server or sees no tools:** verify the absolute
   path to `ControlDeskMCP.exe` in the client configuration is correct and the file
   exists. In VS Code, confirm that Copilot is signed in and that `mcp.json` is
@@ -278,19 +279,13 @@ uv run pytest -m integration
 - [Security policy](SECURITY.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
 - [Changelog](CHANGELOG.md)
-- [dSPACE Support](https://www.dspace.com/en/pub/home/support.cfm): official
-  user documentation, installation guides, COM API reference, and product support.
 
 ## Support
 
-For questions and issues related to this MCP server, open a
-[GitHub issue](https://github.com/dspace-group/ControlDeskMCP/issues).
+For technical questions and issues related to the dSPACE MCP Servers and related GitHub repositories, please open a GitHub issue.
 
-For questions about dSPACE ControlDesk itself — installation, licensing, COM
-API, or product behavior — contact dSPACE support:
-
-- Web: <https://www.dspace.com/en/pub/home/support.cfm>
-- dSPACE GmbH, Rathenaustraße 26, 33102 Paderborn, Germany
+As a valued dSPACE customer, you are always welcome to contact dSPACE Support
+directly via [http://www.dspace.com/go/supportrequest](http://www.dspace.com/go/supportrequest).
 
 ## License
 
