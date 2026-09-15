@@ -27,7 +27,10 @@ python -m controldesk_mcp
 
 ## Notes
 
-- Generated at: 2026-07-30 16:59:00+05:30
-- Inspector source: C:\Users\sureandhar.a\AppData\Local\npm-cache\_npx\5a9d879542beca3a\node_modules\.bin\mcp-inspector.ps1
+- These files are generated artifacts. Do not edit them manually.
+- Regenerate them after changing tools, resources, prompts, or their schemas, then
+	review and commit the resulting JSON together with the code change.
+- The generated counts are informational and may change as the server surface
+	evolves.
 - Transport: stdio
 - Server command: python -m controldesk_mcp

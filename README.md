@@ -9,6 +9,26 @@ ControlDesk MCP provides a controlled way for AI-assisted workflows to inspect
 and operate an existing ControlDesk setup while preserving the normal
 ControlDesk project and experiment workflow.
 
+## Quick Start for Customers
+
+For a released installation, download `ControlDeskMCP.exe` and its matching
+checksum file from the GitHub release, verify the checksum, and configure your
+MCP client to launch the executable. The executable includes Python and all
+runtime dependencies; Python and `uv` are not required on the customer
+machine.
+
+The main setup choices are:
+
+| Goal | Start here |
+| --- | --- |
+| Install for normal use | [Released executable](#released-executable) |
+| Configure VS Code, Claude Desktop, or Cursor | [Client setup guide](docs/clients.md) |
+| Run from source or contribute code | [Source checkout](#source-checkout) |
+| Verify a downloaded release | [Release verification](docs/release.md) |
+
+The server runs locally through the MCP client's stdio transport by default.
+ControlDesk must be installed and licensed on the same Windows machine.
+
 > **Early release:** This MCP server is an initial release. dSPACE plans to
 > extend and improve the server — additional tools, improved AI guidance, and
 > broader workflow coverage — in future releases.
@@ -25,6 +45,9 @@ ControlDesk project and experiment workflow.
     - Cursor or Claude Code
 - **PowerShell** — available by default on Windows; required to run the server
   launcher script and development scripts.
+
+The project requires Python 3.11 or newer for source development. Python 3.11,
+3.12, and 3.13 are currently listed as supported project targets.
 
 Set `CONTROLDESK_VERSION` to a version such as `2026-A` when a specific
 ControlDesk version is required. Leave it unset to use the newest detected
@@ -49,6 +72,11 @@ installation.
 The executable contains the Python runtime and all server dependencies (including
 the MCP SDK). It does not require a separate Python, `uv`, or any additional
 package installation.
+
+To upgrade, replace the executable and checksum file with the pair from the
+new release, verify the new checksum, and restart the MCP client. To roll back,
+restore the previous executable and matching checksum file. Keep each release
+pair together; do not mix an executable with a checksum from another release.
 
 ### Source checkout
 
