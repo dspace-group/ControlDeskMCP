@@ -70,6 +70,21 @@ The released-server path is normally:
 `C:\path\to\ControlDeskMCP\ControlDeskMCP.cmd` and ensure Python 3.11+ and
 `uv` are installed.
 
+### Configuration scope
+
+Choose the configuration scope based on how broadly the server should be
+available:
+
+| Client | Global configuration | Project/workspace configuration |
+| --- | --- | --- |
+| VS Code | User-level `mcp.json` | `.vscode/mcp.json` |
+| Claude Desktop | `%APPDATA%\Claude\claude_desktop_config.json` | Not supported by the desktop client |
+| Cursor | `%USERPROFILE%\.cursor\mcp.json` | `.cursor\mcp.json` |
+
+Use an absolute path to the released executable for a global installation. Use
+the repository launcher only when the source checkout and its development
+environment are available on the same machine.
+
 ---
 
 ## Client A — VS Code + GitHub Copilot
@@ -382,6 +397,11 @@ npx @modelcontextprotocol/inspector `
 
 ## Client E — HTTP Transport (Remote / Headless)
 
+> **Security warning:** HTTP transport has no built-in authentication. It is
+> intended for controlled networks only. Prefer stdio for local clients. If
+> remote access is required, restrict the port with Windows Firewall and do not
+> expose the endpoint directly to the public internet.
+
 Use `streamable-http` transport when you need to:
 
 - Access the server from a different machine on the same network
@@ -577,13 +597,9 @@ List the calibration objects available on the main platform.
 3. Verify the command is reachable:
     ```powershell
     .\ControlDeskMCP.cmd --help
+    # or use the full path to a source checkout:
+    & "C:\path\to\ControlDeskMCP\ControlDeskMCP.cmd" --help
     ```
-
-# or full path:
-
-"C:\path\to\ControlDeskMCP\ControlDeskMCP.cmd" --help
-
-````
 
 ### `controldesk_app_start_or_attach` returns an error about ControlDesk not found
 
@@ -593,7 +609,7 @@ List the calibration objects available on the main platform.
 - Increase the launch timeout:
 ```json
 "env": { "COM_LAUNCH_TIMEOUT_MS": "60000" }
-````
+```
 
 ### Tools time out or return `COM_TIMEOUT`
 

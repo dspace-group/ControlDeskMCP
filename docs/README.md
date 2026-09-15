@@ -1,23 +1,27 @@
 # ControlDesk MCP Documentation
 
-This directory contains supporting documentation for ControlDesk MCP Server.
+This directory contains the documentation for ControlDesk MCP Server. Start
+with the customer guide if you are installing or configuring the released
+server; use the developer guides when working from the source repository.
 
-## Guides
+## Customer Guides
 
 - [Client configuration and examples](clients.md): Configure the server in MCP clients.
+- [Getting started and usage](../README.md): Install the released executable or set up a source checkout.
+- [Release verification and artifact policy](release.md): Verify published packages and understand the signing and dependency-notice policy.
+- [Security policy](../SECURITY.md): Report security issues and understand the project policy.
+
+## Developer Reference
+
 - [Server architecture](architecture.md): Understand the service, COM bridge, and
   MCP server layers.
 - [Variable resolution behavior](variable-resolution.md): Resolver fallback order,
   ambiguity handling, write safety, and operator examples.
 - [Error handling](error-handling.md): Interpret errors and recovery guidance.
 - [MCP Inspector](mcp-inspector.md): Inspect and test the MCP surface locally.
-- [Release verification and artifact policy](release.md): Verify published
-  packages and understand the signing and dependency-notice policy.
 
-## Project Documents
+## Project Information
 
-- [Getting started and usage](../README.md)
-- [Security policy](../SECURITY.md)
 - [Code of Conduct](../CODE_OF_CONDUCT.md)
 - [Changelog](../CHANGELOG.md)
 

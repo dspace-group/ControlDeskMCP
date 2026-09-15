@@ -9,7 +9,7 @@
 
 .PARAMETER Transport
     MCP transport to use. Defaults to 'stdio'. Set to 'http' when
-    connecting via SSE/Streamable-HTTP instead.
+    connecting via Streamable HTTP instead.
 
 .EXAMPLE
     ./scripts/debug.ps1
