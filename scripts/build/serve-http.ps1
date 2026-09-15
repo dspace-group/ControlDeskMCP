@@ -8,7 +8,7 @@
     machine (e.g. a developer's laptop) to a ControlDesk VM.
 
     Default host is 0.0.0.0 (all interfaces) so remote clients can reach
-    the server.  For local-only HTTP testing use -Host 127.0.0.1.
+    the server. For local-only HTTP testing use -BindHost 127.0.0.1.
 
     The MCP endpoint will be:  http://<host>:<port>/mcp
 
@@ -30,24 +30,25 @@
     Server log level: DEBUG | INFO | WARNING | ERROR.  Default: INFO.
 
 .PARAMETER DevMode
-    When specified, launches via 'python -m controldesk_mcp' (source tree) instead
-    of the installed controldesk-mcp executable.  Useful during development.
+    When specified, launches via 'uv run python -m controldesk_mcp' from the
+    source tree instead of the installed controldesk-mcp executable. Useful
+    during development.
 
 .EXAMPLE
     # Remote access — bind to all interfaces (default)
-    ./scripts/serve-http.ps1
+    ./scripts/build/serve-http.ps1
 
 .EXAMPLE
     # Local HTTP only
-    ./scripts/serve-http.ps1 -BindHost 127.0.0.1
+    ./scripts/build/serve-http.ps1 -BindHost 127.0.0.1
 
 .EXAMPLE
     # Custom port, debug logging
-    ./scripts/serve-http.ps1 -Port 9000 -LogLevel DEBUG
+    ./scripts/build/serve-http.ps1 -Port 9000 -LogLevel DEBUG
 
 .EXAMPLE
     # Development mode (run from source tree)
-    ./scripts/serve-http.ps1 -DevMode
+    ./scripts/build/serve-http.ps1 -DevMode
 #>
 param(
     [string]$BindHost = "0.0.0.0",
@@ -58,11 +59,18 @@ param(
     [ValidateSet("DEBUG", "INFO", "WARNING", "ERROR")]
     [string]$LogLevel = "INFO",
 
-    [switch]$DevMode
+    [switch]$DevMode,
+
+    [switch]$Help
 )
 
+if ($Help) {
+    Get-Help $MyInvocation.MyCommand.Path -Detailed
+    exit 0
+}
+
 $ErrorActionPreference = 'Stop'
-Set-Location $PSScriptRoot\..
+Set-Location $PSScriptRoot\..\..
 
 Write-Host ""
 Write-Host "=== ControlDesk MCP Server — HTTP Transport ===" -ForegroundColor Cyan
@@ -96,8 +104,8 @@ else {
     }
     else {
         Write-Host "ERROR: controldesk-mcp executable not found." -ForegroundColor Red
-        Write-Host "       Install the wheel first:  .\scripts\build\install-wheel.ps1" -ForegroundColor Red
-        Write-Host "       Or run in dev mode:       .\scripts\serve-http.ps1 -DevMode" -ForegroundColor Red
+        Write-Host "       Install the project first: uv pip install --system ." -ForegroundColor Red
+        Write-Host "       Or run in dev mode:        .\scripts\build\serve-http.ps1 -DevMode" -ForegroundColor Red
         Write-Host ""
         exit 1
     }

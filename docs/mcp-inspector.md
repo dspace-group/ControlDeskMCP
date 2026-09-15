@@ -179,7 +179,7 @@ the Resources tab to verify that resource value independently.
 1. Add a `@mcp.prompt(name=..., ...)` function to `controldesk_mcp/prompts/<domain>_prompts.py` (create if new domain).
 2. Import the module in `controldesk_mcp/server/registry.py` under `# ── Prompts`.
 3. Add unit tests in `tests/unit/test_prompts/test_<domain>_prompts.py`.
-4. Update the prompt table in `AGENTS.md` and in this guide.
+4. Update the prompt table in this guide.
 
 ---
 
@@ -349,7 +349,6 @@ The `workbench.mcp.serverOptions` command also opens a quickpick showing Start /
 | File                                                                                                | Purpose                                                                 |
 | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | [docs/architecture.md](architecture.md)                                                             | Five-layer server architecture, transport protocol, COM bridge          |
-| [AGENTS.md](../AGENTS.md)                                                                           | Non-obvious rules for AI coding agents                                  |
 | [.vscode/launch.json](../.vscode/launch.json)                                                       | VS Code debug configuration — "Debug ControlDesk MCP Server"            |
 | [.vscode/tasks.json](../.vscode/tasks.json)                                                         | VS Code task definitions (Inspector pre-launch task)                    |
 | [.vscode/mcp-inspector.json](../.vscode/mcp-inspector.json)                                         | Inspector server config — pre-configures the ControlDesk MCP server URL |

@@ -24,7 +24,6 @@
 ```
 root/
 │
-├── AGENTS.md                          ✅ AI agent context (non-obvious knowledge only)
 ├── pyproject.toml                     ✅ PEP 517 project + pip/hatch deps
 ├── README.md                          ✅
 │
@@ -113,13 +112,10 @@ root/
 │   ├── inspect.ps1                    ✅ MCP Inspector launcher
 │
 └── docs/
-    ├── INDEX.md                       ✅ Navigation entry point
     ├── architecture.md                ✅ (this file)
     ├── error-handling.md              ✅ Error taxonomy, CdError hierarchy, envelope builder
-    ├── performance.md                 ✅ COM marshaling, STA bottleneck, process overhead
-    ├── tool-design.md                 ✅ Tool consolidation, progressive discovery pattern
-    ├── testing.md                     ✅ Product test setup, LLM-driven test architecture
     ├── mcp-inspector.md               ✅ Inspector developer guide
+    ├── README.md                      ✅ Documentation navigation entry point
     └── tools/                         ✅ Tool specifications per domain
 ```
 
@@ -356,7 +352,7 @@ Tools use `MCPToolCategory` to control registration and context window costs:
 
 The META tool (`<domain>_discover`) returns a catalogue of all lazy ADD_ON tools. The LLM calls it once to learn what operations exist, then calls the specific manage-tool.
 
-See [tool-design.md](tool-design.md) for the full consolidation pattern and categorisation rules.
+See [Tool Design Contract](#7-tool-design-contract) for the consolidation pattern and categorisation rules.
 
 ### TTL-Based Eviction
 
@@ -599,7 +595,7 @@ Each file in `domains/` wraps COM calls for one functional area:
 
 **Layer 3 — Integration Tests (live ControlDesk):** Marked `@pytest.mark.integration`. Run with `pytest -m integration`. Skipped in CI with `pytest -m "not integration"`.
 
-See [testing.md](testing.md) for full test setup.
+See the [test layout and markers](#8-key-files) and the test configuration in `pyproject.toml` for the current test setup.
 
 ---
 
@@ -683,7 +679,6 @@ async def variable_read_scalar(params: VariableReadScalarInput) -> str:
 | `controldesk_mcp/com_bridge/error_handling/circuit_breaker.py` | Per-interface CLOSED/OPEN/HALF-OPEN circuit breaker                                                         |
 | `controldesk_mcp/com_bridge/detector.py`                       | ControlDesk version/process detection on the local machine                                                  |
 | `controldesk_mcp/config/settings.py`                           | `pydantic-settings`: `COM_PROG_ID`, `COM_TIMEOUT_MS`, `LOG_LEVEL`, `MCP_TRANSPORT`                          |
-| `AGENTS.md`                                                    | AI agent context: STA rules, ProgID, mock setup, test markers                                               |
 
 ---
 
@@ -693,20 +688,19 @@ async def variable_read_scalar(params: VariableReadScalarInput) -> str:
 [project]
 requires-python = ">=3.11"
 dependencies = [
-    "mcp[cli]>=1.2",          # FastMCP server framework
-    "pywin32>=306",            # COM automation (win32com)
-    "pydantic>=2.7",           # Input/output models
-    "pydantic-settings>=2.3",  # Config from env vars
+    "mcp==2.2.0",              # FastMCP server framework
+    "pydantic>=2.12.0",        # Input/output models
+    "pydantic-settings>=2.0",  # Config from env vars
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8",
     "pytest-asyncio>=0.23",
-    "pytest-mock>=3.14",
+    "pytest-mock>=3.0",
 ]
 ```
 
 ---
 
-_See also: [error-handling.md](error-handling.md) · [performance.md](performance.md) · [tool-design.md](tool-design.md) · [testing.md](testing.md) · [mcp-inspector.md](mcp-inspector.md)_
+_See also: [error-handling.md](error-handling.md) · [README.md](README.md) · [mcp-inspector.md](mcp-inspector.md)_
