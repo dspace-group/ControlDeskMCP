@@ -349,6 +349,9 @@ async def quit_application(params: AppQuitInput) -> AppQuitResult | ErrorEnvelop
         app = await com_bridge.dispatch(conn.get_app)
         await com_bridge.dispatch(com_bridge.domains.application_com.quit_application, app)
         _log.info("ControlDesk quit command sent successfully")
+        _log.info("Com connection state before disconnect: %s", conn.state)
+        await com_bridge.disconnect_for_switch()
+        _log.info("Com connection state after disconnect: %s", conn.state)
         return AppQuitResult(timestamp_utc=_now_utc())
     except BridgeError as exc:
         return build_envelope(exc)

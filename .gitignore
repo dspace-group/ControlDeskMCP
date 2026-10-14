@@ -50,3 +50,4 @@ TestResults/
 
 # Node (optional tooling)
 node_modules/
+uv.lock

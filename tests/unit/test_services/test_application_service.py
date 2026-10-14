@@ -7,7 +7,9 @@ Service layer is tested in isolation from both the MCP tool layer and real COM.
 from __future__ import annotations
 
 import os
+from concurrent.futures import Future
 from pathlib import Path
+from typing import Callable
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -252,19 +254,44 @@ class TestSetWindowVisible:
 class TestQuitApplication:
     @pytest.mark.asyncio
     async def test_returns_quit_result(self) -> None:
-        conn = _make_connected_bridge()
-        app_mock = conn.get_app.return_value
+        from controldesk_mcp.com_bridge.connection import ComConnection, ConnectionState
 
-        with patch(
-            "controldesk_mcp.com_bridge.dispatch",
-            new_callable=AsyncMock,
-            side_effect=[app_mock, None],
+        conn = ComConnection()
+        app_mock = MagicMock()
+        conn._state = ConnectionState.CONNECTED
+        conn._app = app_mock
+        bridge._connection = conn
+
+        def submit_disconnect(operation: Callable[[], None]) -> Future[None]:
+            future: Future[None] = Future()
+            future.set_result(operation())
+            return future
+
+        assert conn.state is ConnectionState.CONNECTED
+
+        with (
+            patch(
+                "controldesk_mcp.com_bridge.dispatch",
+                new_callable=AsyncMock,
+                side_effect=[app_mock, None],
+            ),
+            patch(
+                "controldesk_mcp.com_bridge.disconnect_for_switch",
+                new_callable=AsyncMock,
+                wraps=bridge.disconnect_for_switch,
+            ) as disconnect,
+            patch("controldesk_mcp.com_bridge._sta.get_sta_thread") as get_sta_thread,
         ):
+            get_sta_thread.return_value.submit.side_effect = submit_disconnect
             from controldesk_mcp.services.application_service import quit_application
 
             result = await quit_application(AppQuitInput())
 
         assert "timestamp_utc" in result
+        disconnect.assert_awaited_once()
+        get_sta_thread.return_value.submit.assert_called_once_with(conn.disconnect)
+        assert conn.state is ConnectionState.DISCONNECTED
+        assert conn._app is None
 
     @pytest.mark.asyncio
     async def test_returns_error_on_bridge_error(self) -> None:
