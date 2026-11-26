@@ -31,8 +31,8 @@ consumers should verify the attestation and checksum before installation.
 
 ## Third-Party Dependencies and Notices
 
-The executable bundles this project's runtime dependencies. The committed
-`uv.lock` records the exact source dependencies used for the release build.
+The executable bundles this project's runtime dependencies. The release build
+resolves dependencies from `pyproject.toml`.
 
 Before changing a dependency or publishing a release, maintainers must review
 the dependency's license and notice obligations. Any dependency that requires
