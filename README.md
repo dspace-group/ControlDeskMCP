@@ -73,10 +73,9 @@ Use this workflow only when developing or running a local checkout. Install a
     uv sync --extra dev
     ```
 
-`uv sync` is the developer workflow and may refresh `uv.lock` when dependency
-metadata changes. The lockfile is committed; CI and release automation use
-locked installs and fail when it needs to be regenerated. Update it
-intentionally with `uv lock` whenever declared dependencies change.
+`uv sync` is the developer workflow and resolves dependencies from
+`pyproject.toml`. Run `uv lock` only when you intentionally want to create a
+local lockfile for your environment.
 
 ## Using With an MCP Client
 
